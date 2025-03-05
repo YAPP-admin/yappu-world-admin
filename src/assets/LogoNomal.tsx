@@ -1,9 +1,14 @@
-export const LogoNormal = () => {
+import { FC } from 'react';
+
+export const LogoNormal: FC<{ width?: string; height?: string }> = ({
+  width = '25',
+  height = '24',
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="25"
-      height="24"
+      width={width}
+      height={height}
       viewBox="0 0 25 24"
       fill="none"
     >

@@ -1,9 +1,14 @@
-export const LogoText = () => {
+import { FC } from 'react';
+
+export const LogoText: FC<{ width?: string; height?: string }> = ({
+  width = '50',
+  height = '14',
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="50"
-      height="14"
+      width={width}
+      height={height}
       viewBox="0 0 50 14"
       fill="none"
     >

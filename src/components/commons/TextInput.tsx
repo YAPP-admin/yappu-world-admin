@@ -51,6 +51,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
 `;
 
 const Label = styled.label`
@@ -64,6 +65,7 @@ const InputWrapper = styled.div<{ inputSize: TextInputSize }>`
   display: flex;
   gap: 12px;
   align-items: center;
+  justify-content: space-between;
   padding: 12px 16px;
   border-radius: ${({ inputSize }) => (inputSize === 'large' ? '10px' : '8px')};
   border: 1px solid ${theme.colors.lineNormal.normal};

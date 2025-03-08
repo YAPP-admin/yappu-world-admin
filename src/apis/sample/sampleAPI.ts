@@ -1,4 +1,4 @@
-import axiosInstance from '../axiosInstance.ts';
+import axiosInstance from '../common/axiosInstance.ts';
 import { GetSampleDataRes } from './sampleTypes.ts';
 
 export const getSampleData = () =>

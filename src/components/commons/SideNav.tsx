@@ -5,17 +5,16 @@ import theme from 'styles/theme';
 import Logo from './Logo';
 import UserInfo from './UserInfo';
 import SideNavList from './SideNavList';
+import { useLocation } from 'react-router-dom';
 
 const SideNav: FC = () => {
+  const { pathname } = useLocation();
   return (
     <Container>
       <Wrapper>
         <Logo />
         <UserInfo authority="어드민" userName="김현정" />
-        <SideNavList
-          curPath="/admin/members"
-          onClick={() => console.log('click')}
-        />
+        <SideNavList pathname={pathname} />
       </Wrapper>
       <Button
         text="로그아웃"

@@ -7,7 +7,11 @@ export const sideNavList: NavList[] = [
     childs: [
       {
         title: '전체 회원 리스트',
-        path: '/admin/members',
+        path: '/admin/members/list',
+      },
+      {
+        title: '가입신청서 관리',
+        path: '/admin/members/application',
       },
       {
         title: '가입코드 관리',
@@ -29,7 +33,7 @@ export const sideNavList: NavList[] = [
   },
   {
     title: '설정',
-    path: 'admin/settings',
+    path: '/admin/settings',
     childs: [
       {
         title: '강제 업데이트',

@@ -1,38 +1,48 @@
 import NormalBlank from '@assets/NormalBlank';
 import { sideNavList } from '@constants/sideNavList';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface Props {
-  curPath: string;
-  onClick: () => void;
+  pathname: string;
 }
 
 const SideNavList: FC<Props> = (props) => {
-  const { curPath, onClick } = props;
+  const { pathname } = props;
 
   return (
     <Container>
       {sideNavList.map((el) => (
         <Wrapper key={el.title}>
-          <Route active={curPath === el.path}>
-            <NormalBlank active={curPath === el.path} />
-            <span>{el.title}</span>
-          </Route>
+          <Link
+            to={el.path}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <Route active={pathname === el.path}>
+              <NormalBlank active={pathname === el.path} />
+              <span>{el.title}</span>
+            </Route>
+          </Link>
           {el.childs &&
             el.childs.map((child, index) => (
-              <Route
-                key={index}
-                className="child"
-                active={curPath === child.path}
+              <Link
+                to={child.path}
+                style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                <NormalBlank
-                  width="16"
-                  height="16"
-                  active={curPath === child.path}
-                />
-                <span>{child.title}</span>
-              </Route>
+                <Route
+                  key={index}
+                  className="child"
+                  active={pathname === child.path}
+                >
+                  <NormalBlank
+                    width="16"
+                    height="16"
+                    active={pathname === child.path}
+                  />
+                  <span>{child.title}</span>
+                </Route>
+              </Link>
             ))}
         </Wrapper>
       ))}

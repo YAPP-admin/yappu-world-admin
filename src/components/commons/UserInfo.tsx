@@ -16,7 +16,7 @@ const UserInfo: FC<UserInfoProps> = (props) => {
       <ProfileImg />
       <Info>
         <Chip
-          text={'김현정'}
+          text={authority}
           chipColor="primary"
           chipSize="small"
           chipStyle="fill"

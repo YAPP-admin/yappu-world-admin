@@ -3,11 +3,19 @@ import { LogoText } from '@assets/LogoText';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const Logo: FC = () => {
+interface LogoProps {
+  iconWidth?: string;
+  iconHeight?: string;
+  textWidth?: string;
+  textHeight?: string;
+}
+
+const Logo: FC<LogoProps> = (props) => {
+  const { iconWidth, iconHeight, textWidth, textHeight } = props;
   return (
     <Container>
-      <LogoNormal width="32" height="32" />
-      <LogoText width="64.2" height="16.8" />
+      <LogoNormal width={iconWidth} height={iconHeight} />
+      <LogoText width={textWidth} height={textHeight} />
     </Container>
   );
 };

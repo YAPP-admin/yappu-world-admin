@@ -12,6 +12,7 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   variantType: ButtonVariantType;
   text: string;
+  style?: React.CSSProperties;
 }
 
 const Button: FC<ButtonProps> = (props) => {
@@ -20,6 +21,7 @@ const Button: FC<ButtonProps> = (props) => {
     buttonSize = 'medium',
     variant = 'contained',
     variantType = 'primary',
+    style,
     ...rest
   } = props;
   return (
@@ -28,6 +30,7 @@ const Button: FC<ButtonProps> = (props) => {
       $buttonSize={buttonSize}
       $variantType={variantType}
       {...rest}
+      style={style}
     >
       {text}
     </CustomButton>

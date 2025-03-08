@@ -25,7 +25,12 @@ const Login: FC = () => {
   return (
     <Container>
       <Title>
-        <Logo />
+        <Logo
+          iconWidth="32"
+          iconHeight="32"
+          textWidth="64.2"
+          textHeight="16.8"
+        />
         <span>App 관리자</span>
       </Title>
       <Wrapper onSubmit={handleSubmit(onSubmit)}>

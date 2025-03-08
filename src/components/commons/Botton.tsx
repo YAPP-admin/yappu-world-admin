@@ -24,9 +24,9 @@ const Button: FC<ButtonProps> = (props) => {
   } = props;
   return (
     <CustomButton
-      variant={variant}
-      buttonSize={buttonSize}
-      variantType={variantType}
+      $variant={variant}
+      $buttonSize={buttonSize}
+      $variantType={variantType}
       {...rest}
     >
       {text}
@@ -37,13 +37,13 @@ const Button: FC<ButtonProps> = (props) => {
 export default Button;
 
 const CustomButton = styled.button<{
-  variant: ButtonVariant;
-  buttonSize: ButtonSize;
-  variantType: ButtonVariantType;
+  $variant: ButtonVariant;
+  $buttonSize: ButtonSize;
+  $variantType: ButtonVariantType;
 }>`
-  ${({ variant, variantType, buttonSize, disabled }) => css`
-    ${buttonSizeStyles[buttonSize]};
-    ${getButtonVariantStyle(variant, variantType, disabled)};
+  ${({ $variant, $variantType, $buttonSize, disabled }) => css`
+    ${buttonSizeStyles[$buttonSize]};
+    ${getButtonVariantStyle($variant, $variantType, disabled)};
   `}
   font-weight: 600;
   cursor: pointer;

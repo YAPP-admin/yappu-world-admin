@@ -1,21 +1,42 @@
 import Button from '@compnents/commons/Botton';
 import Logo from '@compnents/commons/Logo';
 import TextInput from '@compnents/commons/TextInput';
+import { useLoginMutation } from '@queries/auth/useLoginMutation';
+import { LoginReq } from 'apis/auth/types';
 import { FC } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const Login: FC = () => {
+  const { register, handleSubmit } = useForm<LoginReq>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const { mutate } = useLoginMutation();
+
+  const onSubmit = (data: LoginReq) => {
+    mutate(data);
+  };
+
   return (
     <Container>
       <Title>
         <Logo />
         <span>App 관리자</span>
       </Title>
-      <Wrapper>
+      <Wrapper onSubmit={handleSubmit(onSubmit)}>
         <InputArea>
-          <TextInput title="이메일" placeholder="이메일을 입력해주세요." />
           <TextInput
+            {...register('email')}
+            title="이메일"
+            placeholder="이메일을 입력해주세요."
+          />
+          <TextInput
+            {...register('password')}
             title="비밀번호"
             type="password"
             placeholder="비밀번호를 입력해주세요."

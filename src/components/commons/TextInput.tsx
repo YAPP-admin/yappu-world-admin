@@ -32,8 +32,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     return (
       <Container>
         {title && <Label>{title}</Label>}
-        <InputWrapper inputSize={inputSize}>
-          <Input ref={ref} {...rest} inputSize={inputSize} type={inputType} />
+        <InputWrapper $inputSize={inputSize}>
+          <Input ref={ref} {...rest} $inputSize={inputSize} type={inputType} />
           {isShow && (
             <IconWrapper onClick={handleVisible}>
               {isVisible ? <View /> : <ViewSlash />}
@@ -61,23 +61,25 @@ const Label = styled.label`
   font-weight: 500;
 `;
 
-const InputWrapper = styled.div<{ inputSize: TextInputSize }>`
+const InputWrapper = styled.div<{ $inputSize: TextInputSize }>`
   display: flex;
   gap: 12px;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-radius: ${({ inputSize }) => (inputSize === 'large' ? '10px' : '8px')};
+  border-radius: ${({ $inputSize }) =>
+    $inputSize === 'large' ? '10px' : '8px'};
   border: 1px solid ${theme.colors.lineNormal.normal};
 `;
 
-const Input = styled.input<{ inputSize: TextInputSize }>`
+const Input = styled.input<{ $inputSize: TextInputSize }>`
   border: none;
   outline: none;
-  font-size: ${({ inputSize }) => (inputSize === 'large' ? '16px' : '15px')};
-  line-height: ${({ inputSize }) => (inputSize === 'large' ? '24px' : '22px')};
-  letter-spacing: ${({ inputSize }) =>
-    inputSize === 'large' ? '0.091pxpx' : '0.144pxpx'};
+  font-size: ${({ $inputSize }) => ($inputSize === 'large' ? '16px' : '15px')};
+  line-height: ${({ $inputSize }) =>
+    $inputSize === 'large' ? '24px' : '22px'};
+  letter-spacing: ${({ $inputSize }) =>
+    $inputSize === 'large' ? '0.091pxpx' : '0.144pxpx'};
 `;
 
 const IconWrapper = styled.div`

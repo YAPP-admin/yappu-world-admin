@@ -1,12 +1,12 @@
 import Button from '@compnents/commons/Botton';
 import Logo from '@compnents/commons/Logo';
 import TextInput from '@compnents/commons/TextInput';
+import Typography from '@compnents/commons/Typography';
 import { useLoginMutation } from '@queries/auth/useLoginMutation';
 import { LoginReq } from 'apis/auth/types';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import theme from 'styles/theme';
 
 const Login: FC = () => {
   const { register, handleSubmit } = useForm<LoginReq>({
@@ -31,7 +31,7 @@ const Login: FC = () => {
           textWidth="64.2"
           textHeight="16.8"
         />
-        <span>App 관리자</span>
+        <Typography text="App 관리자" variatnt="title3Bold" />
       </Title>
       <Wrapper onSubmit={handleSubmit(onSubmit)}>
         <InputArea>
@@ -75,13 +75,6 @@ const Title = styled.div`
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  span {
-    font-size: ${theme.typography.title3Bold.fontSize};
-    line-height: ${theme.typography.title3Bold.lineHeight};
-    letter-spacing: ${theme.typography.title3Bold.letterSpacing};
-    font-weight: ${theme.typography.title3Bold.fontWeight};
-  }
 `;
 
 const Wrapper = styled.form`

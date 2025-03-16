@@ -22,7 +22,7 @@ interface TableProps {
   counts: number;
   columns: TableColumn[];
   data: any[];
-  onClickRow?: (index: number) => void;
+  onClickRow: (index?: number) => void;
   isCheck?: boolean; // 체크박스 유무
   onChecked?: (indexes: number[]) => void; // 체크박스 중복 선택
   isEmpty?: boolean; // 데이터 없을 때
@@ -94,7 +94,7 @@ const Table: FC<TableProps> = (props) => {
               </tr>
             ) : (
               data.map((row, index) => (
-                <tr key={index}>
+                <tr key={index} onClick={() => onClickRow()}>
                   {isCheck && (
                     <td>
                       <input

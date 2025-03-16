@@ -1,4 +1,5 @@
 import Radio from '@compnents/commons/Radio';
+import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
@@ -60,7 +61,7 @@ const MemberBasicForm: FC = () => {
             variatnt="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
-          <SelePct width="120px" />
+          <Select width="120px" />
         </Wrapper>
         <Wrapper>
           <Typography

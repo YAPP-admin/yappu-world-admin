@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import theme from 'styles/theme';
 
 interface Props {
-  onClose: () => void;
+  onClose?: () => void;
   children: React.ReactNode;
 }
 

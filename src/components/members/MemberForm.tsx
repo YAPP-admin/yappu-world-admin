@@ -1,9 +1,10 @@
 import Button from '@compnents/commons/Botton';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import MemberActivityForm from './MemberActivityForm';
 import MemberBasicForm from './MemberBasicForm';
+import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 
 interface Props {
   isEdit: boolean;
@@ -12,25 +13,36 @@ interface Props {
 
 const MemberForm: FC<Props> = (props) => {
   const { isEdit, cancelToEdit } = props;
+  const [openConfirm, setOpenConfirm] = useState(false);
+
   return (
-    <Container onClick={(e) => e.stopPropagation()}>
-      <Wrapper>
-        <MemberBasicForm />
-        <MemberActivityForm />
-      </Wrapper>
-      <ButtonWrapper>
-        <Button
-          text="취소"
-          variant="outlined"
-          variantType="assistive"
-          onClick={cancelToEdit}
+    <>
+      <Container onClick={(e) => e.stopPropagation()}>
+        <Wrapper>
+          <MemberBasicForm />
+          <MemberActivityForm />
+        </Wrapper>
+        <ButtonWrapper>
+          <Button
+            text="취소"
+            variant="outlined"
+            variantType="assistive"
+            onClick={cancelToEdit}
+          />
+          <Button text="저장" onClick={() => setOpenConfirm(true)} />
+        </ButtonWrapper>
+      </Container>
+      {openConfirm && (
+        <ConfirmPopup
+          title="회원 정보 저장"
+          comment="수정한 내용으로 회원 정보를 저장할까요?"
+          confirmActionLabel="저장"
+          cancelActionLabel="취소"
+          onConfirmAction={() => console.log('저장')}
+          onCancelAction={() => setOpenConfirm(false)}
         />
-        <Button
-          text="저장"
-          onClick={() => console.log('저장 confirm 모달 오픈')}
-        />
-      </ButtonWrapper>
-    </Container>
+      )}
+    </>
   );
 };
 

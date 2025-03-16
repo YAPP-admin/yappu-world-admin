@@ -1,9 +1,10 @@
 import Table, { TableColumn } from '@compnents/table/Table';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import Typography from '@compnents/commons/Typography';
 import theme from 'styles/theme';
 import Chip from '@compnents/commons/Chip';
+import MemberDetailPopup from '@compnents/popup/MemberDetailPopup';
 
 const columns: TableColumn[] = [
   { field: 'index', fieldName: '번호' },
@@ -60,21 +61,28 @@ const data = [
 ];
 
 const MemberList: FC = () => {
+  const [detailPopup, setDetailPopup] = useState(false);
   return (
-    <Container>
-      <Typography
-        text="전체 회원 리스트"
-        variatnt="title2Bold"
-        style={{ fontWeight: 700 }}
-      />
+    <>
+      <Container>
+        <Typography
+          text="전체 회원 리스트"
+          variatnt="title2Bold"
+          style={{ fontWeight: 700 }}
+        />
 
-      <Table
-        tableTitle="회원리스트"
-        counts={100}
-        data={data}
-        columns={columns}
-      />
-    </Container>
+        <Table
+          tableTitle="회원리스트"
+          counts={100}
+          data={data}
+          columns={columns}
+          onClickRow={() => setDetailPopup(true)}
+        />
+      </Container>
+      {detailPopup && (
+        <MemberDetailPopup onClose={() => setDetailPopup(false)} />
+      )}
+    </>
   );
 };
 

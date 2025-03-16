@@ -12,11 +12,11 @@ interface Props {
 
 const MemberDetailPopup: FC<Props> = (props) => {
   const { onClose } = props;
-  const [isEdit, setIsEdit] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
 
   return (
     <Backdrop onClose={onClose}>
-      <Container>
+      <Container onClick={(e) => e.stopPropagation()}>
         <MemberDetailHeader
           isEdit={isEdit}
           onClose={onClose}

@@ -1,11 +1,17 @@
 import Chip from '@compnents/commons/Chip';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
+import { UserDetail } from '@compnents/popup/MemberDetailPopup';
 import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
-const MemberBasicInfo: FC = () => {
+interface Props {
+  userData: UserDetail;
+}
+
+const MemberBasicInfo: FC<Props> = (props) => {
+  const { userData } = props;
   return (
     <div
       style={{
@@ -22,7 +28,7 @@ const MemberBasicInfo: FC = () => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text="김현정"
+            text={userData.name}
             variatnt="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -34,7 +40,7 @@ const MemberBasicInfo: FC = () => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text="cowguswjd@gmail.com"
+            text={userData.email}
             variatnt="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -46,7 +52,7 @@ const MemberBasicInfo: FC = () => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text="010-6407-9715"
+            text={userData?.phoneNumber ?? '-'}
             variatnt="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -58,7 +64,7 @@ const MemberBasicInfo: FC = () => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text="여자"
+            text={userData?.gender ?? '-'}
             variatnt="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -70,7 +76,7 @@ const MemberBasicInfo: FC = () => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Chip
-            text="활동회원"
+            text={userData.role.label}
             chipColor="neutral"
             chipSize="large"
             chipStyle="weak"
@@ -83,7 +89,7 @@ const MemberBasicInfo: FC = () => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text="2025.02.02"
+            text={userData?.joinDate ?? '-'}
             variatnt="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />

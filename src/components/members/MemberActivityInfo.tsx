@@ -2,8 +2,15 @@ import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
+import GenerateInfo from './GenerateInfo';
+import { UserDetail } from '@compnents/popup/MemberDetailPopup';
 
-const MemberActivityInfo: FC = () => {
+interface Props {
+  userData: UserDetail;
+}
+
+const MemberActivityInfo: FC<Props> = (props) => {
+  const { userData } = props;
   return (
     <div style={{ width: '286px' }}>
       <Typography text="활동 정보" variatnt="heading2Bold" />
@@ -26,38 +33,13 @@ const MemberActivityInfo: FC = () => {
             }}
           />
         </Wrapper>
-        <Wrapper width="100px">
-          <Typography
-            text="24기"
-            variatnt="body1Normal"
-            style={{
-              color: theme.colors.label.normal,
-            }}
+        {userData.activityUnits?.map((el, idx) => (
+          <GenerateInfo
+            key={idx}
+            generation={el.generation}
+            role={el.position}
           />
-          <Typography
-            text="PM"
-            variatnt="body1Normal"
-            style={{
-              color: theme.colors.label.normal,
-            }}
-          />
-        </Wrapper>
-        <Wrapper width="100px">
-          <Typography
-            text="25기"
-            variatnt="body1Normal"
-            style={{
-              color: theme.colors.label.normal,
-            }}
-          />
-          <Typography
-            text="Web"
-            variatnt="body1Normal"
-            style={{
-              color: theme.colors.label.normal,
-            }}
-          />
-        </Wrapper>
+        ))}
       </div>
     </div>
   );
@@ -71,6 +53,6 @@ const Wrapper = styled.div<{ width?: string }>`
   align-items: center;
 
   span:first-child {
-    width: ${({ width }) => (width ? width : '64px')};
+    width: 100px;
   }
 `;

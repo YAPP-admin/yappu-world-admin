@@ -12,10 +12,11 @@ interface Props {
   title: string;
   onClose: () => void;
   onClickToEdit: () => void;
+  userName: string;
 }
 
 const MemberDetailHeader: FC<Props> = (props) => {
-  const { isEdit, title, onClose, onClickToEdit } = props;
+  const { isEdit, title, onClose, onClickToEdit, userName } = props;
 
   return (
     <Header>
@@ -40,7 +41,7 @@ const MemberDetailHeader: FC<Props> = (props) => {
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
         <Typography
-          text="김현정"
+          text={userName}
           variatnt="title1Bold"
           style={{ color: theme.colors.primary.normal }}
         />

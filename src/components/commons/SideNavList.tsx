@@ -27,6 +27,7 @@ const SideNavList: FC<Props> = (props) => {
           {el.childs &&
             el.childs.map((child, index) => (
               <Link
+                key={index}
                 to={child.path}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >

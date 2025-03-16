@@ -1,7 +1,6 @@
 import { View } from '@assets/View';
 import { ViewSlash } from '@assets/ViewSlash';
-import React, { useState } from 'react';
-import { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
@@ -13,11 +12,23 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   state?: TextInputState;
   title?: string;
   isShow?: boolean;
+  unitText?: string;
+  width?: string;
+  borderColor?: string;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
-    { inputSize = 'large', state = 'default', isShow = false, title, ...rest },
+    {
+      inputSize = 'large',
+      state = 'default',
+      isShow = false,
+      title,
+      unitText,
+      width,
+      borderColor,
+      ...rest
+    },
     ref,
   ) => {
     const [isVisible, setIsVisible] = useState(false);
@@ -30,15 +41,16 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       rest.type === 'password' && isVisible ? 'text' : rest.type;
 
     return (
-      <Container>
+      <Container width={width}>
         {title && <Label>{title}</Label>}
-        <InputWrapper $inputSize={inputSize}>
+        <InputWrapper $inputSize={inputSize} border={borderColor}>
           <Input ref={ref} {...rest} $inputSize={inputSize} type={inputType} />
           {isShow && (
             <IconWrapper onClick={handleVisible}>
               {isVisible ? <View /> : <ViewSlash />}
             </IconWrapper>
           )}
+          {unitText && <UnitText>{unitText}</UnitText>}
         </InputWrapper>
       </Container>
     );
@@ -47,11 +59,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
 export default TextInput;
 
-const Container = styled.div`
+const Container = styled.div<{ width?: string }>`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  width: 100%;
+  width: ${({ width }) => (width ? width : '100%')};
 `;
 
 const Label = styled.label`
@@ -61,7 +73,10 @@ const Label = styled.label`
   font-weight: 500;
 `;
 
-const InputWrapper = styled.div<{ $inputSize: TextInputSize }>`
+const InputWrapper = styled.div<{
+  $inputSize: TextInputSize;
+  border?: string;
+}>`
   display: flex;
   gap: 12px;
   align-items: center;
@@ -69,7 +84,13 @@ const InputWrapper = styled.div<{ $inputSize: TextInputSize }>`
   padding: 12px 16px;
   border-radius: ${({ $inputSize }) =>
     $inputSize === 'large' ? '10px' : '8px'};
-  border: 1px solid ${theme.colors.lineNormal.normal};
+  border: ${({ border }) =>
+    border
+      ? `1px solid ${border}`
+      : `1px solid ${theme.colors.lineNormal.normal}`};
+  width: 100%;
+  box-sizing: border-box;
+  height: ${({ $inputSize }) => ($inputSize === 'large' ? '48px' : '40px')};
 `;
 
 const Input = styled.input<{ $inputSize: TextInputSize }>`
@@ -79,10 +100,19 @@ const Input = styled.input<{ $inputSize: TextInputSize }>`
   line-height: ${({ $inputSize }) =>
     $inputSize === 'large' ? '24px' : '22px'};
   letter-spacing: ${({ $inputSize }) =>
-    $inputSize === 'large' ? '0.091pxpx' : '0.144pxpx'};
+    $inputSize === 'large' ? '0.091px' : '0.144px'};
+  width: 100%;
 `;
 
 const IconWrapper = styled.div`
   width: 24px;
   height: 24px;
+`;
+
+const UnitText = styled.span`
+  color: ${theme.colors.label.assistive};
+  font-size: 15px;
+  font-style: normal;
+  line-height: 22px;
+  letter-spacing: 0.144px;
 `;

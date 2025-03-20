@@ -1,16 +1,16 @@
 import Typography from '@compnents/commons/Typography';
+import { UserDetailRes } from 'apis/user/types';
 import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import GenerateInfo from './GenerateInfo';
-import { UserDetail } from '@compnents/popup/MemberDetailPopup';
 
 interface Props {
-  userData: UserDetail;
+  userInfo: UserDetailRes | null;
 }
 
 const MemberActivityInfo: FC<Props> = (props) => {
-  const { userData } = props;
+  const { userInfo } = props;
   return (
     <div style={{ width: '286px' }}>
       <Typography children="활동 정보" variant="heading2Bold" />
@@ -33,7 +33,7 @@ const MemberActivityInfo: FC<Props> = (props) => {
             }}
           />
         </Wrapper>
-        {userData.activityUnits?.map((el) => (
+        {userInfo?.activityUnits?.map((el) => (
           <GenerateInfo
             key={`${el.generation}-${el.position}`}
             generation={el.generation}

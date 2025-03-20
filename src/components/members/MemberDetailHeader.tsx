@@ -12,11 +12,11 @@ interface Props {
   title: string;
   onClose: () => void;
   onClickToEdit: () => void;
-  userName: string;
+  userName?: string;
 }
 
 const MemberDetailHeader: FC<Props> = (props) => {
-  const { isEdit, title, onClose, onClickToEdit, userName } = props;
+  const { isEdit, title, onClose, onClickToEdit, userName = '' } = props;
 
   return (
     <Header>

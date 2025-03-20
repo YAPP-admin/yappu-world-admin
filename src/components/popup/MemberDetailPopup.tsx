@@ -5,46 +5,7 @@ import MemberForm from '@compnents/members/MemberForm';
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 import PopupContainer from './PopupContainer';
-
-export interface UserDetail {
-  userId: string;
-  name: string;
-  phoneNumber?: string | null;
-  email: string;
-  role: {
-    name: string;
-    label: string;
-  };
-  isActive: boolean;
-  activityUnits: {
-    generation: number;
-    position: string;
-    isActive?: boolean | null;
-  }[];
-  gender?: string | null;
-  joinDate?: string | null;
-}
-
-const sample: UserDetail = {
-  userId: '01954c67-0c2b-d741-4561-ed80b4c28d0c',
-  name: '홍길동',
-  email: 'email@email.com',
-  role: {
-    name: 'ADMIN',
-    label: '관리자',
-  },
-  isActive: true,
-  activityUnits: [
-    {
-      generation: 1,
-      position: 'PM',
-    },
-    {
-      generation: 2,
-      position: 'Web',
-    },
-  ],
-};
+import { useMemberStore } from '@stores/memberStore';
 
 interface Props {
   onClose: () => void;
@@ -53,6 +14,7 @@ interface Props {
 const MemberDetailPopup: FC<Props> = (props) => {
   const { onClose } = props;
   const [isEdit, setIsEdit] = useState(false);
+  const { selectedUserId, userDetailInfo } = useMemberStore();
 
   return (
     <PopupContainer>
@@ -62,14 +24,14 @@ const MemberDetailPopup: FC<Props> = (props) => {
           onClose={onClose}
           title="회원 상세 정보"
           onClickToEdit={() => setIsEdit(true)}
-          userName={sample.name}
+          userName={userDetailInfo?.name}
         />
         {isEdit ? (
           <MemberForm isEdit={isEdit} cancelToEdit={() => setIsEdit(false)} />
         ) : (
           <Wrapper>
-            <MemberBasicInfo userData={sample} />
-            <MemberActivityInfo userData={sample} />
+            <MemberBasicInfo userInfo={userDetailInfo} />
+            <MemberActivityInfo userInfo={userDetailInfo} />
           </Wrapper>
         )}
       </Container>

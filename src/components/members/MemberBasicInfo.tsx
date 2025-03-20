@@ -1,17 +1,16 @@
 import Chip from '@compnents/commons/Chip';
-import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
-import { UserDetail } from '@compnents/popup/MemberDetailPopup';
+import { UserDetailRes } from 'apis/user/types';
 import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
 interface Props {
-  userData: UserDetail;
+  userInfo: UserDetailRes | null;
 }
 
 const MemberBasicInfo: FC<Props> = (props) => {
-  const { userData } = props;
+  const { userInfo } = props;
   return (
     <div
       style={{
@@ -28,7 +27,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            children={userData.name}
+            children={userInfo?.name}
             variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -40,7 +39,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            children={userData.email}
+            children={userInfo?.email}
             variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -52,7 +51,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            children={userData?.phoneNumber ?? '-'}
+            children={userInfo?.phoneNumber ?? '-'}
             variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -64,7 +63,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            children={userData?.gender ?? '-'}
+            children={userInfo?.gender ?? '-'}
             variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
@@ -76,7 +75,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Chip
-            text={userData.role.label}
+            text={userInfo?.role.label}
             color="neutral"
             size="large"
             variant="weak"
@@ -89,7 +88,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            children={userData?.joinDate ?? '-'}
+            children={userInfo?.joinDate ?? '-'}
             variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />

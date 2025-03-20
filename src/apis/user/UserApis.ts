@@ -10,7 +10,7 @@ const sampleData: PaginatedApiResponse<UserListRes> = {
   data: {
     data: [
       {
-        userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        userId: '1',
         name: '홍길동',
         email: 'abc@abc.com',
         role: {
@@ -23,7 +23,7 @@ const sampleData: PaginatedApiResponse<UserListRes> = {
         },
       },
       {
-        userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        userId: '2',
         name: '김현정',
         email: 'guswjd@naver.com',
         role: {
@@ -36,7 +36,7 @@ const sampleData: PaginatedApiResponse<UserListRes> = {
         },
       },
       {
-        userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        userId: '3',
         name: '김백설',
         email: 'qortjf@naver.com',
         role: {
@@ -49,7 +49,7 @@ const sampleData: PaginatedApiResponse<UserListRes> = {
         },
       },
       {
-        userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        userId: '4',
         name: '김건호',
         email: 'rjsgh@naver.com',
         role: {
@@ -72,7 +72,7 @@ const sampleData: PaginatedApiResponse<UserListRes> = {
 
 const userDetail: ApiResponse<UserDetailRes> = {
   data: {
-    userId: '01954c67-0c2b-d741-4561-ed80b4c28d0c',
+    userId: '1',
     name: '홍길동',
     email: 'email@email.com',
     role: {

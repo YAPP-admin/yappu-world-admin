@@ -19,11 +19,16 @@ interface ChipProps {
   color?: ChipColor;
   variant?: ChipStyle;
   size?: ChipSize;
-  text: string;
+  text?: string;
 }
 
 const Chip: FC<ChipProps> = (props) => {
-  const { text, color = 'primary', size = 'small', variant = 'fill' } = props;
+  const {
+    text = '',
+    color = 'primary',
+    size = 'small',
+    variant = 'fill',
+  } = props;
   return (
     <CustomChip color={color} size={size} variant={variant}>
       {text}

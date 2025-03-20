@@ -1,14 +1,17 @@
-import Table, { TableColumn } from '@compnents/table/Table';
-import { FC, useState } from 'react';
-import styled from 'styled-components';
-import Typography from '@compnents/commons/Typography';
-import theme from 'styles/theme';
 import Chip from '@compnents/commons/Chip';
+import Typography from '@compnents/commons/Typography';
 import MemberDetailPopup from '@compnents/popup/MemberDetailPopup';
+import Table, { TableColumn } from '@compnents/table/Table';
 import useUserListQuery from '@queries/user/useUserListQuery';
+import { useMemberStore } from '@stores/memberStore';
+import { UserList } from 'apis/user/types';
+import { getUserDetail } from 'apis/user/UserApis';
+import { FC } from 'react';
+import styled from 'styled-components';
+import theme from 'styles/theme';
 
-const columns: TableColumn[] = [
-  { field: 'index', fieldName: '번호' },
+const columns: TableColumn<UserList>[] = [
+  { field: 'userId', fieldName: '번호' },
   {
     field: 'name',
     fieldName: '이름',
@@ -32,8 +35,25 @@ const columns: TableColumn[] = [
 ];
 
 const MemberList: FC = () => {
-  const [detailPopup, setDetailPopup] = useState(false);
+  const {
+    selectedUserId,
+    setSelectedUserId,
+    setUserDetailInfo,
+    detailPopupOpen,
+    setDetailPopupOpen,
+  } = useMemberStore();
   const { data: userList } = useUserListQuery({ page: 1, size: 10 });
+
+  const fetchUserDetail = async (userId: number) => {
+    const response = await getUserDetail(userId);
+    setUserDetailInfo(response.data);
+  };
+
+  const onClickRow = (row: UserList) => {
+    setSelectedUserId(Number(row.userId));
+    fetchUserDetail(Number(row.userId));
+    setDetailPopupOpen();
+  };
 
   return (
     <>
@@ -44,17 +64,15 @@ const MemberList: FC = () => {
           style={{ fontWeight: 700 }}
         />
 
-        <Table
+        <Table<UserList>
           tableTitle="회원리스트"
-          counts={userList?.data.totalCount ?? 0}
-          data={userList?.data.data ?? []}
+          counts={userList?.totalCount ?? 0}
+          data={userList?.data ?? []}
           columns={columns}
-          onClickRow={() => setDetailPopup(true)}
+          onClickRow={onClickRow}
         />
       </Container>
-      {detailPopup && (
-        <MemberDetailPopup onClose={() => setDetailPopup(false)} />
-      )}
+      {detailPopupOpen && <MemberDetailPopup onClose={setDetailPopupOpen} />}
     </>
   );
 };

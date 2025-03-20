@@ -33,4 +33,7 @@ export interface UserDetailRes {
   role: UserRole;
   isActive: boolean;
   activityUnits: ActivityUnit[];
+  phoneNumber: string;
+  gender: string;
+  joinDate: string;
 }

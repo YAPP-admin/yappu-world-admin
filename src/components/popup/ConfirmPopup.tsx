@@ -1,9 +1,9 @@
+import Button from '@compnents/commons/Botton';
+import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
-import Backdrop from './Backdrop';
 import styled from 'styled-components';
 import theme from 'styles/theme';
-import Typography from '@compnents/commons/Typography';
-import Button from '@compnents/commons/Botton';
+import PopupContainer from './PopupContainer';
 
 interface Props {
   title: string;
@@ -25,7 +25,7 @@ const ConfirmPopup: FC<Props> = (props) => {
   } = props;
 
   return (
-    <Backdrop>
+    <PopupContainer>
       <Container>
         <Contents>
           <Typography
@@ -48,7 +48,7 @@ const ConfirmPopup: FC<Props> = (props) => {
           <Button text={confirmActionLabel} onClick={onConfirmAction} />
         </ButtonWrapper>
       </Container>
-    </Backdrop>
+    </PopupContainer>
   );
 };
 

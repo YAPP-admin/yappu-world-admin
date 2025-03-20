@@ -1,10 +1,10 @@
-import { FC, useState } from 'react';
-import Backdrop from './Backdrop';
-import styled from 'styled-components';
-import MemberDetailHeader from '@compnents/members/MemberDetailHeader';
-import MemberBasicInfo from '@compnents/members/MemberBasicInfo';
 import MemberActivityInfo from '@compnents/members/MemberActivityInfo';
+import MemberBasicInfo from '@compnents/members/MemberBasicInfo';
+import MemberDetailHeader from '@compnents/members/MemberDetailHeader';
 import MemberForm from '@compnents/members/MemberForm';
+import { FC, useState } from 'react';
+import styled from 'styled-components';
+import PopupContainer from './PopupContainer';
 
 export interface UserDetail {
   userId: string;
@@ -55,7 +55,7 @@ const MemberDetailPopup: FC<Props> = (props) => {
   const [isEdit, setIsEdit] = useState(false);
 
   return (
-    <Backdrop onClose={onClose}>
+    <PopupContainer>
       <Container onClick={(e) => e.stopPropagation()}>
         <MemberDetailHeader
           isEdit={isEdit}
@@ -73,7 +73,7 @@ const MemberDetailPopup: FC<Props> = (props) => {
           </Wrapper>
         )}
       </Container>
-    </Backdrop>
+    </PopupContainer>
   );
 };
 

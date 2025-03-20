@@ -9,36 +9,35 @@ export interface Tablerow {
   fieldName: string;
 }
 
-export interface TableColumn {
+export interface TableColumn<T> {
   field: string;
   fieldName: string;
   minWidth?: number;
   align?: 'left' | 'center' | 'right';
-  renderCell?: (row: any) => React.ReactNode;
+  renderCell?: (row: T) => React.ReactNode;
 }
 
-interface TableProps {
+interface TableProps<T> {
   tableTitle: string;
   counts: number;
-  columns: TableColumn[];
-  data: any[];
-  onClickRow: (index?: number) => void;
+  columns: TableColumn<T>[];
+  data: T[];
+  onClickRow: (row: T) => void;
   isCheck?: boolean; // 체크박스 유무
   onChecked?: (indexes: number[]) => void; // 체크박스 중복 선택
   isEmpty?: boolean; // 데이터 없을 때
 }
 
-const Table: FC<TableProps> = (props) => {
-  const {
-    tableTitle,
-    counts,
-    data,
-    columns,
-    onClickRow,
-    isCheck,
-    onChecked,
-    isEmpty,
-  } = props;
+const Table = <T,>({
+  tableTitle,
+  counts,
+  data,
+  columns,
+  onClickRow,
+  isCheck,
+  onChecked,
+  isEmpty,
+}: TableProps<T>) => {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
   const handleCheck = (index: number) => {
     let newChecked = checkedIndexes.includes(index)
@@ -94,7 +93,7 @@ const Table: FC<TableProps> = (props) => {
               </tr>
             ) : (
               data.map((row, index) => (
-                <tr key={index} onClick={() => onClickRow()}>
+                <tr key={index} onClick={() => onClickRow(row)}>
                   {isCheck && (
                     <td>
                       <input
@@ -111,7 +110,9 @@ const Table: FC<TableProps> = (props) => {
                     >
                       <Typography
                         children={
-                          col.renderCell ? col.renderCell(row) : row[col.field]
+                          col.renderCell
+                            ? col.renderCell(row)
+                            : (row as any)[col.field]
                         }
                         variant="label1Normal"
                       />

@@ -19,7 +19,7 @@ const SideNavList: FC<Props> = (props) => {
             to={el.path}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <Route active={pathname === el.path}>
+            <Route $active={pathname === el.path}>
               <NormalBlank active={pathname === el.path} />
               <span>{el.title}</span>
             </Route>
@@ -34,7 +34,7 @@ const SideNavList: FC<Props> = (props) => {
                 <Route
                   key={index}
                   className="child"
-                  active={pathname === child.path}
+                  $active={pathname === child.path}
                 >
                   <NormalBlank
                     width="16"
@@ -65,13 +65,13 @@ const Wrapper = styled.div`
   gap: 16px;
 `;
 
-const Route = styled.div<{ active: boolean }>`
+const Route = styled.div<{ $active: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 4px 0;
 
-  color: ${({ active }) => (active ? '#fa6027' : 'rgba(55, 56, 60, 0.61)')};
+  color: ${({ $active }) => ($active ? '#fa6027' : 'rgba(55, 56, 60, 0.61)')};
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;

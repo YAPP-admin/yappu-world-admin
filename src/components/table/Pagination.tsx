@@ -33,7 +33,7 @@ const Pagination: FC<PaginationProps> = (props) => {
       {[...Array(totalPages)].map((_, index) => (
         <PaginationButton
           key={index + 1}
-          active={currentPage === index + 1}
+          $active={currentPage === index + 1}
           onClick={() => handlePageChange(index + 1)}
         >
           {index + 1}
@@ -65,10 +65,10 @@ const PaginationContainer = styled.div`
   margin-top: 32px;
 `;
 
-const PaginationButton = styled.button<{ active?: boolean }>`
+const PaginationButton = styled.button<{ $active?: boolean }>`
   border: none;
-  background-color: ${({ active }) => (active ? '#FF6F30' : 'transparent')};
-  color: ${({ active }) => (active ? 'white' : '#171719')};
+  background-color: ${({ $active }) => ($active ? '#FF6F30' : 'transparent')};
+  color: ${({ $active }) => ($active ? 'white' : '#171719')};
   cursor: pointer;
   border-radius: 19px;
   font-size: 14px;

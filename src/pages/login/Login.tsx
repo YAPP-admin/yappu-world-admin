@@ -19,6 +19,7 @@ const Login: FC = () => {
   const { mutate } = useLoginMutation();
 
   const onSubmit = (data: LoginReq) => {
+    console.log('submit data :', data);
     mutate(data);
   };
 
@@ -53,6 +54,7 @@ const Login: FC = () => {
           variantType="primary"
           variant="contained"
           buttonSize="xlarge"
+          buttonType="submit"
         />
       </Wrapper>
     </Container>

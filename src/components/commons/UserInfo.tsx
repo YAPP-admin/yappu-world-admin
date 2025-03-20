@@ -15,12 +15,7 @@ const UserInfo: FC<UserInfoProps> = (props) => {
     <Container>
       <ProfileImg />
       <Info>
-        <Chip
-          text={authority}
-          chipColor="primary"
-          chipSize="small"
-          chipStyle="fill"
-        />
+        <Chip text={authority} color="primary" size="small" variant="fill" />
         <span className="name">{userName}</span>
       </Info>
     </Container>

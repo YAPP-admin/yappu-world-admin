@@ -27,7 +27,7 @@ const MemberDetailHeader: FC<Props> = (props) => {
           alignItems: 'cente',
         }}
       >
-        <Typography text={title} variatnt="headline1Bold" />
+        <Typography children={title} variant="headline1Bold" />
         <Icon
           onClick={onClose}
           icon={
@@ -41,8 +41,8 @@ const MemberDetailHeader: FC<Props> = (props) => {
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
         <Typography
-          text={userName}
-          variatnt="title1Bold"
+          children={userName}
+          variant="title1Bold"
           style={{ color: theme.colors.primary.normal }}
         />
         {!isEdit && (

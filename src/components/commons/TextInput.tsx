@@ -3,6 +3,7 @@ import { ViewSlash } from '@assets/ViewSlash';
 import React, { forwardRef, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
+import Typography from './Typography';
 
 type TextInputSize = 'large' | 'medium';
 type TextInputState = 'default' | 'active' | 'success' | 'error';
@@ -42,7 +43,9 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     return (
       <Container width={width}>
-        {title && <Label>{title}</Label>}
+        {title && (
+          <Typography children={title} variant="label1Normal"></Typography>
+        )}
         <InputWrapper $inputSize={inputSize} border={borderColor}>
           <Input ref={ref} {...rest} $inputSize={inputSize} type={inputType} />
           {isShow && (
@@ -64,13 +67,6 @@ const Container = styled.div<{ width?: string }>`
   flex-direction: column;
   gap: 4px;
   width: ${({ width }) => (width ? width : '100%')};
-`;
-
-const Label = styled.label`
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.2;
-  font-weight: 500;
 `;
 
 const InputWrapper = styled.div<{

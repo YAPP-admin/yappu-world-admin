@@ -1,28 +1,29 @@
 import { typography, TypographyType } from '@constants/typographyStyles';
-import { FC } from 'react';
+import { FC, JSX, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
 
 interface Props {
-  variatnt: TypographyType;
-  text: string;
+  as?: keyof JSX.IntrinsicElements;
+  variant: TypographyType;
+  children: ReactNode;
   style?: React.CSSProperties;
 }
 
-const Typography: FC<Props> = (props) => {
-  const { variatnt, text, style } = props;
+const Typography: FC<Props> = ({ as = 'span', variant, children, style }) => {
   return (
-    <CustomTypo variant={variatnt} style={style}>
-      {text}
+    <CustomTypo as={as} $variant={variant} style={style}>
+      {children}
     </CustomTypo>
   );
 };
 
 export default Typography;
 
-const CustomTypo = styled.span<{ variant: TypographyType }>`
-  ${({ variant }) => css`
-    font-size: ${typography[variant].fontSize};
-    line-height: ${typography[variant].lineHeight};
-    letter-spacing: ${typography[variant].letterSpacing};
+const CustomTypo = styled.span<{ $variant: TypographyType }>`
+  ${({ $variant }) => css`
+    font-size: ${typography[$variant].fontSize};
+    line-height: ${typography[$variant].lineHeight};
+    letter-spacing: ${typography[$variant].letterSpacing};
+    font-weight: ${typography[$variant].fontWeight};
   `}
 `;

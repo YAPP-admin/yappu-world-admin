@@ -9,12 +9,12 @@ import theme from 'styles/theme';
 const MemberBasicForm: FC = () => {
   return (
     <Container>
-      <Typography text="기본 정보" variatnt="heading2Bold" />
+      <Typography children="기본 정보" variant="heading2Bold" />
       <div className="wrapper">
         <Wrapper>
           <Typography
-            text="이름"
-            variatnt="body1Normal"
+            children="이름"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <TextInput
@@ -24,8 +24,8 @@ const MemberBasicForm: FC = () => {
         </Wrapper>
         <Wrapper>
           <Typography
-            text="이메일"
-            variatnt="body1Normal"
+            children="이메일"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <TextInput
@@ -35,8 +35,8 @@ const MemberBasicForm: FC = () => {
         </Wrapper>
         <Wrapper>
           <Typography
-            text="전화번호"
-            variatnt="body1Normal"
+            children="전화번호"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <TextInput
@@ -46,8 +46,8 @@ const MemberBasicForm: FC = () => {
         </Wrapper>
         <Wrapper>
           <Typography
-            text="성별"
-            variatnt="body1Normal"
+            children="성별"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <div id="radio-wrapper">
@@ -57,16 +57,16 @@ const MemberBasicForm: FC = () => {
         </Wrapper>
         <Wrapper>
           <Typography
-            text="권한"
-            variatnt="body1Normal"
+            children="권한"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Select width="120px" />
         </Wrapper>
         <Wrapper>
           <Typography
-            text="가입일"
-            variatnt="body1Normal"
+            children="가입일"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <TextInput

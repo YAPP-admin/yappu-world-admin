@@ -29,13 +29,13 @@ const ConfirmPopup: FC<Props> = (props) => {
       <Container>
         <Contents>
           <Typography
-            text={title}
-            variatnt="heading2Bold"
+            children={title}
+            variant="heading2Bold"
             style={{ color: theme.colors.label.normal }}
           />
           <Typography
-            text={comment}
-            variatnt="label1Normal"
+            children={comment}
+            variant="label1Normal"
             style={{ color: theme.colors.label.neutral }}
           />
         </Contents>

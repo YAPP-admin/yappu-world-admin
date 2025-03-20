@@ -20,7 +20,7 @@ const Icon: FC<Props> = (props) => {
     disabled = false,
     iconSize = 'small',
     variant = 'normal',
-  } = props;
+  } = props; // 탈락
   return <Container onClick={onClick}>{icon}</Container>;
 };
 

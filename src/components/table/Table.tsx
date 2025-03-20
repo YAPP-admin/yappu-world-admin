@@ -53,10 +53,10 @@ const Table: FC<TableProps> = (props) => {
     <Container>
       <TableWrapper>
         <TableHeader>
-          <Typography text={tableTitle} variatnt="headline1Bold" />
+          <Typography children={tableTitle} variant="headline1Bold" />
           <Typography
-            text={`${counts}명`}
-            variatnt="body1Normal"
+            children={`${counts}명`}
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
         </TableHeader>
@@ -77,8 +77,8 @@ const Table: FC<TableProps> = (props) => {
                   }}
                 >
                   <Typography
-                    text={col.fieldName}
-                    variatnt="body1Normal"
+                    children={col.fieldName}
+                    variant="body1Normal"
                     style={{ fontWeight: 600 }}
                   />
                 </th>
@@ -110,10 +110,10 @@ const Table: FC<TableProps> = (props) => {
                       style={{ textAlign: col.align || 'center' }}
                     >
                       <Typography
-                        text={
+                        children={
                           col.renderCell ? col.renderCell(row) : row[col.field]
                         }
-                        variatnt="label1Normal"
+                        variant="label1Normal"
                       />
                     </td>
                   ))}

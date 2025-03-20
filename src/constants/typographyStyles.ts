@@ -109,4 +109,5 @@ export const typography = {
   },
 };
 
+// bad case -> think about it
 export type TypographyType = keyof typeof typography;

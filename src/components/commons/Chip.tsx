@@ -16,21 +16,16 @@ export type ChipStyle = 'weak' | 'fill';
 export type ChipSize = 'small' | 'large';
 
 interface ChipProps {
-  chipColor?: ChipColor;
-  chipStyle?: ChipStyle;
-  chipSize?: ChipSize;
+  color?: ChipColor;
+  variant?: ChipStyle;
+  size?: ChipSize;
   text: string;
 }
 
 const Chip: FC<ChipProps> = (props) => {
-  const {
-    text,
-    chipColor = 'primary',
-    chipSize = 'small',
-    chipStyle = 'fill',
-  } = props;
+  const { text, color = 'primary', size = 'small', variant = 'fill' } = props;
   return (
-    <CustomChip chipColor={chipColor} chipSize={chipSize} chipStyle={chipStyle}>
+    <CustomChip color={color} size={size} variant={variant}>
       {text}
     </CustomChip>
   );
@@ -38,14 +33,12 @@ const Chip: FC<ChipProps> = (props) => {
 
 export default Chip;
 
-const CustomChip = styled.span<
-  Pick<ChipProps, 'chipColor' | 'chipSize' | 'chipStyle'>
->`
+const CustomChip = styled.span<Pick<ChipProps, 'color' | 'size' | 'variant'>>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  ${({ chipSize }) => chipSizeStyles[chipSize || 'small']}
-  ${({ chipColor, chipStyle }) =>
-    chipColorStyles[chipColor || 'primary'][chipStyle || 'fill']}
+  ${({ size }) => chipSizeStyles[size || 'small']}
+  ${({ color, variant }) =>
+    chipColorStyles[color || 'primary'][variant || 'fill']}
 `;

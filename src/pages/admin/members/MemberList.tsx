@@ -13,8 +13,8 @@ const columns: TableColumn[] = [
     fieldName: '이름',
     renderCell: (row) => (
       <Typography
-        text={row.name}
-        variatnt={'label1Normal'}
+        children={row.name}
+        variant={'label1Normal'}
         style={{ color: theme.colors.primary.normal, fontWeight: 600 }}
       />
     ),
@@ -24,7 +24,7 @@ const columns: TableColumn[] = [
   {
     field: 'authority',
     fieldName: '권한',
-    renderCell: (row) => <Chip text={row.authority} chipStyle="weak" />,
+    renderCell: (row) => <Chip text={row.authority} variant="weak" />,
   },
   { field: 'date', fieldName: '가입일' },
   { field: 'isExit', fieldName: '탈퇴여부' },
@@ -66,8 +66,8 @@ const MemberList: FC = () => {
     <>
       <Container>
         <Typography
-          text="전체 회원 리스트"
-          variatnt="title2Bold"
+          children="전체 회원 리스트"
+          variant="title2Bold"
           style={{ fontWeight: 700 }}
         />
 

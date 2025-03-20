@@ -41,7 +41,7 @@ const Select: FC<Props> = (props) => {
   return (
     <Container width={width} ref={selectRef}>
       <SelectButton type="button" onClick={openOptionList}>
-        <Typography text="활동회원" variatnt="body1Normal" />
+        <Typography children="활동회원" variant="body1Normal" />
         <DropDown />
       </SelectButton>
       {isClick && (

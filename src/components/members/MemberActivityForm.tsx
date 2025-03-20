@@ -10,7 +10,7 @@ const MemberActivityForm: FC = () => {
   return (
     <Container className="wrapper">
       <Header>
-        <Typography text="활동 정보" variatnt="heading2Bold" />
+        <Typography children="활동 정보" variant="heading2Bold" />
         <Button
           text="추가"
           buttonSize="xsmall"
@@ -24,8 +24,8 @@ const MemberActivityForm: FC = () => {
       <Content className="wrapper">
         <Title>
           <Typography
-            text="기수"
-            variatnt="body1Normal"
+            children="기수"
+            variant="body1Normal"
             style={{
               color: theme.colors.label.alternative,
               fontWeight: 600,
@@ -33,8 +33,8 @@ const MemberActivityForm: FC = () => {
             }}
           />
           <Typography
-            text="직군"
-            variatnt="body1Normal"
+            children="직군"
+            variant="body1Normal"
             style={{
               color: theme.colors.label.alternative,
               fontWeight: 600,

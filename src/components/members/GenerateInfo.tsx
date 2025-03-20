@@ -15,15 +15,15 @@ const GenerateInfo: FC<Props> = (props) => {
   return (
     <Container>
       <Typography
-        text={`${generation}기`}
-        variatnt="body1Normal"
+        children={`${generation}기`}
+        variant="body1Normal"
         style={{
           color: theme.colors.label.normal,
         }}
       />
       <Typography
-        text={role}
-        variatnt="body1Normal"
+        children={role}
+        variant="body1Normal"
         style={{
           color: theme.colors.label.normal,
         }}

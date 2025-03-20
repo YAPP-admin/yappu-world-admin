@@ -19,78 +19,78 @@ const MemberBasicInfo: FC<Props> = (props) => {
         borderRight: `1px solid ${theme.colors.lineNormal.normal}`,
       }}
     >
-      <Typography text="기본 정보" variatnt="heading2Bold" />
+      <Typography children="기본 정보" variant="heading2Bold" />
       <div className="wrapper">
         <Wrapper>
           <Typography
-            text="이름"
-            variatnt="body1Normal"
+            children="이름"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text={userData.name}
-            variatnt="body1Normal"
+            children={userData.name}
+            variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            text="이메일"
-            variatnt="body1Normal"
+            children="이메일"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text={userData.email}
-            variatnt="body1Normal"
+            children={userData.email}
+            variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            text="전화번호"
-            variatnt="body1Normal"
+            children="전화번호"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text={userData?.phoneNumber ?? '-'}
-            variatnt="body1Normal"
+            children={userData?.phoneNumber ?? '-'}
+            variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            text="성별"
-            variatnt="body1Normal"
+            children="성별"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text={userData?.gender ?? '-'}
-            variatnt="body1Normal"
+            children={userData?.gender ?? '-'}
+            variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            text="권한"
-            variatnt="body1Normal"
+            children="권한"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Chip
             text={userData.role.label}
-            chipColor="neutral"
-            chipSize="large"
-            chipStyle="weak"
+            color="neutral"
+            size="large"
+            variant="weak"
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            text="가입일"
-            variatnt="body1Normal"
+            children="가입일"
+            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
           <Typography
-            text={userData?.joinDate ?? '-'}
-            variatnt="body1Normal"
+            children={userData?.joinDate ?? '-'}
+            variant="body1Normal"
             style={{ color: theme.colors.label.normal }}
           />
         </Wrapper>

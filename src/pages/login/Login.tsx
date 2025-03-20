@@ -31,7 +31,7 @@ const Login: FC = () => {
           textWidth="64.2"
           textHeight="16.8"
         />
-        <Typography text="App 관리자" variatnt="title3Bold" />
+        <Typography children="App 관리자" variant="title3Bold" />
       </Title>
       <Wrapper onSubmit={handleSubmit(onSubmit)}>
         <InputArea>

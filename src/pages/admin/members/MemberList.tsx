@@ -5,6 +5,7 @@ import Typography from '@compnents/commons/Typography';
 import theme from 'styles/theme';
 import Chip from '@compnents/commons/Chip';
 import MemberDetailPopup from '@compnents/popup/MemberDetailPopup';
+import useUserListQuery from '@queries/user/useUserListQuery';
 
 const columns: TableColumn[] = [
   { field: 'index', fieldName: '번호' },
@@ -19,49 +20,21 @@ const columns: TableColumn[] = [
       />
     ),
   },
-  { field: 'generate', fieldName: '최근활동기수' },
-  { field: 'role', fieldName: '직군' },
+  { field: 'generation', fieldName: '최근활동기수' },
+  { field: 'position', fieldName: '직군' },
   {
-    field: 'authority',
+    field: 'role',
     fieldName: '권한',
-    renderCell: (row) => <Chip text={row.authority} variant="weak" />,
+    renderCell: (row) => <Chip text={row.role} variant="weak" />,
   },
   { field: 'date', fieldName: '가입일' },
   { field: 'isExit', fieldName: '탈퇴여부' },
 ];
 
-const data = [
-  {
-    index: 1,
-    name: '김현정',
-    generate: '25기',
-    role: 'Server',
-    authority: '운영진',
-    date: '2025.02.10',
-    isExit: 'X',
-  },
-  {
-    index: 2,
-    name: '김백설',
-    generate: '25기',
-    role: 'Design',
-    authority: '운영진',
-    date: '2025.02.10',
-    isExit: 'X',
-  },
-  {
-    index: 3,
-    name: '김건호',
-    generate: '25기',
-    role: 'Web',
-    authority: '어드민',
-    date: '2025.02.10',
-    isExit: 'X',
-  },
-];
-
 const MemberList: FC = () => {
   const [detailPopup, setDetailPopup] = useState(false);
+  const { data: userList } = useUserListQuery({ page: 1, size: 10 });
+
   return (
     <>
       <Container>
@@ -73,8 +46,8 @@ const MemberList: FC = () => {
 
         <Table
           tableTitle="회원리스트"
-          counts={100}
-          data={data}
+          counts={userList?.data.totalCount ?? 0}
+          data={userList?.data.data ?? []}
           columns={columns}
           onClickRow={() => setDetailPopup(true)}
         />

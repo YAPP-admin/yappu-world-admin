@@ -1,4 +1,4 @@
-import Button from '@compnents/commons/Botton';
+import Button from '@compnents/commons/Button';
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
@@ -6,8 +6,10 @@ import MemberActivityForm from './MemberActivityForm';
 import MemberBasicForm from './MemberBasicForm';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { FormProvider, useForm } from 'react-hook-form';
-import { UserDetailRes } from 'apis/user/types';
+import { UserDetailReq, UserDetailRes } from 'apis/user/types';
 import { useMemberStore } from '@stores/memberStore';
+import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   isEdit: boolean;
@@ -18,14 +20,37 @@ const MemberForm: FC<Props> = (props) => {
   const { isEdit, cancelToEdit } = props;
   const [openConfirm, setOpenConfirm] = useState(false);
   const { userDetailInfo } = useMemberStore();
+  const [formData, setFormData] = useState<UserDetailReq | null>(null);
+  const queryClient = useQueryClient();
+
+  const { mutate } = useUserDetailMutation();
 
   const method = useForm<UserDetailRes>({
     defaultValues: userDetailInfo ?? {},
   });
 
   const onSubmit = (data: UserDetailRes) => {
-    console.log('submit data :', data);
     setOpenConfirm(true);
+    setFormData({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      activityUnits: data.activityUnits,
+    });
+  };
+
+  const cancelToSave = () => {
+    setFormData(null);
+    setOpenConfirm(false);
+  };
+
+  const putUserDetail = () => {
+    if (!formData) return;
+
+    mutate(formData);
+    setOpenConfirm(false);
+    cancelToEdit();
+    queryClient.invalidateQueries({ queryKey: ['user-list'] });
   };
 
   return (
@@ -44,6 +69,7 @@ const MemberForm: FC<Props> = (props) => {
             variant="outlined"
             variantType="assistive"
             onClick={cancelToEdit}
+            buttonType="button"
           />
           <Button text="저장" buttonType="submit" />
         </ButtonWrapper>
@@ -54,8 +80,8 @@ const MemberForm: FC<Props> = (props) => {
           comment="수정한 내용으로 회원 정보를 저장할까요?"
           confirmActionLabel="저장"
           cancelActionLabel="취소"
-          onConfirmAction={() => console.log('저장')}
-          onCancelAction={() => setOpenConfirm(false)}
+          onConfirmAction={putUserDetail}
+          onCancelAction={cancelToSave}
         />
       )}
     </FormProvider>

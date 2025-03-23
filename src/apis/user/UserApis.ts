@@ -4,7 +4,7 @@ import {
   PaginatedApiResponse,
   PaginatedReq,
 } from 'apis/common/types';
-import { UserDetailRes, UserListRes } from './types';
+import { UserDetailReq, UserDetailRes, UserListRes } from './types';
 
 const sampleData: PaginatedApiResponse<UserListRes> = {
   data: {
@@ -120,16 +120,20 @@ export const getUserList = async ({
   page,
   size,
 }: PaginatedReq): Promise<PaginatedApiResponse<UserListRes>> => {
-  // const response = await axiosInstance.get<PaginatedApiResponse<UserListRes>>(
-  //   `/admin/v1/users?page=${page}&size=${size}`,
-  // );
-  // return response.data;
-  return sampleData;
+  const response = await axiosInstance.get<PaginatedApiResponse<UserListRes>>(
+    `/admin/v1/users?page=${page}&size=${size}`,
+  );
+  return response.data;
+  // return sampleData;
 };
 
 export const getUserDetail = async (userId: number) => {
-  // return axiosInstance.get<ApiResponse<UserDetailRes>>(
-  //   `/admin/v1/users/${userId}`,
-  // );
-  return userDetail;
+  return axiosInstance.get<ApiResponse<UserDetailRes>>(
+    `/admin/v1/users/${userId}`,
+  );
+  // return userDetail;
+};
+
+export const putUserDetail = async (data: UserDetailReq) => {
+  return axiosInstance.put<ApiResponse<string>>(`/admin/v1/users`, data);
 };

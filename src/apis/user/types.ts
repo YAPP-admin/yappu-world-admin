@@ -25,7 +25,7 @@ export interface ActivityUnit {
   id?: string;
   generation: number;
   position: string;
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export interface UserList {
@@ -50,4 +50,11 @@ export interface UserDetailRes {
   isActive: boolean;
   activityUnits: ActivityUnit[];
   joinDate: string;
+}
+
+export interface UserDetailReq {
+  id: string;
+  name: string;
+  email: string;
+  activityUnits: ActivityUnit[];
 }

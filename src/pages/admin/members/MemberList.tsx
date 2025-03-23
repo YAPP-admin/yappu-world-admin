@@ -30,8 +30,8 @@ const columns: TableColumn<UserList>[] = [
     fieldName: '권한',
     renderCell: (row) => <Chip text={row.role} variant="weak" />,
   },
-  { field: 'date', fieldName: '가입일' },
-  { field: 'isExit', fieldName: '탈퇴여부' },
+  { field: 'registrationDate', fieldName: '가입일' },
+  { field: 'isActive', fieldName: '탈퇴여부' },
 ];
 
 const MemberList: FC = () => {

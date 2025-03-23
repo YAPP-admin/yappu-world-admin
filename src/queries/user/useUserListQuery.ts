@@ -27,8 +27,8 @@ export const useUserListQuery = ({ page, size }: PaginatedReq) => {
         generation: user.lastActivityUnit.generation,
         position: user.lastActivityUnit.position,
         role: user.role.label,
-        date: '-',
-        isExit: 'X',
+        registrationDate: user.registrationDate,
+        isActive: user.lastActivityUnit.isActive ? 'X' : 'O',
       })),
     }),
   });

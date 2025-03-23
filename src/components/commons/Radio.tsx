@@ -3,26 +3,24 @@ import styled from 'styled-components';
 import theme from 'styles/theme';
 
 interface RadioProps {
-  label: string;
+  value: string;
   color?: string;
-  onChange?: () => void;
-  value?: string;
   checked?: boolean;
+  onChange?: () => void;
 }
 
 const Radio = forwardRef<HTMLInputElement, RadioProps>(
-  ({ label, color = '#E56738', onChange, checked, value }, ref) => {
+  ({ value, color = '#E56738', checked = false, onChange }, ref) => {
     return (
       <Container>
         <HiddenInput
           type="radio"
           ref={ref}
-          value={value}
           checked={checked}
           onChange={onChange}
         />
-        <Circle isChecked={checked || false} color={color} onClick={onChange} />
-        <Label>{label}</Label>
+        <Circle color={color} checked={checked} onClick={onChange} />
+        <Label>{value}</Label>
       </Container>
     );
   },
@@ -41,16 +39,16 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
-const Circle = styled.div<{ isChecked: boolean; color: string }>`
+const Circle = styled.div<{ checked: boolean; color: string }>`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: ${({ isChecked, color }) =>
-    isChecked
+  border: ${({ checked, color }) =>
+    checked
       ? `6px solid ${color}`
       : `2px solid ${theme.colors.lineNormal.normal}`};
-  background-color: ${({ isChecked, color }) =>
-    isChecked ? color : 'transparent'};
+  background-color: ${({ checked, color }) =>
+    checked ? color : 'transparent'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,7 +60,7 @@ const Circle = styled.div<{ isChecked: boolean; color: string }>`
     height: 8px;
     background: #fff;
     border-radius: 50%;
-    display: ${({ isChecked }) => (isChecked ? 'block' : 'none')};
+    display: ${({ checked }) => (checked ? 'block' : 'none')};
   }
 `;
 

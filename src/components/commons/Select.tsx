@@ -1,23 +1,24 @@
 import DropDown from '@assets/DropDown';
-import { FC, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import Typography from './Typography';
 
-const option: { label: string; value: string }[] = [
-  { label: '활동회원', value: '활동회원' },
-  { label: '정회원', value: '정회원' },
-  { label: '수료자', value: '수료자' },
-  { label: '운영진', value: '운영진' },
-];
-
-interface Props {
+interface Props<T> {
   width?: string;
-  optionList?: string[];
+  optionList: T[];
+  selectedValue: T;
+  onChange: (value: T) => void;
+  getLabel?: (option: T) => string;
 }
 
-const Select: FC<Props> = (props) => {
-  const { width, optionList } = props;
+const Select = <T,>({
+  width,
+  optionList,
+  selectedValue,
+  onChange,
+  getLabel,
+}: Props<T>) => {
   const [isClick, setIsClick] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -41,12 +42,27 @@ const Select: FC<Props> = (props) => {
   return (
     <Container width={width} ref={selectRef}>
       <SelectButton type="button" onClick={openOptionList}>
-        <Typography children="활동회원" variant="body1Normal" />
+        <Typography
+          children={
+            getLabel ? getLabel(selectedValue) : (selectedValue as string)
+          }
+          variant="body1Normal"
+        />
         <DropDown />
       </SelectButton>
       {isClick && (
         <OptionWrapper>
-          {option?.map((el) => <li key={el.value}>{el.label}</li>)}
+          {optionList.map((option, index) => (
+            <li
+              key={index}
+              onClick={() => {
+                onChange(option);
+                setIsClick(false);
+              }}
+            >
+              {getLabel ? getLabel(option) : (option as string)}
+            </li>
+          ))}
         </OptionWrapper>
       )}
     </Container>

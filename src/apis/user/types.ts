@@ -3,17 +3,29 @@ export interface UserListRes {
   name: string;
   email: string;
   role: UserRole;
+  registrationDate: string;
   lastActivityUnit: ActivityUnit;
 }
 
 export interface UserRole {
-  name: string;
-  label: string;
+  name: RoleName;
+  label: RoleLabel;
 }
 
+export type RoleName = 'ADMIN' | 'STAFF' | 'ALUMNI' | 'GRADUATE' | 'ACTIVE';
+
+export type RoleLabel =
+  | '관리자'
+  | '운영진'
+  | '정회원'
+  | '수료회원'
+  | '활동회원';
+
 export interface ActivityUnit {
+  id?: string;
   generation: number;
   position: string;
+  isActive: boolean;
 }
 
 export interface UserList {
@@ -21,19 +33,21 @@ export interface UserList {
   name: string;
   generation: number;
   position: string;
-  role: string;
-  date: string;
-  isExit: string;
+  role: RoleLabel;
+  registrationDate: string;
+  isActive: string;
 }
 
+export type UserGender = '남' | '여';
+
 export interface UserDetailRes {
-  userId: string;
+  id: string;
   name: string;
   email: string;
-  role: UserRole;
+  phoneNumber: string;
+  gender: UserGender;
+  role: RoleLabel;
   isActive: boolean;
   activityUnits: ActivityUnit[];
-  phoneNumber: string;
-  gender: string;
   joinDate: string;
 }

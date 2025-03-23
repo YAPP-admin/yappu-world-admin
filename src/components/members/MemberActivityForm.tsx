@@ -1,12 +1,20 @@
 import Plus from '@assets/Plus';
 import Button from '@compnents/commons/Botton';
 import Typography from '@compnents/commons/Typography';
+import { UserDetailRes } from 'apis/user/types';
 import { FC } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import GenerateForm from './GenerateForm';
 
 const MemberActivityForm: FC = () => {
+  const { control, watch } = useFormContext<UserDetailRes>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'activityUnits',
+  });
+
   return (
     <Container className="wrapper">
       <Header>
@@ -17,7 +25,13 @@ const MemberActivityForm: FC = () => {
           variant="outlined"
           variantType="assistive"
           leftIcon={<Plus />}
-          onClick={() => console.log('추가')}
+          onClick={() =>
+            append({
+              generation: 0,
+              position: '',
+              isActive: true,
+            })
+          }
         />
       </Header>
 
@@ -42,9 +56,13 @@ const MemberActivityForm: FC = () => {
           />
         </Title>
         <Wrapper className="wrapper">
-          <GenerateForm />
-          <GenerateForm />
-          <GenerateForm />
+          {fields.map((unit, index) => (
+            <GenerateForm
+              key={unit.id}
+              index={index}
+              onRemove={() => remove(index)}
+            />
+          ))}
         </Wrapper>
       </Content>
     </Container>

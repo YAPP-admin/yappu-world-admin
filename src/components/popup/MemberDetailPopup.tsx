@@ -14,7 +14,7 @@ interface Props {
 const MemberDetailPopup: FC<Props> = (props) => {
   const { onClose } = props;
   const [isEdit, setIsEdit] = useState(false);
-  const { selectedUserId, userDetailInfo } = useMemberStore();
+  const { userDetailInfo } = useMemberStore();
 
   return (
     <PopupContainer>

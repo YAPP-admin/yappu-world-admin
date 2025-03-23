@@ -75,7 +75,7 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.alternative }}
           />
           <Chip
-            text={userInfo?.role.label}
+            text={userInfo?.role}
             color="neutral"
             size="large"
             variant="weak"

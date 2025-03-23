@@ -5,6 +5,9 @@ import theme from 'styles/theme';
 import MemberActivityForm from './MemberActivityForm';
 import MemberBasicForm from './MemberBasicForm';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
+import { FormProvider, useForm } from 'react-hook-form';
+import { UserDetailRes } from 'apis/user/types';
+import { useMemberStore } from '@stores/memberStore';
 
 interface Props {
   isEdit: boolean;
@@ -14,10 +17,23 @@ interface Props {
 const MemberForm: FC<Props> = (props) => {
   const { isEdit, cancelToEdit } = props;
   const [openConfirm, setOpenConfirm] = useState(false);
+  const { userDetailInfo } = useMemberStore();
+
+  const method = useForm<UserDetailRes>({
+    defaultValues: userDetailInfo ?? {},
+  });
+
+  const onSubmit = (data: UserDetailRes) => {
+    console.log('submit data :', data);
+    setOpenConfirm(true);
+  };
 
   return (
-    <>
-      <Container onClick={(e) => e.stopPropagation()}>
+    <FormProvider {...method}>
+      <Container
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={method.handleSubmit(onSubmit)}
+      >
         <Wrapper>
           <MemberBasicForm />
           <MemberActivityForm />
@@ -29,7 +45,7 @@ const MemberForm: FC<Props> = (props) => {
             variantType="assistive"
             onClick={cancelToEdit}
           />
-          <Button text="저장" onClick={() => setOpenConfirm(true)} />
+          <Button text="저장" buttonType="submit" />
         </ButtonWrapper>
       </Container>
       {openConfirm && (
@@ -42,7 +58,7 @@ const MemberForm: FC<Props> = (props) => {
           onCancelAction={() => setOpenConfirm(false)}
         />
       )}
-    </>
+    </FormProvider>
   );
 };
 

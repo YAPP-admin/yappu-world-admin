@@ -1,12 +1,18 @@
 import Radio from '@compnents/commons/Radio';
+import RadioGroup from '@compnents/commons/RadioGroup';
 import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
+import { roleList } from '@constants/role';
+import { RoleLabel, UserDetailRes } from 'apis/user/types';
 import { FC } from 'react';
+import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const MemberBasicForm: FC = () => {
+  const { register, watch, setValue } = useFormContext<UserDetailRes>();
+
   return (
     <Container>
       <Typography children="기본 정보" variant="heading2Bold" />
@@ -20,6 +26,7 @@ const MemberBasicForm: FC = () => {
           <TextInput
             inputSize="medium"
             borderColor={theme.colors.lineNormal.strong}
+            {...register('name')}
           />
         </Wrapper>
         <Wrapper>
@@ -31,6 +38,7 @@ const MemberBasicForm: FC = () => {
           <TextInput
             inputSize="medium"
             borderColor={theme.colors.lineNormal.strong}
+            {...register('email')}
           />
         </Wrapper>
         <Wrapper>
@@ -42,6 +50,7 @@ const MemberBasicForm: FC = () => {
           <TextInput
             inputSize="medium"
             borderColor={theme.colors.lineNormal.strong}
+            {...register('phoneNumber')}
           />
         </Wrapper>
         <Wrapper>
@@ -50,10 +59,7 @@ const MemberBasicForm: FC = () => {
             variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
-          <div id="radio-wrapper">
-            <Radio label="남자" />
-            <Radio label="여자" checked={true} />
-          </div>
+          <RadioGroup name="gender" options={['남', '여']} />
         </Wrapper>
         <Wrapper>
           <Typography
@@ -61,7 +67,12 @@ const MemberBasicForm: FC = () => {
             variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
-          <Select width="120px" />
+          <Select
+            width="120px"
+            optionList={roleList}
+            selectedValue={watch('role')}
+            onChange={(value: RoleLabel) => setValue('role', value)}
+          />
         </Wrapper>
         <Wrapper>
           <Typography
@@ -69,9 +80,10 @@ const MemberBasicForm: FC = () => {
             variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
           />
-          <TextInput
-            inputSize="medium"
-            borderColor={theme.colors.lineNormal.strong}
+          <Typography
+            children={watch('joinDate')}
+            variant="body1Normal"
+            style={{ color: theme.colors.label.alternative }}
           />
         </Wrapper>
       </div>

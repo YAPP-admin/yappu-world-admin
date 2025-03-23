@@ -1,6 +1,6 @@
 import Close from '@assets/Close';
 import Pencil from '@assets/Pencil';
-import Button from '@compnents/commons/Botton';
+import Button from '@compnents/commons/Button';
 import Icon from '@compnents/commons/Icon';
 import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';

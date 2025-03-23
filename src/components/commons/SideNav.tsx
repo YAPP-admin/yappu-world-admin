@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import Button from './Botton';
+import Button from './Button';
 import theme from 'styles/theme';
 import Logo from './Logo';
 import UserInfo from './UserInfo';

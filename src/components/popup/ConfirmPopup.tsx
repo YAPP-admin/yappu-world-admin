@@ -1,4 +1,4 @@
-import Button from '@compnents/commons/Botton';
+import Button from '@compnents/commons/Button';
 import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';

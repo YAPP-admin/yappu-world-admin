@@ -1,4 +1,4 @@
-import Button from '@compnents/commons/Botton';
+import Button from '@compnents/commons/Button';
 import Logo from '@compnents/commons/Logo';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';

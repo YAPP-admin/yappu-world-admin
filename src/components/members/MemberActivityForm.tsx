@@ -1,5 +1,5 @@
 import Plus from '@assets/Plus';
-import Button from '@compnents/commons/Botton';
+import Button from '@compnents/commons/Button';
 import Typography from '@compnents/commons/Typography';
 import { UserDetailRes } from 'apis/user/types';
 import { FC } from 'react';

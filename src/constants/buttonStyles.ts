@@ -2,7 +2,7 @@ import {
   ButtonSize,
   ButtonVariant,
   ButtonVariantType,
-} from '@compnents/commons/Botton';
+} from '@compnents/commons/Button';
 import { css } from 'styled-components';
 
 export const variantStyles: Record<

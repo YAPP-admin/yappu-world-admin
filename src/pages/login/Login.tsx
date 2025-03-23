@@ -1,12 +1,12 @@
-import Button from '@compnents/commons/Botton';
+import Button from '@compnents/commons/Button';
 import Logo from '@compnents/commons/Logo';
 import TextInput from '@compnents/commons/TextInput';
+import Typography from '@compnents/commons/Typography';
 import { useLoginMutation } from '@queries/auth/useLoginMutation';
 import { LoginReq } from 'apis/auth/types';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import theme from 'styles/theme';
 
 const Login: FC = () => {
   const { register, handleSubmit } = useForm<LoginReq>({
@@ -19,14 +19,20 @@ const Login: FC = () => {
   const { mutate } = useLoginMutation();
 
   const onSubmit = (data: LoginReq) => {
+    console.log('submit data :', data);
     mutate(data);
   };
 
   return (
     <Container>
       <Title>
-        <Logo />
-        <span>App 관리자</span>
+        <Logo
+          iconWidth="32"
+          iconHeight="32"
+          textWidth="64.2"
+          textHeight="16.8"
+        />
+        <Typography children="App 관리자" variant="title3Bold" />
       </Title>
       <Wrapper onSubmit={handleSubmit(onSubmit)}>
         <InputArea>
@@ -48,6 +54,7 @@ const Login: FC = () => {
           variantType="primary"
           variant="contained"
           buttonSize="xlarge"
+          buttonType="submit"
         />
       </Wrapper>
     </Container>
@@ -70,13 +77,6 @@ const Title = styled.div`
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  span {
-    font-size: ${theme.typography.title3Bold.fontSize};
-    line-height: ${theme.typography.title3Bold.lineHeight};
-    letter-spacing: ${theme.typography.title3Bold.letterSpacing};
-    font-weight: ${theme.typography.title3Bold.fontWeight};
-  }
 `;
 
 const Wrapper = styled.form`

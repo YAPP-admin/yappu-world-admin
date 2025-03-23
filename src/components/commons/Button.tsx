@@ -10,8 +10,12 @@ export type ButtonVariantType = 'primary' | 'secondary' | 'assistive';
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   buttonSize?: ButtonSize;
   variant?: ButtonVariant;
-  variantType: ButtonVariantType;
+  variantType?: ButtonVariantType;
   text: string;
+  style?: React.CSSProperties;
+  leftIcon?: React.ReactElement;
+  rightIcon?: React.ReactElement;
+  buttonType?: 'submit' | 'reset' | 'button';
 }
 
 const Button: FC<ButtonProps> = (props) => {
@@ -20,6 +24,10 @@ const Button: FC<ButtonProps> = (props) => {
     buttonSize = 'medium',
     variant = 'contained',
     variantType = 'primary',
+    style,
+    leftIcon,
+    rightIcon,
+    buttonType = 'button',
     ...rest
   } = props;
   return (
@@ -28,8 +36,12 @@ const Button: FC<ButtonProps> = (props) => {
       $buttonSize={buttonSize}
       $variantType={variantType}
       {...rest}
+      style={style}
+      type={buttonType}
     >
+      {leftIcon}
       {text}
+      {rightIcon}
     </CustomButton>
   );
 };
@@ -47,4 +59,8 @@ const CustomButton = styled.button<{
   `}
   font-weight: 600;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
 `;

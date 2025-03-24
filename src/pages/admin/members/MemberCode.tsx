@@ -66,7 +66,7 @@ const MemberCode: FC = () => {
                 fontWeight: 600,
               }}
             >
-              4개
+              {data?.length}개
             </Typography>
           </TitleWrapper>
           <StyledTable>

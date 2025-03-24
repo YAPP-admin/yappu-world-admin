@@ -1,29 +1,36 @@
 import { typography, TypographyType } from '@constants/typographyStyles';
 import { FC, JSX, ReactNode } from 'react';
 import styled, { css } from 'styled-components';
+import { semanticColor, SemanticColorKey } from 'styles/colors/semantic';
 
 interface Props {
   as?: keyof JSX.IntrinsicElements;
   variant: TypographyType;
+  color?: SemanticColorKey;
   children: ReactNode;
   style?: React.CSSProperties;
 }
 
-const Typography: FC<Props> = ({ as = 'span', variant, children, style }) => {
+const Typography: FC<Props> = ({
+  as = 'span',
+  variant,
+  children,
+  style,
+  color = 'static-black',
+}) => {
   return (
-    <CustomTypo as={as} $variant={variant} style={style}>
+    <Styled as={as} $variant={variant} style={style} $color={color}>
       {children}
-    </CustomTypo>
+    </Styled>
   );
 };
 
 export default Typography;
 
-const CustomTypo = styled.span<{ $variant: TypographyType }>`
-  ${({ $variant }) => css`
-    font-size: ${typography[$variant].fontSize};
-    line-height: ${typography[$variant].lineHeight};
-    letter-spacing: ${typography[$variant].letterSpacing};
-    font-weight: ${typography[$variant].fontWeight};
-  `}
-`;
+const Styled = styled.span<{
+  $variant: TypographyType;
+  $color: SemanticColorKey;
+}>(({ $variant, $color }) => ({
+  ...typography[$variant],
+  color: semanticColor[$color],
+}));

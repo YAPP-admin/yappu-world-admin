@@ -42,6 +42,7 @@ const CustomChip = styled.span<Pick<ChipProps, 'color' | 'size' | 'variant'>>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: fit-content;
 
   ${({ size }) => chipSizeStyles[size || 'small']}
   ${({ color, variant }) =>

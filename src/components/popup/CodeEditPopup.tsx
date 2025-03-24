@@ -1,12 +1,12 @@
-import { FC } from 'react';
-import PopupContainer from './PopupContainer';
-import styled from 'styled-components';
-import Typography from '@compnents/commons/Typography';
+import SolidButton from '@compnents/Button/SolidButton';
 import Chip from '@compnents/commons/Chip';
 import TextInput from '@compnents/commons/TextInput';
-import Button from '@compnents/commons/Button';
-import CodeEditConfirmPopup from './CodeEditConfirmPopup';
+import Typography from '@compnents/commons/Typography';
 import { UserRole } from 'apis/user/types';
+import { FC } from 'react';
+import styled from 'styled-components';
+import CodeEditConfirmPopup from './CodeEditConfirmPopup';
+import PopupContainer from './PopupContainer';
 
 interface Props {
   handleEditPopup: () => void;
@@ -39,17 +39,16 @@ const CodeEditPopup: FC<Props> = (props) => {
           <Chip size="large" variant="weak" text={role?.label} />
           <TextInput value={code} onChange={(e) => onChange(e.target.value)} />
           <ButtonWrapper>
-            <Button
-              text="초기화"
-              buttonSize="xlarge"
-              variantType="secondary"
+            <SolidButton
+              variant="secondary"
+              size="xlarge"
               onClick={() => onChange('')}
-            />
-            <Button
-              text="저장"
-              buttonSize="xlarge"
-              onClick={handleConfirmPopup}
-            />
+            >
+              초기화
+            </SolidButton>
+            <SolidButton size="xlarge" onClick={handleConfirmPopup}>
+              저장
+            </SolidButton>
           </ButtonWrapper>
         </Container>
       </PopupContainer>

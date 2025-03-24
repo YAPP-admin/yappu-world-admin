@@ -1,4 +1,4 @@
-import Button from '@compnents/commons/Button';
+import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
 import CodeEditPopup from '@compnents/popup/CodeEditPopup';
@@ -109,10 +109,11 @@ const MemberCode: FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      text="수정"
+                    <TextButton
                       onClick={() => onClickToEdit(code.role, code.code)}
-                    />
+                    >
+                      수정
+                    </TextButton>
                   </TableCell>
                 </TableRow>
               ))}

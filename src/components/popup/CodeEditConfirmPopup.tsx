@@ -3,6 +3,7 @@ import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';
 import PopupContainer from './PopupContainer';
+import SolidButton from '@compnents/Button/SolidButton';
 
 interface Props {
   onClose: () => void;
@@ -29,7 +30,9 @@ const CodeEditConfirmPopup: FC<Props> = ({ onClose, onSave }) => {
             variantType="secondary"
             onClick={onClose}
           />
-          <Button text="저장" buttonSize="xlarge" onClick={onSave} />
+          <SolidButton size="xlarge" onClick={onSave}>
+            저장
+          </SolidButton>
         </ButtonWrapper>
       </Container>
     </PopupContainer>

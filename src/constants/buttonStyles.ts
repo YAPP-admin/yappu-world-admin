@@ -114,3 +114,61 @@ export const buttonSizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
     letter-spacing: 0.252px;
   `,
 };
+
+export const sizeStyles = {
+  xlarge: css`
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.091px;
+  `,
+  large: css`
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.091px;
+  `,
+  medium: css`
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.144px;
+  `,
+  small: css`
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0.252px;
+  `,
+  xsmall: css`
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0.252px;
+  `,
+};
+
+export const textButtonSizeStyles = {
+  medium: css`
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.091px;
+  `,
+  small: css`
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0.203px;
+  `,
+};

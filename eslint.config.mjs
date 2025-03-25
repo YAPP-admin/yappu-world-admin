@@ -2,6 +2,9 @@ import eslint from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import importPlugin from 'eslint-plugin-import';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 export default tseslint.config(
   { ignores: ['dist', 'node_modules', 'vite.config.ts'] },
@@ -15,6 +18,9 @@ export default tseslint.config(
     },
     plugins: {
       import: importPlugin,
+      prettier: prettierPlugin,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
     },
     settings: {
       'import/resolver': {
@@ -25,6 +31,13 @@ export default tseslint.config(
       },
     },
     rules: {
+      // React
+      ...reactPlugin.configs.recommended.rules,
+
+      // React Hooks
+      ...reactHooksPlugin.configs.recommended.rules,
+
+      // Import
       'import/order': [
         'error',
         {

@@ -33,6 +33,32 @@ export default tseslint.config(
     rules: {
       // React
       ...reactPlugin.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
+      'react/sort-prop-types': [
+        'error',
+        {
+          ignoreCase: true,
+          callbacksLast: true,
+          sortShapeProp: true,
+        },
+      ],
+      'react/jsx-sort-props': [
+        'error',
+        {
+          ignoreCase: true,
+          callbacksLast: true,
+          shorthandFirst: true,
+          multiline: 'last',
+          reservedFirst: true,
+          // noSortAlphabetically: true,
+        },
+      ],
+      'react/jsx-tag-spacing': [
+        'error',
+        {
+          beforeSelfClosing: 'always',
+        },
+      ],
 
       // React Hooks
       ...reactHooksPlugin.configs.recommended.rules,

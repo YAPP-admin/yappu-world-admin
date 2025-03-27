@@ -2,6 +2,7 @@ import Trash from '@assets/Trash';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import TextButton from '@compnents/Button/TextButton';
 import Typography from '@compnents/commons/Typography';
+import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
@@ -68,10 +69,10 @@ const SettingLink: FC = () => {
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell as="th">
-                  <input type="checkbox" />
+                <TableCell as="th" justifyContent="center">
+                  <Checkbox />
                 </TableCell>
-                <TableCell as="th">
+                <TableCell as="th" justifyContent="center">
                   <Typography
                     variant="body1Normal"
                     color="label-normal"
@@ -93,7 +94,7 @@ const SettingLink: FC = () => {
                     URL
                   </Typography>
                 </TableCell>
-                <TableCell as="th">
+                <TableCell as="th" justifyContent="center">
                   <Typography
                     variant="body1Normal"
                     color="label-normal"
@@ -109,8 +110,8 @@ const SettingLink: FC = () => {
             <TableBody>
               {data?.links.map((link) => (
                 <TableRow key={link.id}>
-                  <TableCell>
-                    <input type="checkbox" />
+                  <TableCell justifyContent="center">
+                    <Checkbox />
                   </TableCell>
                   <TableCell>
                     <Typography variant="body1Normal" color="label-normal">
@@ -122,7 +123,7 @@ const SettingLink: FC = () => {
                       {link.value}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell justifyContent="center">
                     <TextButton onClick={() => onClickToEdit(link)}>
                       수정
                     </TextButton>

@@ -1,4 +1,5 @@
-import Button from '@compnents/commons/Button';
+import OutlinedButton from '@compnents/Button/OutlinedButton';
+import SolidButton from '@compnents/Button/SolidButton';
 import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';
@@ -25,7 +26,7 @@ const ConfirmPopup: FC<Props> = (props) => {
   } = props;
 
   return (
-    <PopupContainer>
+    <PopupContainer onClose={onCancelAction}>
       <Container>
         <Contents>
           <Typography
@@ -36,16 +37,20 @@ const ConfirmPopup: FC<Props> = (props) => {
           <Typography
             children={comment}
             variant="label1Normal"
-            style={{ color: theme.colors.label.neutral }}
+            color="label-neutral"
           />
         </Contents>
         <ButtonWrapper>
-          <Button
-            text={cancelActionLabel}
+          <OutlinedButton
             onClick={onCancelAction}
-            variant="outlined"
-          />
-          <Button text={confirmActionLabel} onClick={onConfirmAction} />
+            variant="secondary"
+            size="xlarge"
+          >
+            {cancelActionLabel}
+          </OutlinedButton>
+          <SolidButton onClick={onConfirmAction} size="xlarge">
+            {confirmActionLabel}
+          </SolidButton>
         </ButtonWrapper>
       </Container>
     </PopupContainer>
@@ -63,6 +68,7 @@ const Container = styled.div`
   border-radius: 20px;
   background: ${theme.colors.backgroundNormal.normal};
   box-shadow: 0px 4px 36px 0px rgba(0, 0, 0, 0.3);
+  width: 396px;
 `;
 
 const Contents = styled.div`

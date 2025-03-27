@@ -172,3 +172,78 @@ export const textButtonSizeStyles = {
     letter-spacing: 0.203px;
   `,
 };
+
+export const outlinedSizeStyles = {
+  xlarge: css`
+    padding: 16px 36px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.091px;
+  `,
+  large: css`
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.091px;
+  `,
+  medium: css`
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.144px;
+  `,
+  small: css`
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0.252px;
+  `,
+  xsmall: css`
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    letter-spacing: 0.252px;
+  `,
+};
+
+export const assistiveStyleMap: Record<ButtonSize, ReturnType<typeof css>> = {
+  xlarge: css``,
+  large: css`
+    border-radius: 8px;
+    font-weight: 500;
+    gap: 5px;
+  `,
+  medium: css`
+    border-radius: 8px;
+    font-weight: 500;
+    gap: 5px;
+  `,
+  small: css`
+    border-radius: 6px;
+    font-weight: 500;
+    gap: 4px;
+  `,
+  xsmall: css`
+    border-radius: 4px;
+    font-weight: 500;
+    gap: 4px;
+  `,
+};
+
+export const defaultGapMap: Record<ButtonSize, string> = {
+  xlarge: '6px',
+  large: '6px',
+  medium: '5px',
+  small: '4px',
+  xsmall: '4px',
+};

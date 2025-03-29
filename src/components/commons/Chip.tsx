@@ -1,4 +1,9 @@
-import { chipColorStyles, chipSizeStyles } from '@constants/chipStyles';
+import {
+  chipColorStyles,
+  chipSizeStyles,
+  roleChipStyleMap,
+} from '@constants/chipStyles';
+import { RoleName } from 'apis/user/types';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -20,6 +25,7 @@ interface ChipProps {
   variant?: ChipStyle;
   size?: ChipSize;
   text?: string;
+  role?: RoleName;
 }
 
 const Chip: FC<ChipProps> = (props) => {
@@ -28,9 +34,16 @@ const Chip: FC<ChipProps> = (props) => {
     color = 'primary',
     size = 'small',
     variant = 'fill',
+    role = '',
   } = props;
+
+  const roleStyle = role ? roleChipStyleMap[role] : undefined;
+
+  const resolvedColor = roleStyle?.color ?? color ?? 'primary';
+  const resolvedVariant = roleStyle?.variant ?? variant ?? 'fill';
+
   return (
-    <CustomChip color={color} size={size} variant={variant}>
+    <CustomChip color={resolvedColor} size={size} variant={resolvedVariant}>
       {text}
     </CustomChip>
   );

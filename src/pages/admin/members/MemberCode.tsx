@@ -72,7 +72,7 @@ const MemberCode: FC = () => {
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell as="th">
+                <TableCell as="th" justifyContent="center">
                   <Typography
                     variant="body1Normal"
                     color="label-normal"
@@ -83,7 +83,7 @@ const MemberCode: FC = () => {
                     코드이름
                   </Typography>
                 </TableCell>
-                <TableCell as="th">
+                <TableCell as="th" justifyContent="center">
                   <Typography
                     variant="body1Normal"
                     color="label-normal"
@@ -94,21 +94,25 @@ const MemberCode: FC = () => {
                     코드값
                   </Typography>
                 </TableCell>
-                <TableCell as="th"></TableCell>
+                <TableCell as="th" justifyContent="center" />
               </TableRow>
             </TableHead>
             <TableBody>
               {data?.map((code) => (
                 <TableRow key={code.code}>
-                  <TableCell>
-                    <Chip text={code.role.label} size="large" />
+                  <TableCell justifyContent="center">
+                    <Chip
+                      text={code.role.label}
+                      size="large"
+                      role={code.role.name}
+                    />
                   </TableCell>
-                  <TableCell>
+                  <TableCell justifyContent="center">
                     <Typography variant="body1Normal" color="label-normal">
                       {code.code}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell justifyContent="center">
                     <TextButton
                       onClick={() => onClickToEdit(code.role, code.code)}
                     >

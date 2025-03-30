@@ -13,6 +13,7 @@ import MemberCode from '@pages/admin/members/MemberCode';
 import MemberApplication from '@pages/admin/members/MemberApplication';
 import MemberList from '@pages/admin/members/MemberList';
 import MemberGeneration from '@pages/admin/members/MemberGeneration';
+import NoticeWrite from '@pages/admin/notices/NoticeWrite';
 
 export const RouteSetup = () => {
   return (
@@ -31,7 +32,11 @@ export const RouteSetup = () => {
             <Route path="generation" element={<MemberGeneration />} />
           </Route>
 
-          <Route path="notices" element={<Notice />} />
+          <Route path="notices">
+            <Route index element={<Notice />} />
+            <Route path="write" element={<NoticeWrite />} />{' '}
+          </Route>
+
           <Route path="sessions" element={<Session />} />
 
           <Route path="settings">

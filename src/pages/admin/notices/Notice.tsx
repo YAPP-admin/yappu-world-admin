@@ -13,17 +13,26 @@ import TableRow from '@compnents/table/TableRow';
 import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
 import dayjs from 'dayjs';
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const Notice: FC = () => {
   const { data } = useAllNoticeQuery();
+  const navigate = useNavigate();
+
+  const onClickMoveToWrite = () => {
+    navigate('/admin/notices/write');
+  };
+
   return (
     <>
       <Container>
         <FlexBox justify="space-between" height="fit-content">
           <Typography variant="title2Bold">공지사항</Typography>
-          <SolidButton size="medium">글쓰기</SolidButton>
+          <SolidButton size="medium" onClick={onClickMoveToWrite}>
+            글쓰기
+          </SolidButton>
         </FlexBox>
         <FlexBox direction="column" gap={8}>
           <FlexBox justify="space-between" height="fit-content">

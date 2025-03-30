@@ -1,4 +1,8 @@
 import {
+  IconButtonSize,
+  IconButtonVariant,
+} from '@compnents/Button/IconButton';
+import {
   ButtonSize,
   ButtonVariant,
   ButtonVariantType,
@@ -246,4 +250,82 @@ export const defaultGapMap: Record<ButtonSize, string> = {
   medium: '5px',
   small: '4px',
   xsmall: '4px',
+};
+
+export const iconButtonSizeStyles: Record<
+  IconButtonSize,
+  ReturnType<typeof css>
+> = {
+  normal: css`
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+  `,
+  small: css`
+    padding: 7px;
+    width: 18px;
+    height: 18px;
+  `,
+  custom: css`
+    padding: 6px;
+    width: 16px;
+    height: 16px;
+  `,
+};
+
+export const iconButtonVariantStyles: Record<
+  IconButtonVariant,
+  {
+    default: (size: IconButtonSize) => ReturnType<typeof css>;
+    disabled?: (size: IconButtonSize) => ReturnType<typeof css>;
+  }
+> = {
+  normal: {
+    default: () => css`
+      background: none;
+      width: 24px;
+      height: 24px;
+      border: none;
+      padding: 0;
+    `,
+    disabled: () => css`
+      opacity: 0.43;
+      border: none;
+      padding: 0;
+    `,
+  },
+  background: {
+    default: () => css`
+      padding: 20px;
+      width: 20px;
+      height: 20px;
+      background: rgba(112, 115, 124, 0.08); // #70737C14
+    `,
+    disabled: () => css`
+      background: rgba(112, 115, 124, 0.05); // #70737C0D
+    `,
+  },
+  outlined: {
+    default: (size) => css`
+      background: none;
+      border: 1px solid rgba(112, 115, 124, 0.22);
+      color: #171717;
+      ${iconButtonSizeStyles[size]}
+    `,
+    disabled: () => css`
+      color: rgba(55, 56, 60, 0.16);
+    `,
+  },
+  solid: {
+    default: (size) => css`
+      background: #fa6027;
+      color: #ffffff;
+      border: none;
+      ${iconButtonSizeStyles[size]}
+    `,
+    disabled: () => css`
+      background: rgba(112, 115, 124, 0.08);
+      color: #171717;
+    `,
+  },
 };

@@ -1,8 +1,5 @@
-import Trash from '@assets/Trash';
-import OutlinedButton from '@compnents/Button/OutlinedButton';
 import TextButton from '@compnents/Button/TextButton';
 import Typography from '@compnents/commons/Typography';
-import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
@@ -15,7 +12,6 @@ import { OperationListInfo } from 'apis/operation/types';
 import EditPopup from 'features/setting/components/EditPopup';
 import { FC } from 'react';
 import styled from 'styled-components';
-import theme from 'styles/theme';
 
 const SettingLink: FC = () => {
   const { data } = useOperationQuery();
@@ -51,27 +47,10 @@ const SettingLink: FC = () => {
                 {data?.links.length}개
               </Typography>
             </TitleWrapper>
-            <OutlinedButton
-              variant="assistive"
-              size="xsmall"
-              color="status-negative"
-              leftIcon={
-                <Trash
-                  width="16"
-                  height="16"
-                  color={theme.colors.status.nagative}
-                />
-              }
-            >
-              삭제
-            </OutlinedButton>
           </TableHeader>
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell as="th" justifyContent="center">
-                  <Checkbox />
-                </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
                     variant="body1Normal"
@@ -110,9 +89,6 @@ const SettingLink: FC = () => {
             <TableBody>
               {data?.links.map((link) => (
                 <TableRow key={link.id}>
-                  <TableCell justifyContent="center">
-                    <Checkbox />
-                  </TableCell>
                   <TableCell>
                     <Typography variant="body1Normal" color="label-normal">
                       {link.label}

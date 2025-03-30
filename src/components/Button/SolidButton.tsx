@@ -13,6 +13,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   disabled?: boolean;
+  buttonType?: 'button' | 'reset' | 'submit' | undefined;
 }
 
 const SolidButton: FC<Props> = (props) => {
@@ -23,6 +24,7 @@ const SolidButton: FC<Props> = (props) => {
     variant = 'primary',
     size = 'small',
     disabled = false,
+    buttonType = 'button',
     ...rest
   } = props;
 
@@ -34,6 +36,7 @@ const SolidButton: FC<Props> = (props) => {
       $variant={variant}
       $disabled={disabled}
       $size={size}
+      type={buttonType}
     >
       {children}
     </StyledButton>

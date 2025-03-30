@@ -85,6 +85,7 @@ export const chipColorStyles: Record<
 };
 
 import { ChipColor, ChipSize, ChipStyle } from '@compnents/commons/Chip';
+import { RoleName } from 'apis/user/types';
 import { css } from 'styled-components';
 
 export const chipSizeStyles: Record<ChipSize, ReturnType<typeof css>> = {
@@ -104,4 +105,30 @@ export const chipSizeStyles: Record<ChipSize, ReturnType<typeof css>> = {
     line-height: 18px;
     letter-spacing: 0.252px;
   `,
+};
+
+export const roleChipStyleMap: Record<
+  RoleName,
+  { color: ChipColor; variant: ChipStyle }
+> = {
+  ADMIN: {
+    color: 'neutral', // background: Neutral/95, text: Neutral/40
+    variant: 'weak',
+  },
+  STAFF: {
+    color: 'primary', // background: Orange/95, text: Primary/Normal
+    variant: 'weak',
+  },
+  ALUMNI: {
+    color: 'secondary', // background: Secondary/Normal, text: Common/100
+    variant: 'fill',
+  },
+  ACTIVE: {
+    color: 'primary', // background: Primary/Normal, text: Common/100
+    variant: 'fill',
+  },
+  GRADUATE: {
+    color: 'coolNeutral', // 우선 중립 처리
+    variant: 'weak',
+  },
 };

@@ -4,12 +4,17 @@ import theme from 'styles/theme';
 
 interface Props {
   checked: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   size?: 'small' | 'medium';
   onToggle?: () => void;
 }
 
-const Switch: FC<Props> = ({ checked, disabled, size = 'small', onToggle }) => {
+const Switch: FC<Props> = ({
+  checked,
+  disabled = false,
+  size = 'small',
+  onToggle,
+}) => {
   return (
     <SwitchContainer onClick={onToggle}>
       <ThumbWrapper $checked={checked} $disabled={disabled} $size={size}>

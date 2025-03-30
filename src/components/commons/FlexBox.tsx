@@ -36,7 +36,7 @@ const FlexBox: FC<FlexBoxProps> = ({
   wrap = 'nowrap',
   flex,
   width,
-  height,
+  height = 'fit-content',
   fullWidth,
   fullHeight,
   padding,

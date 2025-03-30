@@ -17,7 +17,7 @@ const sampleAllNotice: PaginatedApiResponse<NoticeRes> = {
         createdAt: '2025-03-30T13:29:31.217Z',
         writer: {
           userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-          name: 'string',
+          name: '홍길동',
         },
         noticeType: 'ALL',
       },
@@ -27,7 +27,7 @@ const sampleAllNotice: PaginatedApiResponse<NoticeRes> = {
         createdAt: '2025-03-30T13:29:31.217Z',
         writer: {
           userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-          name: 'string',
+          name: '김현정',
         },
         noticeType: 'SESSION',
       },
@@ -37,12 +37,12 @@ const sampleAllNotice: PaginatedApiResponse<NoticeRes> = {
         createdAt: '2025-03-30T13:29:31.217Z',
         writer: {
           userId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-          name: 'string',
+          name: '김백설',
         },
         noticeType: 'OPERATION',
       },
     ],
-    totalCount: 0,
+    totalCount: 3,
     totalPage: 0,
     page: 0,
     size: 0,

@@ -1,21 +1,16 @@
 import { FC } from 'react';
 
 interface Props {
-  width?: string;
-  height?: string;
+  size?: string;
   color?: string;
 }
 
-const Trash: FC<Props> = ({
-  width = '24',
-  height = '24',
-  color = '#171719',
-}) => {
+const Trash: FC<Props> = ({ size = '24', color = '#171719' }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={width}
-      height={height}
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
     >

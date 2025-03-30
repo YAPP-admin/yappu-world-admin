@@ -1,8 +1,9 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import SolidButton from '@compnents/Button/SolidButton';
 import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
-import { FC } from 'react';
-import styled from 'styled-components';
 
 interface Props {
   title: string;
@@ -18,11 +19,11 @@ const CompletePopup: FC<Props> = (props) => {
       <Container>
         <Wrapper>
           <Typography variant="headline1Bold">{title}</Typography>
-          <Typography variant="label1Reading" color="label-neutral">
+          <Typography color="label-neutral" variant="label1Reading">
             {comment}
           </Typography>
         </Wrapper>
-        <SolidButton onClick={onClose} variant="secondary" size="xlarge">
+        <SolidButton size="xlarge" variant="secondary" onClick={onClose}>
           {buttonText}
         </SolidButton>
       </Container>

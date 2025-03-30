@@ -1,7 +1,8 @@
 import { FC, InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
-import theme from 'styles/theme';
+
 import ShapeIcon from '@assets/Shpae';
+import theme from 'styles/theme';
 
 type CheckboxSize = 'normal' | 'small';
 type CheckboxState = 'unchecked' | 'checked' | 'partial';
@@ -20,12 +21,12 @@ const Checkbox: FC<Props> = (props) => {
     ...rest
   } = props;
   return (
-    <Wrapper $checkboxSize={checkboxSize} $state={state} $disabled={disabled}>
-      <HiddenInput type="checkbox" disabled={disabled} {...rest} />
+    <Wrapper $checkboxSize={checkboxSize} $disabled={disabled} $state={state}>
+      <HiddenInput disabled={disabled} type="checkbox" {...rest} />
       <StyledCheckbox
         $checkboxSize={checkboxSize}
-        $state={state}
         $disabled={disabled}
+        $state={state}
       >
         {state === 'checked' && <ShapeIcon />}
       </StyledCheckbox>
@@ -68,7 +69,7 @@ const StyledCheckbox = styled.div<{
   flex-shrink: 0;
 
   border: 1.5px solid
-    ${({ $state, $disabled }) =>
+    ${({ $state }) =>
       $state === 'checked'
         ? theme.colors.primary.normal
         : theme.colors.lineNormal.normal};

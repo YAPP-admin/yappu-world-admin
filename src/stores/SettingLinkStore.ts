@@ -1,6 +1,6 @@
-import { OperationListInfo } from 'apis/operation/types';
-import { UserDetailRes } from 'apis/user/types';
 import { create } from 'zustand';
+
+import { OperationListInfo } from 'apis/operation/types';
 
 interface SettingLink {
   selectedLinkInfo: OperationListInfo;

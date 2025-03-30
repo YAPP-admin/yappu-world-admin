@@ -1,7 +1,9 @@
-import DropDown from '@assets/DropDown';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+
+import DropDown from '@assets/DropDown';
 import theme from 'styles/theme';
+
 import Typography from './Typography';
 
 interface Props<T> {
@@ -40,14 +42,11 @@ const Select = <T,>({
   }, []);
 
   return (
-    <Container width={width} ref={selectRef}>
+    <Container ref={selectRef} width={width}>
       <SelectButton type="button" onClick={openOptionList}>
-        <Typography
-          children={
-            getLabel ? getLabel(selectedValue) : (selectedValue as string)
-          }
-          variant="body1Normal"
-        />
+        <Typography variant="body1Normal">
+          {getLabel ? getLabel(selectedValue) : (selectedValue as string)}
+        </Typography>
         <DropDown />
       </SelectButton>
       {isClick && (

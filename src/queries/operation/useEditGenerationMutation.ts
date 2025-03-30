@@ -1,9 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { ErrorResponse } from 'react-router-dom';
+
 import { ApiResponse } from 'apis/common/types';
 import { patchGenerationActive } from 'apis/operation/OperationApis';
 import { EditGenerationReq, EditGenerationRes } from 'apis/operation/types';
-import { AxiosError, AxiosResponse } from 'axios';
-import { ErrorResponse } from 'react-router-dom';
 
 export const useEditGenerationMutation = () => {
   return useMutation<

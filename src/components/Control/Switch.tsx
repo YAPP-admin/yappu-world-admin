@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import styled, { css } from 'styled-components';
+
 import theme from 'styles/theme';
 
 interface Props {
@@ -18,7 +19,7 @@ const Switch: FC<Props> = ({
   return (
     <SwitchContainer onClick={onToggle}>
       <ThumbWrapper $checked={checked} $disabled={disabled} $size={size}>
-        <Thumb $size={size} $checked={checked} />
+        <Thumb $checked={checked} $size={size} />
       </ThumbWrapper>
     </SwitchContainer>
   );

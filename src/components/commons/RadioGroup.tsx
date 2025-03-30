@@ -1,5 +1,5 @@
 import { Controller, useFormContext } from 'react-hook-form';
-import { forwardRef } from 'react';
+
 import Radio from './Radio';
 
 interface RadioGroupProps {
@@ -13,15 +13,15 @@ const RadioGroup = ({ name, options }: RadioGroupProps) => {
   return (
     <div id="radio-wrapper">
       <Controller
-        name={name}
         control={control}
+        name={name}
         render={({ field }) => (
           <>
             {options.map((option) => (
               <Radio
                 key={option}
-                value={option}
                 checked={field.value === option}
+                value={option}
                 onChange={() => field.onChange(option)}
               />
             ))}

@@ -1,23 +1,24 @@
-import Button from '@compnents/commons/Button';
+import { useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
+
+import Button from '@compnents/commons/Button';
+import ConfirmPopup from '@compnents/popup/ConfirmPopup';
+import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
+import { useMemberStore } from '@stores/memberStore';
+import { UserDetailReq, UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
+
 import MemberActivityForm from './MemberActivityForm';
 import MemberBasicForm from './MemberBasicForm';
-import ConfirmPopup from '@compnents/popup/ConfirmPopup';
-import { FormProvider, useForm } from 'react-hook-form';
-import { UserDetailReq, UserDetailRes } from 'apis/user/types';
-import { useMemberStore } from '@stores/memberStore';
-import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
-  isEdit: boolean;
   cancelToEdit: () => void;
 }
 
 const MemberForm: FC<Props> = (props) => {
-  const { isEdit, cancelToEdit } = props;
+  const { cancelToEdit } = props;
   const [openConfirm, setOpenConfirm] = useState(false);
   const { userDetailInfo } = useMemberStore();
   const [formData, setFormData] = useState<UserDetailReq | null>(null);
@@ -65,23 +66,23 @@ const MemberForm: FC<Props> = (props) => {
         </Wrapper>
         <ButtonWrapper>
           <Button
+            buttonType="button"
             text="취소"
             variant="outlined"
             variantType="assistive"
             onClick={cancelToEdit}
-            buttonType="button"
           />
-          <Button text="저장" buttonType="submit" />
+          <Button buttonType="submit" text="저장" />
         </ButtonWrapper>
       </Container>
       {openConfirm && (
         <ConfirmPopup
-          title="회원 정보 저장"
+          cancelActionLabel="취소"
           comment="수정한 내용으로 회원 정보를 저장할까요?"
           confirmActionLabel="저장"
-          cancelActionLabel="취소"
-          onConfirmAction={putUserDetail}
+          title="회원 정보 저장"
           onCancelAction={cancelToSave}
+          onConfirmAction={putUserDetail}
         />
       )}
     </FormProvider>

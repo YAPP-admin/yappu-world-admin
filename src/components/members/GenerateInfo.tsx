@@ -1,6 +1,7 @@
-import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import Typography from '@compnents/commons/Typography';
 import theme from 'styles/theme';
 
 interface Props {
@@ -10,24 +11,26 @@ interface Props {
 }
 
 const GenerateInfo: FC<Props> = (props) => {
-  const { generation, role, isActive } = props;
+  const { generation, role } = props;
 
   return (
     <Container>
       <Typography
-        children={`${generation}기`}
         variant="body1Normal"
         style={{
           color: theme.colors.label.normal,
         }}
-      />
+      >
+        {generation}기
+      </Typography>
       <Typography
-        children={role}
         variant="body1Normal"
         style={{
           color: theme.colors.label.normal,
         }}
-      />
+      >
+        {role}
+      </Typography>
     </Container>
   );
 };

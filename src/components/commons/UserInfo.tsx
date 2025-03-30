@@ -1,6 +1,8 @@
-import ProfileImg from '@assets/ProfileImg';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import ProfileImg from '@assets/ProfileImg';
+
 import Chip from './Chip';
 
 interface UserInfoProps {
@@ -15,7 +17,7 @@ const UserInfo: FC<UserInfoProps> = (props) => {
     <Container>
       <ProfileImg />
       <Info>
-        <Chip text={authority} color="primary" size="small" variant="fill" />
+        <Chip color="primary" size="small" text={authority} variant="fill" />
         <span className="name">{userName}</span>
       </Info>
     </Container>

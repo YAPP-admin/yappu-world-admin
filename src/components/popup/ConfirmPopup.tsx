@@ -1,9 +1,11 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import Typography from '@compnents/commons/Typography';
-import { FC } from 'react';
-import styled from 'styled-components';
 import theme from 'styles/theme';
+
 import PopupContainer from './PopupContainer';
 
 interface Props {
@@ -30,25 +32,24 @@ const ConfirmPopup: FC<Props> = (props) => {
       <Container>
         <Contents>
           <Typography
-            children={title}
-            variant="heading2Bold"
             style={{ color: theme.colors.label.normal }}
-          />
-          <Typography
-            children={comment}
-            variant="label1Normal"
-            color="label-neutral"
-          />
+            variant="heading2Bold"
+          >
+            {title}
+          </Typography>
+          <Typography color="label-neutral" variant="label1Normal">
+            {comment}
+          </Typography>
         </Contents>
         <ButtonWrapper>
           <OutlinedButton
-            onClick={onCancelAction}
-            variant="secondary"
             size="xlarge"
+            variant="secondary"
+            onClick={onCancelAction}
           >
             {cancelActionLabel}
           </OutlinedButton>
-          <SolidButton onClick={onConfirmAction} size="xlarge">
+          <SolidButton size="xlarge" onClick={onConfirmAction}>
             {confirmActionLabel}
           </SolidButton>
         </ButtonWrapper>

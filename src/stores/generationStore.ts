@@ -1,5 +1,6 @@
-import { GenerationListRes } from 'apis/operation/types';
 import { create } from 'zustand';
+
+import { GenerationListRes } from 'apis/operation/types';
 
 interface GenerationState {
   selectedGeneration: GenerationListRes | null;

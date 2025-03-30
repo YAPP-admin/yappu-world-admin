@@ -10,11 +10,11 @@ const NormalBlank: FC<Props> = (props) => {
   const { width = '24', height = 24, active = false } = props;
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
+      fill="none"
       height={height}
       viewBox="0 0 24 24"
-      fill="none"
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <path
         d="M9.34444 3.24961C9.34444 2.75255 9.74738 2.34961 10.2444 2.34961H13.7418C14.2389 2.34961 14.6418 2.75255 14.6418 3.24961C14.6418 3.74667 14.2389 4.14961 13.7418 4.14961H10.2444C9.74738 4.14961 9.34444 3.74667 9.34444 3.24961Z"

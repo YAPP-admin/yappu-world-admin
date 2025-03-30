@@ -1,5 +1,6 @@
-import { UserDetailRes, UserRole } from 'apis/user/types';
 import { create } from 'zustand';
+
+import { UserRole } from 'apis/user/types';
 
 interface MemberCodeState {
   code: string;

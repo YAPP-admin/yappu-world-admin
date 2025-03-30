@@ -6,7 +6,9 @@ import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import Switch from '@compnents/Control/Switch';
 import PopupContainer from '@compnents/popup/PopupContainer';
-import { GenerationRes } from '@pages/admin/members/MemberGeneration';
+import { useAddGenerationMutation } from '@queries/operation/useAddGenerationMutation';
+import { useQueryClient } from '@tanstack/react-query';
+import { AddGenerationReq } from 'apis/operation/types';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -18,7 +20,7 @@ interface Props {
 
 const AddGenerationPopup: FC<Props> = (props) => {
   const { onClose, handleAddCompletePopupOpen } = props;
-  const method = useForm<GenerationRes>({
+  const method = useForm<AddGenerationReq>({
     defaultValues: {
       generation: null,
       startDate: null,
@@ -26,9 +28,13 @@ const AddGenerationPopup: FC<Props> = (props) => {
       isActive: false,
     },
   });
+  const queryClient = useQueryClient();
+  const { mutate } = useAddGenerationMutation();
 
-  const onSubmit = (data: GenerationRes) => {
+  const onSubmit = (data: AddGenerationReq) => {
     console.log('onSubmit data :', data);
+    mutate(data);
+    queryClient.invalidateQueries({ queryKey: ['generation-list'] });
     onClose();
     handleAddCompletePopupOpen(true);
   };

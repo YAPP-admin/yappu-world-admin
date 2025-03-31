@@ -45,3 +45,7 @@ export interface NoticeReq {
 export interface EditNoticeReq extends BaseNoticeReq {
   id: string;
 }
+
+export interface DeleteNoticeReq {
+  id: string;
+}

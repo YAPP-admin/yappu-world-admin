@@ -11,14 +11,21 @@ import { FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ReactMarkdown from 'react-markdown';
+import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
 
 const NoticeDetail: FC = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { data } = useNoticeDetailQuery(Number(params.id ?? 0));
+  const { mutate } = useDeleteNoticeMutation();
 
   const onClickBack = () => {
     navigate('/admin/notices');
+  };
+
+  const onClickToDelete = () => {
+    if (!params.id) return;
+    mutate({ id: params.id });
   };
 
   return (
@@ -43,7 +50,11 @@ const NoticeDetail: FC = () => {
               <OutlinedButton size="xsmall" variant="assistive">
                 수정
               </OutlinedButton>
-              <OutlinedButton size="xsmall" variant="assistive">
+              <OutlinedButton
+                size="xsmall"
+                variant="assistive"
+                onClick={onClickToDelete}
+              >
                 삭제
               </OutlinedButton>
             </FlexBox>

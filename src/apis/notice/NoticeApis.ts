@@ -2,6 +2,7 @@ import axiosInstance from 'apis/common/axiosInstance';
 import { ApiResponse, PaginatedApiResponse } from 'apis/common/types';
 import {
   BaseNoticeReq,
+  DeleteNoticeReq,
   EditNoticeReq,
   NoticeDetailRes,
   NoticeRes,
@@ -92,6 +93,6 @@ export const putNotice = (data: EditNoticeReq): Promise<void> => {
   return axiosInstance.put('/admin/v1/notices', data);
 };
 
-export const deleteNotice = (): Promise<void> => {
-  return axiosInstance.delete('/admin/v1/notices');
+export const deleteNotice = (data: DeleteNoticeReq): Promise<void> => {
+  return axiosInstance.delete('/admin/v1/notices', { data });
 };

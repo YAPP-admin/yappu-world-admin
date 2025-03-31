@@ -5,5 +5,10 @@ export const useNoticeDetailQuery = (noticeId: number) => {
   return useQuery({
     queryKey: ['notice-detail', noticeId],
     queryFn: () => getNoticeDetail(noticeId),
+    select: (data) => {
+      return data.data;
+    },
+    enabled: !!noticeId,
+    retry: false,
   });
 };

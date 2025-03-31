@@ -28,4 +28,5 @@ export default ButtonBase;
 
 const StyledButton = styled.button`
   cursor: pointer;
+  white-space: nowrap;
 `;

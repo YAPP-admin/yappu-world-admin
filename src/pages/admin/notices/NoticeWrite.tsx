@@ -8,13 +8,13 @@ import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
+import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
 import { BaseNoticeReq } from 'apis/notice/types';
 import { FC } from 'react';
 import { Control, Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import removeMarkdown from 'remove-markdown';
-import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
+import styled from 'styled-components';
 
 const NoticeWrite: FC = () => {
   const navigate = useNavigate();
@@ -94,8 +94,16 @@ const NoticeWrite: FC = () => {
         </GridBox>
       </FlexBox>
       <FlexBox gap={16} justify="flex-end">
-        <OutlinedButton variant="assistive">취소</OutlinedButton>
-        <SolidButton type="submit">저장</SolidButton>
+        <OutlinedButton variant="assistive" size="large">
+          취소
+        </OutlinedButton>
+        <SolidButton
+          type="submit"
+          size="large"
+          disabled={!(watch('type') && watch('title') && watch('content'))}
+        >
+          저장
+        </SolidButton>
       </FlexBox>
     </Container>
   );

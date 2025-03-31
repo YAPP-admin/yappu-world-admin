@@ -1,11 +1,15 @@
 import { FC } from 'react';
 
-const DropDown: FC = () => {
+interface Props {
+  size?: string;
+}
+
+const DropDown: FC<Props> = ({ size = '24' }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
     >

@@ -1,20 +1,18 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import Login from '@pages/login/Login.tsx';
-import AdminLayer from '@pages/admin/AdminLayer.tsx';
-import Member from '@pages/admin/members/Member.tsx';
-import Notice from '@pages/admin/notices/Notice.tsx';
-import Session from '@pages/admin/sessions/Session.tsx';
-import Setting from '@pages/admin/settings/Setting.tsx';
 import Layout from '@compnents/commons/Layout';
-import SettingUpdate from '@pages/admin/settings/SettingUpdate';
-import SettingLink from '@pages/admin/settings/SettingLink';
-import MemberCode from '@pages/admin/members/MemberCode';
+import AdminLayer from '@pages/admin/AdminLayer.tsx';
 import MemberApplication from '@pages/admin/members/MemberApplication';
-import MemberList from '@pages/admin/members/MemberList';
+import MemberCode from '@pages/admin/members/MemberCode';
 import MemberGeneration from '@pages/admin/members/MemberGeneration';
+import MemberList from '@pages/admin/members/MemberList';
+import NoticeList from '@pages/admin/notices/NoticeList';
 import NoticeWrite from '@pages/admin/notices/NoticeWrite';
-import NoticeDetail from '@pages/admin/notices/NoticeDetail';
+import Session from '@pages/admin/sessions/Session.tsx';
+import SettingLink from '@pages/admin/settings/SettingLink';
+import SettingUpdate from '@pages/admin/settings/SettingUpdate';
+import Login from '@pages/login/Login.tsx';
+import Notice from '@pages/admin/notices/Notice';
 
 export const RouteSetup = () => {
   return (
@@ -34,9 +32,9 @@ export const RouteSetup = () => {
           </Route>
 
           <Route path="notices">
-            <Route index element={<Notice />} />
+            <Route index element={<NoticeList />} />
             <Route path="write" element={<NoticeWrite />} />
-            <Route path="detail/:id" element={<NoticeDetail />} />
+            <Route path="detail/:id" element={<Notice />} />
           </Route>
 
           <Route path="sessions" element={<Session />} />

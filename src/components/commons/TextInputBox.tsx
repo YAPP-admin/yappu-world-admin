@@ -35,11 +35,11 @@ const TextInputBox = forwardRef<HTMLTextAreaElement, Props>(
         {title && <Typography variant="label1Normal">{title}</Typography>}
         <TextAreaWrapper>
           <textarea ref={ref} {...rest} />
-          {letterCount && (
+          {/* {letterCount && (
             <CountWrapper>
               {currentLength} / {maxCount}
             </CountWrapper>
-          )}
+          )} */}
         </TextAreaWrapper>
       </Container>
     );

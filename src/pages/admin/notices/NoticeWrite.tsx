@@ -10,7 +10,7 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { BaseNoticeReq } from 'apis/notice/types';
 import { FC } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Control, Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import removeMarkdown from 'remove-markdown';
@@ -41,8 +41,6 @@ const NoticeWrite: FC = () => {
     mutate(newData);
     navigate('/admin/notices');
   };
-
-  const contentValue = useWatch({ name: 'content', control });
 
   return (
     <Container
@@ -75,27 +73,29 @@ const NoticeWrite: FC = () => {
         <GridBox columnGap={16} columns={'80px 1fr'} fullWidth>
           <Typography variant="headline1Bold">제목</Typography>
           <TextInput
+            {...register('title')}
             placeholder="제목을 입력하세요"
             maxLength={50}
-            {...register('title')}
           />
         </GridBox>
         <GridBox columnGap={16} columns={'80px 1fr'} fullWidth height={'400px'}>
           <Typography variant="headline1Bold">내용</Typography>
-          <TextInputBox
-            placeholder="내용을 입력해주세요"
-            height={400}
-            letterCount
-            maxLength={1000}
-            maxCount={1000}
-            value={contentValue}
-            {...register('content')}
-          />
+          <InputWrapper>
+            <TextInputBox
+              {...register('content')}
+              placeholder="내용을 입력해주세요"
+              height={400}
+              letterCount
+              maxLength={1000}
+              maxCount={1000}
+            />
+            <Counter control={control} maxCount={1000} />
+          </InputWrapper>
         </GridBox>
       </FlexBox>
       <FlexBox gap={16} justify="flex-end">
         <OutlinedButton variant="assistive">취소</OutlinedButton>
-        <SolidButton buttonType="submit">저장</SolidButton>
+        <SolidButton type="submit">저장</SolidButton>
       </FlexBox>
     </Container>
   );
@@ -111,4 +111,27 @@ const Container = styled.form`
   flex-direction: column;
   gap: 40px;
   flex-shrink: 0;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+`;
+
+const Counter: FC<{
+  maxCount: number;
+  control: Control<BaseNoticeReq>;
+}> = ({ control, maxCount }) => {
+  const content = useWatch({ control, name: 'content' });
+  return (
+    <CounterWrapper>
+      {content.length} / {maxCount}
+    </CounterWrapper>
+  );
+};
+
+const CounterWrapper = styled.div`
+  position: absolute;
+  z-index: 1;
+  bottom: 4px;
+  right: 4px;
 `;

@@ -14,6 +14,7 @@ import MemberApplication from '@pages/admin/members/MemberApplication';
 import MemberList from '@pages/admin/members/MemberList';
 import MemberGeneration from '@pages/admin/members/MemberGeneration';
 import NoticeWrite from '@pages/admin/notices/NoticeWrite';
+import NoticeDetail from '@pages/admin/notices/NoticeDetail';
 
 export const RouteSetup = () => {
   return (
@@ -34,7 +35,8 @@ export const RouteSetup = () => {
 
           <Route path="notices">
             <Route index element={<Notice />} />
-            <Route path="write" element={<NoticeWrite />} />{' '}
+            <Route path="write" element={<NoticeWrite />} />
+            <Route path="detail/:id" element={<NoticeDetail />} />
           </Route>
 
           <Route path="sessions" element={<Session />} />

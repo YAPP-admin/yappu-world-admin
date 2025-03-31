@@ -25,6 +25,10 @@ const Notice: FC = () => {
     navigate('/admin/notices/write');
   };
 
+  const onClickRow = (id: string) => {
+    navigate(`/admin/notices/detail/${id}`);
+  };
+
   return (
     <>
       <Container>
@@ -125,7 +129,10 @@ const Notice: FC = () => {
             </TableHead>
             <TableBody>
               {data?.data.map((notice) => (
-                <TableRow key={notice.noticeId}>
+                <TableRow
+                  key={notice.noticeId}
+                  onClick={() => onClickRow(notice.noticeId)}
+                >
                   <TableCell justifyContent="center">
                     <Checkbox />
                   </TableCell>

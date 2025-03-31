@@ -10,7 +10,7 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { BaseNoticeReq } from 'apis/notice/types';
 import { FC } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import removeMarkdown from 'remove-markdown';
@@ -18,7 +18,7 @@ import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
 
 const NoticeWrite: FC = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, control } = useForm<BaseNoticeReq>({
+  const { register, handleSubmit, control, watch } = useForm<BaseNoticeReq>({
     defaultValues: {
       type: undefined,
       title: '',
@@ -41,6 +41,8 @@ const NoticeWrite: FC = () => {
     mutate(newData);
     navigate('/admin/notices');
   };
+
+  const contentValue = useWatch({ name: 'content', control });
 
   return (
     <Container
@@ -86,6 +88,7 @@ const NoticeWrite: FC = () => {
             letterCount
             maxLength={1000}
             maxCount={1000}
+            value={contentValue}
             {...register('content')}
           />
         </GridBox>

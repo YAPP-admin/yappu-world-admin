@@ -44,7 +44,7 @@ const EditPopup: FC<Props> = (props) => {
           <OutlinedButton onClick={onClose} variant="secondary" size="xlarge">
             취소
           </OutlinedButton>
-          <SolidButton size="xlarge" buttonType="submit">
+          <SolidButton size="xlarge" type="submit">
             저장
           </SolidButton>
         </ButtonWrapper>

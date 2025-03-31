@@ -83,7 +83,7 @@ const AddGenerationPopup: FC<Props> = (props) => {
             </OutlinedButton>
             <SolidButton
               size="xlarge"
-              buttonType="submit"
+              type="submit"
               disabled={
                 !(
                   method.watch('generation') &&

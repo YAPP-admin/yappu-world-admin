@@ -94,14 +94,92 @@ export const patchUserRole = (data: EidtUserRoleReq) => {
   return axiosInstance.post<ApiResponse<void>>('/admin/v1/users/role', data);
 };
 
+const all: PaginatedApiResponse<ApplicationListRes> = {
+  data: {
+    data: [
+      {
+        applicationId: '1',
+        name: '홍길동',
+        email: 'email@email.com',
+        applicationDate: '2025-03-04',
+        activityUnit: {
+          generation: 25,
+          position: {
+            name: 'PM',
+            label: 'PM',
+          },
+        },
+        status: '대기',
+      },
+      {
+        applicationId: '2',
+        name: '김현정',
+        email: 'email@email.com',
+        applicationDate: '2025-03-04',
+        activityUnit: {
+          generation: 25,
+          position: {
+            name: 'PM',
+            label: 'PM',
+          },
+        },
+        status: '승인',
+      },
+      {
+        applicationId: '3',
+        name: '김해나',
+        email: 'email@email.com',
+        applicationDate: '2025-03-04',
+        activityUnit: {
+          generation: 25,
+          position: {
+            name: 'PM',
+            label: 'PM',
+          },
+        },
+        status: '거절',
+      },
+    ],
+    totalCount: 3,
+    page: 1,
+    size: 1,
+  },
+  isSuccess: true,
+};
+
 export const getApplicationList = ({ page, size }: PaginatedReq) => {
-  return axiosInstance.get<PaginatedApiResponse<ApplicationListRes>>(
-    `/admin/v1/auth/applications?page=${page}&size=${size}`,
-  );
+  // return axiosInstance.get<PaginatedApiResponse<ApplicationListRes>>(
+  //   `/admin/v1/auth/applications?page=${page}&size=${size}`,
+  // );
+  return all;
+};
+
+const detail: ApiResponse<ApplicationDetailRes> = {
+  data: {
+    details: {
+      name: '홍길동',
+      email: 'email@email.com',
+      applicationDate: '2025-03-04',
+      activityUnits: [
+        {
+          generation: 1,
+          position: {
+            name: 'PM',
+            label: 'PM',
+          },
+        },
+      ],
+    },
+    status: '대기',
+    rejectReason: null,
+    assignedRole: null,
+  },
+  isSuccess: true,
 };
 
 export const getApplicationDetail = (applicationId: string) => {
-  return axiosInstance.get<ApiResponse<ApplicationDetailRes>>(
-    `/admin/v1/auth/applications/${applicationId}`,
-  );
+  // return axiosInstance.get<ApiResponse<ApplicationDetailRes>>(
+  //   `/admin/v1/auth/applications/${applicationId}`,
+  // );
+  return detail;
 };

@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+
 import { patchMemberCode } from 'apis/auth/AuthApis';
 import { MemberCodeReq } from 'apis/auth/types';
 import { ApiResponse, ErrorResponse } from 'apis/common/types';
-import { AxiosError, AxiosResponse } from 'axios';
 
 export const useMemberCodeMutation = () => {
   return useMutation<

@@ -1,13 +1,13 @@
-import Radio from '@compnents/commons/Radio';
+import { FC } from 'react';
+import { useFormContext } from 'react-hook-form';
+import styled from 'styled-components';
+
 import RadioGroup from '@compnents/commons/RadioGroup';
 import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { roleList } from '@constants/role';
 import { RoleLabel, UserDetailRes } from 'apis/user/types';
-import { FC } from 'react';
-import { useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const MemberBasicForm: FC = () => {
@@ -15,76 +15,83 @@ const MemberBasicForm: FC = () => {
 
   return (
     <Container>
-      <Typography children="기본 정보" variant="heading2Bold" />
+      <Typography variant="heading2Bold">기본정보</Typography>
       <div className="wrapper">
         <Wrapper>
           <Typography
-            children="이름"
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            이름
+          </Typography>
           <TextInput
-            inputSize="medium"
             borderColor={theme.colors.lineNormal.strong}
+            inputSize="medium"
             {...register('name')}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            children="이메일"
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            이메일
+          </Typography>
           <TextInput
-            inputSize="medium"
             borderColor={theme.colors.lineNormal.strong}
+            inputSize="medium"
             {...register('email')}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            children="전화번호"
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            전화번호
+          </Typography>
           <TextInput
-            inputSize="medium"
             borderColor={theme.colors.lineNormal.strong}
+            inputSize="medium"
             {...register('phoneNumber')}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            children="성별"
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            성별
+          </Typography>
           <RadioGroup name="gender" options={['남', '여']} />
         </Wrapper>
         <Wrapper>
           <Typography
-            children="권한"
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            권한
+          </Typography>
           <Select
-            width="120px"
             optionList={roleList}
             selectedValue={watch('role')}
+            width="120px"
             onChange={(value: RoleLabel) => setValue('role', value)}
           />
         </Wrapper>
         <Wrapper>
           <Typography
-            children="가입일"
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            가입일
+          </Typography>
           <Typography
-            children={watch('joinDate')}
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            {watch('joinDate')}
+          </Typography>
         </Wrapper>
       </div>
     </Container>

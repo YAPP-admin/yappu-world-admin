@@ -1,3 +1,7 @@
+import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import TextInput from '@compnents/commons/TextInput';
@@ -5,9 +9,6 @@ import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { useOperationMutation } from '@queries/operation/useOperationMutation';
 import { OperationListInfo } from 'apis/operation/types';
-import { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
 
 interface Props {
   linkInfo: OperationListInfo;
@@ -32,8 +33,8 @@ const EditPopup: FC<Props> = (props) => {
   return (
     <PopupContainer onClose={onClose}>
       <Container
-        onSubmit={handleSubmit(onSubmit)}
         onClick={(e) => e.stopPropagation()}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Typography variant="headline1Bold">링크 수정</Typography>
         <InputWrapper>
@@ -41,10 +42,10 @@ const EditPopup: FC<Props> = (props) => {
           <TextInput title={'URL'} {...register('value')} />
         </InputWrapper>
         <ButtonWrapper>
-          <OutlinedButton onClick={onClose} variant="secondary" size="xlarge">
+          <OutlinedButton size="xlarge" variant="secondary" onClick={onClose}>
             취소
           </OutlinedButton>
-          <SolidButton size="xlarge" buttonType="submit">
+          <SolidButton buttonType="submit" size="xlarge">
             저장
           </SolidButton>
         </ButtonWrapper>

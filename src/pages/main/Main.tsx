@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+
 import useSampleStore from '@stores/useSampleStore';
 
 const Main: FC = () => {

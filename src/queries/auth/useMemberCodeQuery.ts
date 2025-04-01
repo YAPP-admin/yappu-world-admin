@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getMemberCode } from 'apis/auth/AuthApis';
 
 export const useMemberCodeQuery = () => {

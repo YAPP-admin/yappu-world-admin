@@ -1,8 +1,10 @@
-import Typography from '@compnents/commons/Typography';
-import { UserDetailRes } from 'apis/user/types';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import Typography from '@compnents/commons/Typography';
+import { UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
+
 import GenerateInfo from './GenerateInfo';
 
 interface Props {
@@ -13,25 +15,27 @@ const MemberActivityInfo: FC<Props> = (props) => {
   const { userInfo } = props;
   return (
     <div style={{ width: '286px' }}>
-      <Typography children="활동 정보" variant="heading2Bold" />
+      <Typography variant="heading2Bold">활동 정보</Typography>
       <div className="wrapper">
         <Wrapper width="100px">
           <Typography
-            children="기수"
             variant="body1Normal"
             style={{
               color: theme.colors.label.alternative,
               fontWeight: 600,
             }}
-          />
+          >
+            기수
+          </Typography>
           <Typography
-            children="직군"
             variant="body1Normal"
             style={{
               color: theme.colors.label.alternative,
               fontWeight: 600,
             }}
-          />
+          >
+            직군
+          </Typography>
         </Wrapper>
         {userInfo?.activityUnits?.map((el) => (
           <GenerateInfo

@@ -1,3 +1,6 @@
+import { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+
 import MoreVertical from '@assets/MoreVertical';
 import Plus from '@assets/Plus';
 import IconButton from '@compnents/Button/IconButton';
@@ -16,8 +19,6 @@ import { useGenerationStore } from '@stores/generationStore';
 import { EditGenerationReq, GenerationListRes } from 'apis/operation/types';
 import AddGenerationPopup from 'features/member/generation/AddGenerationPopup';
 import StatusChangeMenu from 'features/member/generation/StatusChangeMenu';
-import { FC, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const MemberGeneration: FC = () => {
@@ -99,8 +100,8 @@ const MemberGeneration: FC = () => {
             <TitleWrapper>
               <Typography variant="headline1Bold">기수 리스트</Typography>
               <Typography
-                variant="body1Normal"
                 color="label-alternative"
+                variant="body1Normal"
                 style={{
                   fontWeight: 600,
                 }}
@@ -121,8 +122,8 @@ const MemberGeneration: FC = () => {
               <TableRow>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -132,8 +133,8 @@ const MemberGeneration: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -143,8 +144,8 @@ const MemberGeneration: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -158,12 +159,12 @@ const MemberGeneration: FC = () => {
               {data?.data?.map((generation) => (
                 <TableRow key={generation.generation}>
                   <TableCell justifyContent="center">
-                    <Typography variant="body1Normal" color="label-normal">
+                    <Typography color="label-normal" variant="body1Normal">
                       {generation.generation}기
                     </Typography>
                   </TableCell>
                   <TableCell justifyContent="center">
-                    <Typography variant="body1Normal" color="label-normal">
+                    <Typography color="label-normal" variant="body1Normal">
                       {generation.startDate} - {generation.endDate}
                     </Typography>
                   </TableCell>
@@ -171,9 +172,9 @@ const MemberGeneration: FC = () => {
                     <StatusWrapper>
                       <div />
                       <Chip
-                        text={generation.isActive ? '활동중' : '종료'}
-                        size="large"
                         color={generation.isActive ? 'primary' : 'neutral'}
+                        size="large"
+                        text={generation.isActive ? '활동중' : '종료'}
                         variant={generation.isActive ? 'fill' : 'weak'}
                       />
                       <IconButton
@@ -194,25 +195,25 @@ const MemberGeneration: FC = () => {
       </Container>
       {isAddCompletePopupOpen && (
         <CompletePopup
-          title="추가 완료"
-          comment="신규 기수 추가되었습니다."
           buttonText="확인"
+          comment="신규 기수 추가되었습니다."
+          title="추가 완료"
           onClose={() => handleAddCompletePopupOpen(false)}
         />
       )}
       {isAddPopupOpen && (
         <AddGenerationPopup
-          onClose={() => handleAddPopupOpen(false)}
           handleAddCompletePopupOpen={handleAddCompletePopupOpen}
+          onClose={() => handleAddPopupOpen(false)}
         />
       )}
       {menuPos && (
         <StatusChangeMenu
           ref={menuRef}
           active={selectedGeneration?.isActive ?? false}
-          onToggle={patchGeneration}
-          top={menuPos.top}
           left={menuPos.left}
+          top={menuPos.top}
+          onToggle={patchGeneration}
         />
       )}
     </>

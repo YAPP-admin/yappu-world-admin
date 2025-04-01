@@ -1,11 +1,13 @@
 import { FC } from 'react';
-import styled from 'styled-components';
-import Button from './Button';
-import theme from 'styles/theme';
-import Logo from './Logo';
-import UserInfo from './UserInfo';
-import SideNavList from './SideNavList';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+
+import theme from 'styles/theme';
+
+import Button from './Button';
+import Logo from './Logo';
+import SideNavList from './SideNavList';
+import UserInfo from './UserInfo';
 
 const SideNav: FC = () => {
   const { pathname } = useLocation();
@@ -17,11 +19,11 @@ const SideNav: FC = () => {
         <SideNavList pathname={pathname} />
       </Wrapper>
       <Button
+        buttonSize="medium"
+        style={{ width: '100%' }}
         text="로그아웃"
         variant="contained"
         variantType="primary"
-        buttonSize="medium"
-        style={{ width: '100%' }}
       ></Button>
     </Container>
   );

@@ -1,10 +1,12 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import SolidButton from '@compnents/Button/SolidButton';
 import Chip from '@compnents/commons/Chip';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { UserRole } from 'apis/user/types';
-import { FC } from 'react';
-import styled from 'styled-components';
+
 import CodeEditConfirmPopup from './CodeEditConfirmPopup';
 import PopupContainer from './PopupContainer';
 
@@ -33,15 +35,15 @@ const CodeEditPopup: FC<Props> = (props) => {
     <>
       <PopupContainer onClose={handleEditPopup}>
         <Container onClick={(e) => e.stopPropagation()}>
-          <Typography variant="headline1Bold" color="label-normal">
+          <Typography color="label-normal" variant="headline1Bold">
             코드값 수정
           </Typography>
-          <Chip size="large" variant="weak" text={role?.label} />
+          <Chip size="large" text={role?.label} variant="weak" />
           <TextInput value={code} onChange={(e) => onChange(e.target.value)} />
           <ButtonWrapper>
             <SolidButton
-              variant="secondary"
               size="xlarge"
+              variant="secondary"
               onClick={() => onChange('')}
             >
               초기화

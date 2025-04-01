@@ -1,7 +1,8 @@
-import { buttonSizeStyles } from '@constants/buttonStyles';
-import { getButtonVariantStyle } from '@utils/getButtonVariantStyle';
 import React, { FC } from 'react';
 import styled, { css } from 'styled-components';
+
+import { buttonSizeStyles } from '@constants/buttonStyles';
+import { getButtonVariantStyle } from '@utils/getButtonVariantStyle';
 
 export type ButtonSize = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
 export type ButtonVariant = 'contained' | 'outlined';
@@ -32,8 +33,8 @@ const Button: FC<ButtonProps> = (props) => {
   } = props;
   return (
     <CustomButton
-      $variant={variant}
       $buttonSize={buttonSize}
+      $variant={variant}
       $variantType={variantType}
       {...rest}
       style={style}

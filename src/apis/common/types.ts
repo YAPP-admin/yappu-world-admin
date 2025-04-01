@@ -11,8 +11,7 @@ export interface PaginatedResponse<T> {
   totalPage: number;
 }
 
-export interface PaginatedApiResponse<T>
-  extends ApiResponse<PaginatedResponse<T>> {}
+export type PaginatedApiResponse<T> = ApiResponse<PaginatedResponse<T>>;
 
 export interface ErrorResponse {
   isSuccess: boolean;

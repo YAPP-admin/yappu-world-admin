@@ -1,6 +1,7 @@
 import axiosInstance from 'apis/common/axiosInstance';
-import { LoginReq, LoginRes, MemberCodeReq, MemberCodeRes } from './types';
 import { ApiResponse } from 'apis/common/types';
+
+import { LoginReq, LoginRes, MemberCodeReq, MemberCodeRes } from './types';
 
 export const postLogin = async (data: LoginReq) => {
   return axiosInstance.post<ApiResponse<LoginRes>>(

@@ -8,11 +8,11 @@ interface Props {
 const MoreVertical: FC<Props> = ({ size = '24', color = '#171719' }) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
+      fill="none"
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <g id="Shape">
         <g id="Vector">

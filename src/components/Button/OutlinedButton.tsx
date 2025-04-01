@@ -1,13 +1,15 @@
+import React, { ButtonHTMLAttributes, FC } from 'react';
+import styled, { css } from 'styled-components';
+
 import {
   assistiveStyleMap,
   defaultGapMap,
   outlinedSizeStyles,
 } from '@constants/buttonStyles';
-import React, { ButtonHTMLAttributes, FC } from 'react';
-import styled, { css } from 'styled-components';
-import ButtonBase from './ButtonBase';
-import theme from 'styles/theme';
 import { semanticColor, SemanticColorKey } from 'styles/colors/semantic';
+import theme from 'styles/theme';
+
+import ButtonBase from './ButtonBase';
 
 type ButtonVariant = 'primary' | 'secondary' | 'assistive';
 type ButtonSize = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
@@ -18,7 +20,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  disabled?: boolean;
   color?: SemanticColorKey;
   buttonType?: 'button' | 'reset' | 'submit' | undefined;
 }
@@ -30,7 +31,6 @@ const OutlinedButton: FC<Props> = (props) => {
     children,
     variant = 'primary',
     size = 'small',
-    disabled = false,
     color,
     buttonType = 'button',
     ...rest
@@ -39,12 +39,11 @@ const OutlinedButton: FC<Props> = (props) => {
   return (
     <StyledButton
       {...rest}
+      $color={color}
+      $size={size}
+      $variant={variant}
       leftIcon={leftIcon}
       rightIcon={rightIcon}
-      $variant={variant}
-      $disabled={disabled}
-      $size={size}
-      $color={color}
       type={buttonType}
     >
       {children}
@@ -57,7 +56,6 @@ export default OutlinedButton;
 const StyledButton = styled(ButtonBase)<{
   $variant: ButtonVariant;
   $size: ButtonSize;
-  $disabled: boolean;
   $color?: SemanticColorKey;
 }>`
   display: flex;
@@ -75,14 +73,7 @@ const StyledButton = styled(ButtonBase)<{
           gap: ${defaultGapMap[$size]};
         `}
   
-    ${({ $variant, $disabled, $color }) => {
-    if ($disabled) {
-      return css`
-        color: ${theme.colors.label.disable};
-        border: 1px solid ${theme.colors.lineNormal.normal};
-      `;
-    }
-
+    ${({ $variant, $color }) => {
     const defaultColor =
       $variant === 'primary' || $variant === 'secondary'
         ? theme.colors.primary.normal
@@ -98,4 +89,8 @@ const StyledButton = styled(ButtonBase)<{
       border: 1px solid ${borderColor};
     `;
   }}
+
+  &:disabled {
+    opacity: 0.43;
+  }
 `;

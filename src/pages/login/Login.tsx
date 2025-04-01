@@ -1,12 +1,13 @@
+import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+
 import Button from '@compnents/commons/Button';
 import Logo from '@compnents/commons/Logo';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { useLoginMutation } from '@queries/auth/useLoginMutation';
 import { LoginReq } from 'apis/auth/types';
-import { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
 
 const Login: FC = () => {
   const { register, handleSubmit } = useForm<LoginReq>({
@@ -27,34 +28,34 @@ const Login: FC = () => {
     <Container>
       <Title>
         <Logo
-          iconWidth="32"
           iconHeight="32"
-          textWidth="64.2"
+          iconWidth="32"
           textHeight="16.8"
+          textWidth="64.2"
         />
-        <Typography children="App 관리자" variant="title3Bold" />
+        <Typography variant="title3Bold">App 관리자</Typography>
       </Title>
       <Wrapper onSubmit={handleSubmit(onSubmit)}>
         <InputArea>
           <TextInput
             {...register('email')}
-            title="이메일"
             placeholder="이메일을 입력해주세요."
+            title="이메일"
           />
           <TextInput
             {...register('password')}
+            isShow
+            placeholder="비밀번호를 입력해주세요."
             title="비밀번호"
             type="password"
-            placeholder="비밀번호를 입력해주세요."
-            isShow
           />
         </InputArea>
         <Button
-          text="로그인"
-          variantType="primary"
-          variant="contained"
           buttonSize="xlarge"
           buttonType="submit"
+          text="로그인"
+          variant="contained"
+          variantType="primary"
         />
       </Wrapper>
     </Container>

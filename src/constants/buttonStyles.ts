@@ -1,3 +1,5 @@
+import { css } from 'styled-components';
+
 import {
   IconButtonSize,
   IconButtonVariant,
@@ -7,7 +9,6 @@ import {
   ButtonVariant,
   ButtonVariantType,
 } from '@compnents/commons/Button';
-import { css } from 'styled-components';
 
 export const variantStyles: Record<
   ButtonVariant,

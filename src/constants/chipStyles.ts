@@ -84,9 +84,10 @@ export const chipColorStyles: Record<
   },
 };
 
+import { css } from 'styled-components';
+
 import { ChipColor, ChipSize, ChipStyle } from '@compnents/commons/Chip';
 import { RoleName } from 'apis/user/types';
-import { css } from 'styled-components';
 
 export const chipSizeStyles: Record<ChipSize, ReturnType<typeof css>> = {
   small: css`

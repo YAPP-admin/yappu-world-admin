@@ -1,7 +1,9 @@
 import { ButtonHTMLAttributes, FC } from 'react';
 import styled from 'styled-components';
-import ButtonBase from './ButtonBase';
+
 import { iconButtonVariantStyles } from '@constants/buttonStyles';
+
+import ButtonBase from './ButtonBase';
 
 export type IconButtonVariant = 'normal' | 'outlined' | 'solid' | 'background';
 export type IconButtonSize = 'normal' | 'small' | 'custom';
@@ -27,9 +29,9 @@ const IconButton: FC<Props> = (props) => {
   return (
     <StyledButton
       {...rest}
-      $variant={variant}
-      $size={size}
       $disabled={disabled}
+      $size={size}
+      $variant={variant}
       type={buttonType}
     >
       {children}
@@ -48,9 +50,9 @@ const StyledButton = styled(ButtonBase)<{
   align-items: center;
   justify-content: center;
   border-radius: 1000px;
+  width: fit-content;
 
   ${({ $variant, $size }) => iconButtonVariantStyles[$variant].default($size)}
-
   ${({ $variant, $size, $disabled }) =>
-    $disabled && iconButtonVariantStyles[$variant].disabled?.($size)}
+    $disabled && iconButtonVariantStyles[$variant].disabled?.($size)};
 `;

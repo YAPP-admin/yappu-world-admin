@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
+
 import theme from 'styles/theme';
 
 interface RadioProps {
@@ -14,17 +15,19 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
     return (
       <Container>
         <HiddenInput
-          type="radio"
           ref={ref}
           checked={checked}
+          type="radio"
           onChange={onChange}
         />
-        <Circle color={color} checked={checked} onClick={onChange} />
+        <Circle checked={checked} color={color} onClick={onChange} />
         <Label>{value}</Label>
       </Container>
     );
   },
 );
+
+Radio.displayName = 'Radio';
 
 export default Radio;
 

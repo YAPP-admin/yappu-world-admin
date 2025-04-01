@@ -6,11 +6,11 @@ export const LogoText: FC<{ width?: string; height?: string }> = ({
 }) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={width}
+      fill="none"
       height={height}
       viewBox="0 0 50 14"
-      fill="none"
+      width={width}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <path
         d="M43.6078 0.699951C46.9738 0.699951 49.0798 2.44595 49.0798 5.27195C49.0798 8.07995 46.9738 9.82595 43.6078 9.82595H41.0698V13.3H38.1538V0.699951H43.6078ZM43.4458 7.44995C45.2278 7.44995 46.1278 6.63995 46.1278 5.27195C46.1278 3.88595 45.2278 3.07595 43.4458 3.07595H41.0698V7.44995H43.4458Z"

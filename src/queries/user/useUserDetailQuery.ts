@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getUserDetail } from 'apis/user/UserApis';
 
 export const useUserDetailQuery = (userId: number) => {

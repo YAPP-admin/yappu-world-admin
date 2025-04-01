@@ -1,8 +1,9 @@
-import NormalBlank from '@assets/NormalBlank';
-import { sideNavList } from '@constants/sideNavList';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import NormalBlank from '@assets/NormalBlank';
+import { sideNavList } from '@constants/sideNavList';
 
 interface Props {
   pathname: string;
@@ -16,8 +17,8 @@ const SideNavList: FC<Props> = (props) => {
       {sideNavList.map((el) => (
         <Wrapper key={el.title}>
           <Link
-            to={el.path}
             style={{ textDecoration: 'none', color: 'inherit' }}
+            to={el.path}
           >
             <Route $active={pathname === el.path}>
               <NormalBlank active={pathname === el.path} />
@@ -28,18 +29,18 @@ const SideNavList: FC<Props> = (props) => {
             el.childs.map((child, index) => (
               <Link
                 key={index}
-                to={child.path}
                 style={{ textDecoration: 'none', color: 'inherit' }}
+                to={child.path}
               >
                 <Route
                   key={index}
-                  className="child"
                   $active={pathname === child.path}
+                  className="child"
                 >
                   <NormalBlank
-                    width="16"
-                    height="16"
                     active={pathname === child.path}
+                    height="16"
+                    width="16"
                   />
                   <span>{child.title}</span>
                 </Route>

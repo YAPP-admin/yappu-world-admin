@@ -1,3 +1,6 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import TextButton from '@compnents/Button/TextButton';
 import Typography from '@compnents/commons/Typography';
 import CompletePopup from '@compnents/popup/CompletePopup';
@@ -10,8 +13,6 @@ import { useOperationQuery } from '@queries/operation/useOperationQuery';
 import { useSettingLinkStore } from '@stores/SettingLinkStore';
 import { OperationListInfo } from 'apis/operation/types';
 import EditPopup from 'features/setting/components/EditPopup';
-import { FC } from 'react';
-import styled from 'styled-components';
 
 const SettingLink: FC = () => {
   const { data } = useOperationQuery();
@@ -38,8 +39,8 @@ const SettingLink: FC = () => {
             <TitleWrapper>
               <Typography variant="headline1Bold">관리중인 링크</Typography>
               <Typography
-                variant="body1Normal"
                 color="label-alternative"
+                variant="body1Normal"
                 style={{
                   fontWeight: 600,
                 }}
@@ -53,8 +54,8 @@ const SettingLink: FC = () => {
               <TableRow>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -64,8 +65,8 @@ const SettingLink: FC = () => {
                 </TableCell>
                 <TableCell as="th">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -75,8 +76,8 @@ const SettingLink: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -90,12 +91,12 @@ const SettingLink: FC = () => {
               {data?.links.map((link) => (
                 <TableRow key={link.id}>
                   <TableCell>
-                    <Typography variant="body1Normal" color="label-normal">
+                    <Typography color="label-normal" variant="body1Normal">
                       {link.label}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body1Normal" color="label-normal">
+                    <Typography color="label-normal" variant="body1Normal">
                       {link.value}
                     </Typography>
                   </TableCell>
@@ -112,17 +113,17 @@ const SettingLink: FC = () => {
       </Container>
       {isEditCompletePopupOpen && (
         <CompletePopup
-          title="수정 완료"
-          comment="수정되었습니다."
           buttonText="확인"
+          comment="수정되었습니다."
+          title="수정 완료"
           onClose={() => setIsEditCompletePopupOpen(false)}
         />
       )}
       {isEditPopupOpen && (
         <EditPopup
           linkInfo={selectedLinkInfo}
-          onClose={() => setIsEditPopupOpen(false)}
           setIsEditCompletePopupOpen={() => setIsEditCompletePopupOpen(true)}
+          onClose={() => setIsEditPopupOpen(false)}
         />
       )}
     </>

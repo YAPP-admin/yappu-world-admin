@@ -1,3 +1,6 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
 import MemberDetailPopup from '@compnents/popup/MemberDetailPopup';
@@ -6,8 +9,6 @@ import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
 import { UserList } from 'apis/user/types';
 import { getUserDetail } from 'apis/user/UserApis';
-import { FC } from 'react';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const columns: TableColumn<UserList>[] = [
@@ -17,10 +18,11 @@ const columns: TableColumn<UserList>[] = [
     fieldName: '이름',
     renderCell: (row) => (
       <Typography
-        children={row.name}
-        variant={'label1Normal'}
         style={{ color: theme.colors.primary.normal, fontWeight: 600 }}
-      />
+        variant={'label1Normal'}
+      >
+        {row.name}
+      </Typography>
     ),
   },
   { field: 'generation', fieldName: '최근활동기수' },
@@ -36,7 +38,6 @@ const columns: TableColumn<UserList>[] = [
 
 const MemberList: FC = () => {
   const {
-    selectedUserId,
     setSelectedUserId,
     setUserDetailInfo,
     detailPopupOpen,
@@ -46,7 +47,7 @@ const MemberList: FC = () => {
 
   const fetchUserDetail = async (userId: number) => {
     const response = await getUserDetail(userId);
-    setUserDetailInfo(response.data);
+    setUserDetailInfo(response.data.data);
   };
 
   const onClickRow = (row: UserList) => {
@@ -58,17 +59,15 @@ const MemberList: FC = () => {
   return (
     <>
       <Container>
-        <Typography
-          children="전체 회원 리스트"
-          variant="title2Bold"
-          style={{ fontWeight: 700 }}
-        />
+        <Typography style={{ fontWeight: 700 }} variant="title2Bold">
+          전체 회원 리스트
+        </Typography>
 
         <Table<UserList>
-          tableTitle="회원리스트"
+          columns={columns}
           counts={userList?.totalCount ?? 0}
           data={userList?.data ?? []}
-          columns={columns}
+          tableTitle="회원리스트"
           onClickRow={onClickRow}
         />
       </Container>

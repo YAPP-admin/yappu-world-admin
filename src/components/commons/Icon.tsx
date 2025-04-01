@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
+
 import theme from 'styles/theme';
 
 type IconSize = 'normal' | 'small' | 'custom';
@@ -14,13 +15,7 @@ interface Props {
 }
 
 const Icon: FC<Props> = (props) => {
-  const {
-    icon,
-    onClick,
-    disabled = false,
-    iconSize = 'small',
-    variant = 'normal',
-  } = props; // 탈락
+  const { icon, onClick } = props; // 탈락
   return <Container onClick={onClick}>{icon}</Container>;
 };
 

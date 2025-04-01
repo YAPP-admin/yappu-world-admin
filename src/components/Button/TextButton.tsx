@@ -1,6 +1,8 @@
-import { sizeStyles, textButtonSizeStyles } from '@constants/buttonStyles';
 import React, { ButtonHTMLAttributes, FC } from 'react';
 import styled, { css } from 'styled-components';
+
+import { textButtonSizeStyles } from '@constants/buttonStyles';
+
 import ButtonBase from './ButtonBase';
 
 type ButtonVariant = 'primary' | 'assistive';
@@ -29,11 +31,11 @@ const TextButton: FC<Props> = (props) => {
   return (
     <StyledButton
       {...rest}
-      leftIcon={leftIcon}
-      rightIcon={rightIcon}
-      $variant={variant}
       $disabled={disabled}
       $size={size}
+      $variant={variant}
+      leftIcon={leftIcon}
+      rightIcon={rightIcon}
     >
       {children}
     </StyledButton>

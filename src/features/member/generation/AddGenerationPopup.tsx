@@ -1,3 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { FC } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
+import styled from 'styled-components';
+
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
@@ -7,11 +12,7 @@ import Typography from '@compnents/commons/Typography';
 import Switch from '@compnents/Control/Switch';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { useAddGenerationMutation } from '@queries/operation/useAddGenerationMutation';
-import { useQueryClient } from '@tanstack/react-query';
 import { AddGenerationReq } from 'apis/operation/types';
-import { FC } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import styled from 'styled-components';
 
 interface Props {
   onClose: () => void;
@@ -54,23 +55,23 @@ const AddGenerationPopup: FC<Props> = (props) => {
               placeholder="00기"
             />
             <FlexBox gap={16}>
-              <Calendar name="startDate" label="활동 시작일" />
-              <Calendar name="endDate" label="활동 종료일" />
+              <Calendar label="활동 시작일" name="startDate" />
+              <Calendar label="활동 종료일" name="endDate" />
             </FlexBox>
             <FlexBox direction="column" gap={8}>
-              <Typography variant="label1Normal" color="label-normal">
+              <Typography color="label-normal" variant="label1Normal">
                 상태
               </Typography>
               <FlexBox justify="space-between">
                 <Typography variant="body1Normal">활동중</Typography>
                 <Controller
-                  name="isActive"
                   control={method.control}
+                  name="isActive"
                   render={({ field }) => (
                     <Switch
                       checked={field.value}
-                      onToggle={() => field.onChange(!field.value)}
                       disabled={false}
+                      onToggle={() => field.onChange(!field.value)}
                     />
                   )}
                 />
@@ -83,7 +84,7 @@ const AddGenerationPopup: FC<Props> = (props) => {
             </OutlinedButton>
             <SolidButton
               size="xlarge"
-              buttonType="submit"
+              type="submit"
               disabled={
                 !(
                   method.watch('generation') &&

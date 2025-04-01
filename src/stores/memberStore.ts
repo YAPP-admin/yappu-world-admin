@@ -1,5 +1,6 @@
-import { UserDetailRes } from 'apis/user/types';
 import { create } from 'zustand';
+
+import { UserDetailRes } from 'apis/user/types';
 
 interface MemberState {
   selectedUserId: number | null;

@@ -1,6 +1,8 @@
-import { sizeStyles } from '@constants/buttonStyles';
 import React, { ButtonHTMLAttributes, FC } from 'react';
 import styled, { css } from 'styled-components';
+
+import { sizeStyles } from '@constants/buttonStyles';
+
 import ButtonBase from './ButtonBase';
 
 type ButtonVariant = 'primary' | 'secondary';
@@ -13,7 +15,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   disabled?: boolean;
-  buttonType?: 'button' | 'reset' | 'submit' | undefined;
 }
 
 const SolidButton: FC<Props> = (props) => {
@@ -24,19 +25,19 @@ const SolidButton: FC<Props> = (props) => {
     variant = 'primary',
     size = 'small',
     disabled = false,
-    buttonType = 'button',
+    type,
     ...rest
   } = props;
 
   return (
     <StyledButton
       {...rest}
-      leftIcon={leftIcon}
-      rightIcon={rightIcon}
-      $variant={variant}
       $disabled={disabled}
       $size={size}
-      type={buttonType}
+      $variant={variant}
+      leftIcon={leftIcon}
+      rightIcon={rightIcon}
+      type={type}
     >
       {children}
     </StyledButton>

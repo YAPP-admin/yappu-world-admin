@@ -44,18 +44,18 @@ const FlexBox: FC<FlexBoxProps> = ({
 }) => {
   return (
     <StyledFlexBox
-      direction={direction}
-      gap={gap}
       align={align}
-      justify={justify}
-      wrap={wrap}
+      direction={direction}
       flex={flex}
-      width={width}
-      height={height}
-      fullWidth={fullWidth}
       fullHeight={fullHeight}
-      padding={padding}
+      fullWidth={fullWidth}
+      gap={gap}
+      height={height}
+      justify={justify}
       margin={margin}
+      padding={padding}
+      width={width}
+      wrap={wrap}
     >
       {children}
     </StyledFlexBox>

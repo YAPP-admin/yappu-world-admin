@@ -1,16 +1,16 @@
-import { View } from '@assets/View';
-import { ViewSlash } from '@assets/ViewSlash';
 import React, { forwardRef, useState } from 'react';
 import styled from 'styled-components';
+
+import { View } from '@assets/View';
+import { ViewSlash } from '@assets/ViewSlash';
 import theme from 'styles/theme';
+
 import Typography from './Typography';
 
 type TextInputSize = 'large' | 'medium';
-type TextInputState = 'default' | 'active' | 'success' | 'error';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputSize?: TextInputSize;
-  state?: TextInputState;
   title?: string;
   isShow?: boolean;
   unitText?: string;
@@ -22,7 +22,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       inputSize = 'large',
-      state = 'default',
       isShow = false,
       title,
       unitText,
@@ -43,9 +42,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     return (
       <Container width={width}>
-        {title && (
-          <Typography children={title} variant="label1Normal"></Typography>
-        )}
+        {title && <Typography variant="label1Normal">{title}</Typography>}
         <InputWrapper $inputSize={inputSize} border={borderColor}>
           <Input ref={ref} {...rest} $inputSize={inputSize} type={inputType} />
           {isShow && (
@@ -59,6 +56,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     );
   },
 );
+
+TextInput.displayName = 'TextInput';
 
 export default TextInput;
 

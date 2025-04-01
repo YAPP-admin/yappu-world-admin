@@ -1,9 +1,12 @@
-import Button from '@compnents/commons/Button';
-import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';
-import PopupContainer from './PopupContainer';
+
 import SolidButton from '@compnents/Button/SolidButton';
+import Button from '@compnents/commons/Button';
+import Typography from '@compnents/commons/Typography';
+
+import PopupContainer from './PopupContainer';
+
 
 interface Props {
   onClose: () => void;
@@ -15,17 +18,17 @@ const CodeEditConfirmPopup: FC<Props> = ({ onClose, onSave }) => {
     <PopupContainer onClose={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
         <TitleWrapper>
-          <Typography variant="headline1Bold" color="label-normal">
+          <Typography color="label-normal" variant="headline1Bold">
             코드값 저장
           </Typography>
-          <Typography variant="label1Reading" color="label-neutral">
+          <Typography color="label-neutral" variant="label1Reading">
             수정된 값으로 코드값을 저장할까요?
           </Typography>
         </TitleWrapper>
         <ButtonWrapper>
           <Button
-            text="취소"
             buttonSize="xlarge"
+            text="취소"
             variant="outlined"
             variantType="secondary"
             onClick={onClose}

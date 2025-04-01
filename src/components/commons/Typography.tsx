@@ -1,6 +1,7 @@
-import { typography, TypographyType } from '@constants/typographyStyles';
 import { FC, JSX, ReactNode } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+
+import { typography, TypographyType } from '@constants/typographyStyles';
 import { semanticColor, SemanticColorKey } from 'styles/colors/semantic';
 
 interface Props {
@@ -19,7 +20,7 @@ const Typography: FC<Props> = ({
   color = 'static-black',
 }) => {
   return (
-    <Styled as={as} $variant={variant} style={style} $color={color}>
+    <Styled $color={color} $variant={variant} as={as} style={style}>
       {children}
     </Styled>
   );

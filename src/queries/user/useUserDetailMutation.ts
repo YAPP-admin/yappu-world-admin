@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+
 import { ApiResponse, ErrorResponse } from 'apis/common/types';
 import { UserDetailReq } from 'apis/user/types';
 import { putUserDetail } from 'apis/user/UserApis';
-import { AxiosError, AxiosResponse } from 'axios';
 
 export const useUserDetailMutation = () => {
   return useMutation<
@@ -16,6 +17,7 @@ export const useUserDetailMutation = () => {
     },
     onError: (err) => {
       if (err.response) {
+        console.log(err);
       }
     },
   });

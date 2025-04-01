@@ -1,7 +1,8 @@
-import Typography from '@compnents/commons/Typography';
-import Switch from '@compnents/Control/Switch';
 import { forwardRef } from 'react';
 import styled from 'styled-components';
+
+import Typography from '@compnents/commons/Typography';
+import Switch from '@compnents/Control/Switch';
 
 interface Props {
   active: boolean;
@@ -13,14 +14,14 @@ interface Props {
 const StatusChangeMenu = forwardRef<HTMLDivElement, Props>(
   ({ active, onToggle, top, left }, ref) => {
     return (
-      <Container ref={ref} top={top} left={left}>
+      <Container ref={ref} left={left} top={top}>
         <Header>
-          <Typography variant="caption1Regular" color="label-alternative">
+          <Typography color="label-alternative" variant="caption1Regular">
             상태변경
           </Typography>
         </Header>
         <ToggleWrapper>
-          <Typography variant="label1Normal" color="static-black">
+          <Typography color="static-black" variant="label1Normal">
             활동중
           </Typography>
           <Switch checked={active} size="small" onToggle={onToggle} />
@@ -29,6 +30,8 @@ const StatusChangeMenu = forwardRef<HTMLDivElement, Props>(
     );
   },
 );
+
+StatusChangeMenu.displayName = 'StatusChangeMenu';
 
 export default StatusChangeMenu;
 

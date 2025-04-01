@@ -1,7 +1,8 @@
-import { LogoNormal } from '@assets/LogoNomal';
-import { LogoText } from '@assets/LogoText';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { LogoNormal } from '@assets/LogoNomal';
+import { LogoText } from '@assets/LogoText';
 
 interface LogoProps {
   iconWidth?: string;
@@ -14,8 +15,8 @@ const Logo: FC<LogoProps> = (props) => {
   const { iconWidth, iconHeight, textWidth, textHeight } = props;
   return (
     <Container>
-      <LogoNormal width={iconWidth} height={iconHeight} />
-      <LogoText width={textWidth} height={textHeight} />
+      <LogoNormal height={iconHeight} width={iconWidth} />
+      <LogoText height={textHeight} width={textWidth} />
     </Container>
   );
 };

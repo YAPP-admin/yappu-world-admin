@@ -11,61 +11,12 @@ import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
 import DetailPopup from 'features/member/application/DetailPopup';
 import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
-
-const data = {
-  data: [
-    {
-      applicationId: '1',
-      name: '홍길동',
-      email: 'email@email.com',
-      applicationDate: '2025-03-04',
-      activityUnit: {
-        generation: 25,
-        position: {
-          name: 'PM',
-          label: 'PM',
-        },
-      },
-      status: '대기',
-    },
-    {
-      applicationId: '2',
-      name: '김현정',
-      email: 'email@email.com',
-      applicationDate: '2025-03-04',
-      activityUnit: {
-        generation: 25,
-        position: {
-          name: 'PM',
-          label: 'PM',
-        },
-      },
-      status: '승인',
-    },
-    {
-      applicationId: '3',
-      name: '김해나',
-      email: 'email@email.com',
-      applicationDate: '2025-03-04',
-      activityUnit: {
-        generation: 25,
-        position: {
-          name: 'PM',
-          label: 'PM',
-        },
-      },
-      status: '거절',
-    },
-  ],
-  totalCount: 3,
-  page: 1,
-  size: 1,
-};
 
 const columns = [
   '번호',
@@ -79,7 +30,15 @@ const columns = [
 ];
 
 const MemberApplication: FC = () => {
-  const { selectedIndexes, setSelectedIndexes } = useApplicationStore();
+  const { data } = useApplicationListQuery(1, 10);
+  const {
+    selectedIndexes,
+    setSelectedIndexes,
+    isDetailPopup,
+    setIsDetailPopup,
+    selectedId,
+    setSelectedId,
+  } = useApplicationStore();
 
   const applicationIds =
     data?.data.map((application) => Number(application.applicationId)) || [];
@@ -104,6 +63,11 @@ const MemberApplication: FC = () => {
     }
   };
 
+  const onClickToDetail = (id: string) => {
+    setSelectedId(id);
+    setIsDetailPopup(true);
+  };
+
   return (
     <>
       <Container>
@@ -120,7 +84,7 @@ const MemberApplication: FC = () => {
                   fontWeight: 600,
                 }}
               >
-                {data.totalCount}개
+                {data?.totalCount}개
               </Typography>
             </FlexBox>
 
@@ -170,7 +134,7 @@ const MemberApplication: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.data.map((el) => {
+              {data?.data.map((el) => {
                 const id = Number(el.applicationId);
                 const isChecked = selectedIndexes.includes(id);
                 return (
@@ -222,7 +186,11 @@ const MemberApplication: FC = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <TextButton>상세보기</TextButton>
+                      <TextButton
+                        onClick={() => onClickToDetail(el.applicationId)}
+                      >
+                        상세보기
+                      </TextButton>
                     </TableCell>
                   </TableRow>
                 );
@@ -231,7 +199,9 @@ const MemberApplication: FC = () => {
           </StyledTable>
         </FlexBox>
       </Container>
-      <DetailPopup />
+      {isDetailPopup && (
+        <DetailPopup onClose={() => setIsDetailPopup(false)} id={selectedId} />
+      )}
     </>
   );
 };

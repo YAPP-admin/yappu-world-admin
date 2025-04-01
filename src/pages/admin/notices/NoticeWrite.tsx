@@ -85,9 +85,7 @@ const NoticeWrite: FC = () => {
           <InputWrapper>
             <TextInputBox
               {...register('content')}
-              letterCount
               height={400}
-              maxCount={1000}
               maxLength={1000}
               placeholder="내용을 입력해주세요"
             />

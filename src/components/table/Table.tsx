@@ -1,8 +1,10 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
-import theme from 'styles/theme';
-import Pagination from './Pagination';
+
 import Typography from '@compnents/commons/Typography';
+import theme from 'styles/theme';
+
+import Pagination from './Pagination';
 
 export interface Tablerow {
   field: string;
@@ -40,7 +42,7 @@ const Table = <T,>({
 }: TableProps<T>) => {
   const [checkedIndexes, setCheckedIndexes] = useState<number[]>([]);
   const handleCheck = (index: number) => {
-    let newChecked = checkedIndexes.includes(index)
+    const newChecked = checkedIndexes.includes(index)
       ? checkedIndexes.filter((i) => i !== index)
       : [...checkedIndexes, index];
     setCheckedIndexes(newChecked);
@@ -52,12 +54,13 @@ const Table = <T,>({
     <Container>
       <TableWrapper>
         <TableHeader>
-          <Typography children={tableTitle} variant="headline1Bold" />
+          <Typography variant="headline1Bold">{tableTitle}</Typography>
           <Typography
-            children={`${counts}명`}
-            variant="body1Normal"
             style={{ color: theme.colors.label.alternative }}
-          />
+            variant="body1Normal"
+          >
+            {counts}명
+          </Typography>
         </TableHeader>
         <TableContainer>
           <TableHead>
@@ -75,11 +78,9 @@ const Table = <T,>({
                     textAlign: col.align || 'center',
                   }}
                 >
-                  <Typography
-                    children={col.fieldName}
-                    variant="body1Normal"
-                    style={{ fontWeight: 600 }}
-                  />
+                  <Typography style={{ fontWeight: 600 }} variant="body1Normal">
+                    {col.fieldName}
+                  </Typography>
                 </th>
               ))}
             </tr>
@@ -97,8 +98,8 @@ const Table = <T,>({
                   {isCheck && (
                     <td>
                       <input
-                        type="checkbox"
                         checked={checkedIndexes.includes(index)}
+                        type="checkbox"
                         onChange={() => handleCheck(index)}
                       />
                     </td>
@@ -108,14 +109,7 @@ const Table = <T,>({
                       key={colIndex}
                       style={{ textAlign: col.align || 'center' }}
                     >
-                      <Typography
-                        children={
-                          col.renderCell
-                            ? col.renderCell(row)
-                            : (row as any)[col.field]
-                        }
-                        variant="label1Normal"
-                      />
+                      <Typography variant="label1Normal">주석</Typography>
                     </td>
                   ))}
                 </tr>
@@ -125,8 +119,8 @@ const Table = <T,>({
         </TableContainer>
       </TableWrapper>
       <Pagination
-        totalPages={10}
         currentPage={curIndex}
+        totalPages={10}
         onPageChange={(index: number) => setCurIndex(index)}
       />
     </Container>

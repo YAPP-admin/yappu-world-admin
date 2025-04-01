@@ -1,5 +1,6 @@
-import { LoginRes } from 'apis/auth/types';
 import { create } from 'zustand';
+
+import { LoginRes } from 'apis/auth/types';
 
 interface AuthState {
   accessToken: string | null;

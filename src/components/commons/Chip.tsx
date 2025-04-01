@@ -1,11 +1,12 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import {
   chipColorStyles,
   chipSizeStyles,
   roleChipStyleMap,
 } from '@constants/chipStyles';
 import { RoleName } from 'apis/user/types';
-import { FC } from 'react';
-import styled from 'styled-components';
 
 export type ChipColor =
   | 'primary'

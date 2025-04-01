@@ -1,7 +1,9 @@
-import DropDown from '@assets/DropDown';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+
+import DropDown from '@assets/DropDown';
 import theme from 'styles/theme';
+
 import Typography from './Typography';
 
 interface Props<T> {

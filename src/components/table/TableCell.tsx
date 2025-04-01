@@ -22,7 +22,6 @@ const TableCell: FC<Props> = (props) => {
   const {
     children,
     as = 'td',
-    scope,
     align = 'center',
     alignItems = 'flex-start',
     justifyContent = 'flex-start',

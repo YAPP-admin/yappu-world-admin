@@ -1,10 +1,11 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import Close from '@assets/Close';
 import Pencil from '@assets/Pencil';
 import Button from '@compnents/commons/Button';
 import Icon from '@compnents/commons/Icon';
 import Typography from '@compnents/commons/Typography';
-import { FC } from 'react';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 interface Props {
@@ -27,31 +28,32 @@ const MemberDetailHeader: FC<Props> = (props) => {
           alignItems: 'cente',
         }}
       >
-        <Typography children={title} variant="headline1Bold" />
+        <Typography variant="headline1Bold">{title}</Typography>
         <Icon
-          onClick={onClose}
           icon={
             <Close
-              width="16"
-              height="16"
               color={theme.colors.label.alternative}
+              height="16"
+              width="16"
             />
           }
+          onClick={onClose}
         />
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
         <Typography
-          children={userName}
-          variant="title1Bold"
           style={{ color: theme.colors.primary.normal }}
-        />
+          variant="title1Bold"
+        >
+          {userName}
+        </Typography>
         {!isEdit && (
           <Button
-            text="수정"
             buttonSize="xsmall"
+            leftIcon={<Pencil height="16" width="16" />}
+            text="수정"
             variant="outlined"
             variantType="assistive"
-            leftIcon={<Pencil width="16" height="16" />}
             onClick={onClickToEdit}
           />
         )}

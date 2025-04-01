@@ -1,3 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
@@ -10,10 +14,8 @@ import TableRow from '@compnents/table/TableRow';
 import { useMemberCodeMutation } from '@queries/auth/useMemberCodeMutation';
 import useMemberCodeQuery from '@queries/auth/useMemberCodeQuery';
 import { useMemberCodeStore } from '@stores/memberCodeStore';
-import { useQueryClient } from '@tanstack/react-query';
 import { UserRole } from 'apis/user/types';
-import { FC } from 'react';
-import styled from 'styled-components';
+
 
 const MemberCode: FC = () => {
   const { data } = useMemberCodeQuery();
@@ -60,8 +62,8 @@ const MemberCode: FC = () => {
           <TitleWrapper>
             <Typography variant="headline1Bold">설정된 가입코드</Typography>
             <Typography
-              variant="body1Normal"
               color="label-alternative"
+              variant="body1Normal"
               style={{
                 fontWeight: 600,
               }}
@@ -74,8 +76,8 @@ const MemberCode: FC = () => {
               <TableRow>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -85,8 +87,8 @@ const MemberCode: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -102,13 +104,13 @@ const MemberCode: FC = () => {
                 <TableRow key={code.code}>
                   <TableCell justifyContent="center">
                     <Chip
-                      text={code.role.label}
-                      size="large"
                       role={code.role.name}
+                      size="large"
+                      text={code.role.label}
                     />
                   </TableCell>
                   <TableCell justifyContent="center">
-                    <Typography variant="body1Normal" color="label-normal">
+                    <Typography color="label-normal" variant="body1Normal">
                       {code.code}
                     </Typography>
                   </TableCell>
@@ -127,12 +129,12 @@ const MemberCode: FC = () => {
       </Container>
       {editPopupOpen && (
         <CodeEditPopup
+          code={code}
+          confirmPopupOpen={confirmPopupOpen}
+          handleConfirmPopup={handleConfirmPopup}
           handleEditPopup={refresh}
           role={role}
-          code={code}
           onChange={onChangeCode}
-          handleConfirmPopup={handleConfirmPopup}
-          confirmPopupOpen={confirmPopupOpen}
           onSave={onSubmit}
         />
       )}

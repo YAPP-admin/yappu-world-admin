@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getGenerationList } from 'apis/operation/OperationApis';
 
 export const useGenerationListQuery = () => {

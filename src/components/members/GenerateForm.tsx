@@ -1,12 +1,13 @@
+import { FC } from 'react';
+import { useFormContext } from 'react-hook-form';
+import styled from 'styled-components';
+
 import Minus from '@assets/Minus';
 import Icon from '@compnents/commons/Icon';
 import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import { positionList } from '@constants/position';
 import { UserDetailRes } from 'apis/user/types';
-import { FC } from 'react';
-import { useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 interface Props {
@@ -20,23 +21,23 @@ const GenerateForm: FC<Props> = (props) => {
   return (
     <Container>
       <TextInput
+        borderColor={theme.colors.lineNormal.strong}
+        inputSize="medium"
         unitText="기"
         width="80px"
-        inputSize="medium"
-        borderColor={theme.colors.lineNormal.strong}
         {...register(`activityUnits.${index}.generation`)}
       />
       <Select
-        width="120px"
         optionList={positionList}
         selectedValue={watch(`activityUnits.${index}.position`)}
+        width="120px"
         onChange={(value: string) =>
           setValue(`activityUnits.${index}.position`, value)
         }
       />
       <Icon
-        onClick={onRemove}
         icon={<Minus color={theme.colors.status.nagative} />}
+        onClick={onRemove}
       />
     </Container>
   );

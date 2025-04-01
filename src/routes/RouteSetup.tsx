@@ -8,27 +8,27 @@ import MemberGeneration from '@pages/admin/members/MemberGeneration';
 import MemberList from '@pages/admin/members/MemberList';
 import NoticeList from '@pages/admin/notices/NoticeList';
 import NoticeWrite from '@pages/admin/notices/NoticeWrite';
+import Notice from '@pages/admin/notices/Notice.tsx';
 import Session from '@pages/admin/sessions/Session.tsx';
 import SettingLink from '@pages/admin/settings/SettingLink';
 import SettingUpdate from '@pages/admin/settings/SettingUpdate';
 import Login from '@pages/login/Login.tsx';
-import Notice from '@pages/admin/notices/Notice';
 
 export const RouteSetup = () => {
   return (
     <Layout>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route element={<Login />} path="/login" />
 
-        <Route path="/admin" element={<AdminLayer />}>
-          <Route index element={<Navigate to="members/list" replace />} />
+        <Route element={<AdminLayer />} path="/admin">
+          <Route index element={<Navigate replace to="members/list" />} />
 
           <Route path="members">
-            <Route index element={<Navigate to="list" replace />} />
-            <Route path="list" element={<MemberList />} />
-            <Route path="application" element={<MemberApplication />} />
-            <Route path="code" element={<MemberCode />} />
-            <Route path="generation" element={<MemberGeneration />} />
+            <Route index element={<Navigate replace to="list" />} />
+            <Route element={<MemberList />} path="list" />
+            <Route element={<MemberApplication />} path="application" />
+            <Route element={<MemberCode />} path="code" />
+            <Route element={<MemberGeneration />} path="generation" />
           </Route>
 
           <Route path="notices">
@@ -40,9 +40,9 @@ export const RouteSetup = () => {
           <Route path="sessions" element={<Session />} />
 
           <Route path="settings">
-            <Route index element={<Navigate to="update" replace />} />
-            <Route path="update" element={<SettingUpdate />} />
-            <Route path="link" element={<SettingLink />} />
+            <Route index element={<Navigate replace to="update" />} />
+            <Route element={<SettingUpdate />} path="update" />
+            <Route element={<SettingLink />} path="link" />
           </Route>
         </Route>
       </Routes>

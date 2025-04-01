@@ -1,11 +1,13 @@
+import { FC, useState } from 'react';
+import styled from 'styled-components';
+
 import MemberActivityInfo from '@compnents/members/MemberActivityInfo';
 import MemberBasicInfo from '@compnents/members/MemberBasicInfo';
 import MemberDetailHeader from '@compnents/members/MemberDetailHeader';
 import MemberForm from '@compnents/members/MemberForm';
-import { FC, useState } from 'react';
-import styled from 'styled-components';
-import PopupContainer from './PopupContainer';
 import { useMemberStore } from '@stores/memberStore';
+
+import PopupContainer from './PopupContainer';
 
 interface Props {
   onClose: () => void;
@@ -21,13 +23,13 @@ const MemberDetailPopup: FC<Props> = (props) => {
       <Container onClick={(e) => e.stopPropagation()}>
         <MemberDetailHeader
           isEdit={isEdit}
-          onClose={onClose}
           title="회원 상세 정보"
-          onClickToEdit={() => setIsEdit(true)}
           userName={userDetailInfo?.name}
+          onClickToEdit={() => setIsEdit(true)}
+          onClose={onClose}
         />
         {isEdit ? (
-          <MemberForm isEdit={isEdit} cancelToEdit={() => setIsEdit(false)} />
+          <MemberForm cancelToEdit={() => setIsEdit(false)} isEdit={isEdit} />
         ) : (
           <Wrapper>
             <MemberBasicInfo userInfo={userDetailInfo} />

@@ -1,4 +1,3 @@
-import CalendarIcon from '@assets/CalendarIcon';
 import { FC } from 'react';
 import DatePicker, {
   CalendarContainer,
@@ -7,10 +6,13 @@ import DatePicker, {
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
+
+import CalendarIcon from '@assets/CalendarIcon';
 import theme from 'styles/theme';
-import { ko } from '../../../node_modules/date-fns/locale/ko';
+
 import FlexBox from './FlexBox';
 import Typography from './Typography';
+import { ko } from '../../../node_modules/date-fns/locale/ko';
 
 registerLocale('ko', ko);
 
@@ -25,25 +27,24 @@ const Calendar: FC<Props> = (props) => {
   return (
     <Container>
       <Controller
-        name={name}
         control={control}
+        name={name}
         render={({ field }) => (
           <FlexBox direction="column" gap={4}>
             {label && (
-              <Typography variant="label1Normal" color="label-normal">
+              <Typography color="label-normal" variant="label1Normal">
                 {label}
               </Typography>
             )}
             <CalendarLabel>
               <DatePicker
+                dateFormat={'yyyy.MM.dd'}
+                icon={<CalendarIcon />}
                 locale={ko}
+                placeholderText={'YYYY.MM.DD'}
+                popperContainer={CalendarContainer}
                 selected={field.value}
                 onChange={(date: Date | null) => field.onChange(date)}
-                dateFormat={'yyyy.MM.dd'}
-                placeholderText={'YYYY.MM.DD'}
-                icon={<CalendarIcon />}
-                popperContainer={CalendarContainer}
-                // showIcon
               />
               <CalendarIcon />
             </CalendarLabel>

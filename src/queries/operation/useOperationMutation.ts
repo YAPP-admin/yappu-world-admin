@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+
 import { ErrorResponse } from 'apis/common/types';
 import { putOperationList } from 'apis/operation/OperationApis';
 import { OperationListInfo } from 'apis/operation/types';
-import { AxiosError, AxiosResponse } from 'axios';
 
 export const useOperationMutation = () => {
   return useMutation<void, AxiosError<ErrorResponse>, OperationListInfo>({

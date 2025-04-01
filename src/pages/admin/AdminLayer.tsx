@@ -1,7 +1,8 @@
-import SideNav from '@compnents/commons/SideNav';
 import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+
+import SideNav from '@compnents/commons/SideNav';
 
 const AdminLayer: FC = () => {
   return (

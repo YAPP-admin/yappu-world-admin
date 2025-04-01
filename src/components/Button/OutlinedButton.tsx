@@ -1,13 +1,15 @@
+import React, { ButtonHTMLAttributes, FC } from 'react';
+import styled, { css } from 'styled-components';
+
 import {
   assistiveStyleMap,
   defaultGapMap,
   outlinedSizeStyles,
 } from '@constants/buttonStyles';
-import React, { ButtonHTMLAttributes, FC } from 'react';
-import styled, { css } from 'styled-components';
-import ButtonBase from './ButtonBase';
-import theme from 'styles/theme';
 import { semanticColor, SemanticColorKey } from 'styles/colors/semantic';
+import theme from 'styles/theme';
+
+import ButtonBase from './ButtonBase';
 
 type ButtonVariant = 'primary' | 'secondary' | 'assistive';
 type ButtonSize = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
@@ -40,8 +42,8 @@ const OutlinedButton: FC<Props> = (props) => {
       leftIcon={leftIcon}
       rightIcon={rightIcon}
       $variant={variant}
-      $size={size}
       $color={color}
+      $size={size}
       type={buttonType}
     >
       {children}

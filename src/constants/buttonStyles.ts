@@ -259,18 +259,18 @@ export const iconButtonSizeStyles: Record<
 > = {
   normal: css`
     padding: 10px;
-    width: 20px;
-    height: 20px;
+    /* width: 20px;
+    height: 20px; */
   `,
   small: css`
     padding: 7px;
-    width: 18px;
-    height: 18px;
+    /* width: 18px;
+    height: 18px; */
   `,
   custom: css`
     padding: 6px;
-    width: 16px;
-    height: 16px;
+    /* width: 16px;
+    height: 16px; */
   `,
 };
 
@@ -284,8 +284,8 @@ export const iconButtonVariantStyles: Record<
   normal: {
     default: () => css`
       background: none;
-      width: 24px;
-      height: 24px;
+      /* width: 24px; */
+      /* height: 24px; */
       border: none;
       padding: 0;
     `,
@@ -298,8 +298,8 @@ export const iconButtonVariantStyles: Record<
   background: {
     default: () => css`
       padding: 20px;
-      width: 20px;
-      height: 20px;
+      /* width: 20px; */
+      /* height: 20px; */
       background: rgba(112, 115, 124, 0.08); // #70737C14
     `,
     disabled: () => css`

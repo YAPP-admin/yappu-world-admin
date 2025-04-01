@@ -12,6 +12,7 @@ interface Props<T> {
   selectedValue: T;
   onChange: (value: T) => void;
   getLabel?: (option: T) => string;
+  size?: 'medium' | 'large';
 }
 
 const Select = <T,>({
@@ -20,6 +21,7 @@ const Select = <T,>({
   selectedValue,
   onChange,
   getLabel,
+  size = 'medium',
 }: Props<T>) => {
   const [isClick, setIsClick] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -43,11 +45,19 @@ const Select = <T,>({
 
   return (
     <Container ref={selectRef} width={width}>
-      <SelectButton type="button" onClick={openOptionList}>
-        <Typography variant="body1Normal">
-          {getLabel ? getLabel(selectedValue) : (selectedValue as string)}
+      <SelectButton size={size} type="button" onClick={openOptionList}>
+        <Typography
+          variant={size === 'medium' ? 'body2Reading' : 'body1Normal'}
+        >
+          {getLabel
+            ? getLabel(selectedValue)
+            : selectedValue
+              ? (selectedValue as string)
+              : '선택하세요'}
         </Typography>
-        <DropDown />
+        <IconWrapper $isOpen={isClick}>
+          <DropDown size={size === 'medium' ? '20' : '24'} />
+        </IconWrapper>
       </SelectButton>
       {isClick && (
         <OptionWrapper>
@@ -74,11 +84,12 @@ const Container = styled.div<{ width?: string }>`
   width: ${({ width }) => (width ? width : '100%')};
   position: relative;
 `;
-const SelectButton = styled.button`
+
+const SelectButton = styled.button<{ size: 'medium' | 'large' }>`
   display: flex;
-  height: 40px;
-  padding: 12px;
-  justify-content: center;
+  padding: ${({ size }) => (size === 'medium' ? '12px' : '12px 16px')};
+  height: ${({ size }) => (size === 'medium' ? '40px' : '48px')};
+  justify-content: space-between;
   align-items: center;
   gap: 12px;
   align-self: stretch;
@@ -87,6 +98,10 @@ const SelectButton = styled.button`
   background: #fff;
   box-sizing: border-box;
   width: 100%;
+`;
+
+const IconWrapper = styled.div<{ $isOpen: boolean }>`
+  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : '')};
 `;
 
 const OptionWrapper = styled.ul`

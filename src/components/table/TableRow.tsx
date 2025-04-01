@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLTableRowElement> {
   children: React.ReactNode;
 }
 
-const TableRow: FC<Props> = ({ children }) => {
-  return <StyledRow>{children}</StyledRow>;
+const TableRow: FC<Props> = ({ children, ...rest }) => {
+  return <StyledRow {...rest}>{children}</StyledRow>;
 };
 
 export default TableRow;

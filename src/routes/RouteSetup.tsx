@@ -7,6 +7,8 @@ import MemberCode from '@pages/admin/members/MemberCode';
 import MemberGeneration from '@pages/admin/members/MemberGeneration';
 import MemberList from '@pages/admin/members/MemberList';
 import Notice from '@pages/admin/notices/Notice.tsx';
+import NoticeList from '@pages/admin/notices/NoticeList';
+import NoticeWrite from '@pages/admin/notices/NoticeWrite';
 import Session from '@pages/admin/sessions/Session.tsx';
 import SettingLink from '@pages/admin/settings/SettingLink';
 import SettingUpdate from '@pages/admin/settings/SettingUpdate';
@@ -29,7 +31,12 @@ export const RouteSetup = () => {
             <Route element={<MemberGeneration />} path="generation" />
           </Route>
 
-          <Route element={<Notice />} path="notices" />
+          <Route path="notices">
+            <Route index element={<NoticeList />} />
+            <Route element={<NoticeWrite />} path="write" />
+            <Route element={<Notice />} path="detail/:id" />
+          </Route>
+
           <Route element={<Session />} path="sessions" />
 
           <Route path="settings">

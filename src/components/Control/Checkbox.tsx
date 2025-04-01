@@ -20,6 +20,7 @@ const Checkbox: FC<Props> = (props) => {
     disabled = false,
     ...rest
   } = props;
+
   return (
     <Wrapper $checkboxSize={checkboxSize} $disabled={disabled} $state={state}>
       <HiddenInput disabled={disabled} type="checkbox" {...rest} />

@@ -14,7 +14,6 @@ import PopupContainer from '@compnents/popup/PopupContainer';
 import { useAddGenerationMutation } from '@queries/operation/useAddGenerationMutation';
 import { AddGenerationReq } from 'apis/operation/types';
 
-
 interface Props {
   onClose: () => void;
   handleAddCompletePopupOpen: (value: boolean) => void;
@@ -84,8 +83,8 @@ const AddGenerationPopup: FC<Props> = (props) => {
               취소
             </OutlinedButton>
             <SolidButton
-              buttonType="submit"
               size="xlarge"
+              type="submit"
               disabled={
                 !(
                   method.watch('generation') &&

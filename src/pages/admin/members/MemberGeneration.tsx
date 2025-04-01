@@ -106,7 +106,7 @@ const MemberGeneration: FC = () => {
                   fontWeight: 600,
                 }}
               >
-                {data?.totalCount}개
+                {data?.data?.totalCount}개
               </Typography>
             </TitleWrapper>
             <OutlinedButton
@@ -156,7 +156,7 @@ const MemberGeneration: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data?.map((generation) => (
+              {data?.data.data?.map((generation) => (
                 <TableRow key={generation.generation}>
                   <TableCell justifyContent="center">
                     <Typography color="label-normal" variant="body1Normal">

@@ -20,7 +20,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  disabled?: boolean;
   color?: SemanticColorKey;
   buttonType?: 'button' | 'reset' | 'submit' | undefined;
 }
@@ -32,7 +31,6 @@ const OutlinedButton: FC<Props> = (props) => {
     children,
     variant = 'primary',
     size = 'small',
-    disabled = false,
     color,
     buttonType = 'button',
     ...rest
@@ -42,7 +40,6 @@ const OutlinedButton: FC<Props> = (props) => {
     <StyledButton
       {...rest}
       $color={color}
-      $disabled={disabled}
       $size={size}
       $variant={variant}
       leftIcon={leftIcon}
@@ -59,7 +56,6 @@ export default OutlinedButton;
 const StyledButton = styled(ButtonBase)<{
   $variant: ButtonVariant;
   $size: ButtonSize;
-  $disabled: boolean;
   $color?: SemanticColorKey;
 }>`
   display: flex;
@@ -77,14 +73,7 @@ const StyledButton = styled(ButtonBase)<{
           gap: ${defaultGapMap[$size]};
         `}
   
-    ${({ $variant, $disabled, $color }) => {
-    if ($disabled) {
-      return css`
-        color: ${theme.colors.label.disable};
-        border: 1px solid ${theme.colors.lineNormal.normal};
-      `;
-    }
-
+    ${({ $variant, $color }) => {
     const defaultColor =
       $variant === 'primary' || $variant === 'secondary'
         ? theme.colors.primary.normal
@@ -100,4 +89,8 @@ const StyledButton = styled(ButtonBase)<{
       border: 1px solid ${borderColor};
     `;
   }}
+
+  &:disabled {
+    opacity: 0.43;
+  }
 `;

@@ -50,9 +50,9 @@ const StyledButton = styled(ButtonBase)<{
   align-items: center;
   justify-content: center;
   border-radius: 1000px;
+  width: fit-content;
 
   ${({ $variant, $size }) => iconButtonVariantStyles[$variant].default($size)}
-
   ${({ $variant, $size, $disabled }) =>
-    $disabled && iconButtonVariantStyles[$variant].disabled?.($size)}
+    $disabled && iconButtonVariantStyles[$variant].disabled?.($size)};
 `;

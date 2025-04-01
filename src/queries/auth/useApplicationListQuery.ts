@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getApplicationList } from 'apis/auth/AuthApis';
 
 export const useApplicationListQuery = (page: number, size: number) => {

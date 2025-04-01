@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getApplicationDetail } from 'apis/auth/AuthApis';
 
 export const useApplicationDetailQuery = (id: string) => {

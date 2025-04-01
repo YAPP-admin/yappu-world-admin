@@ -1,3 +1,6 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import CircleCheck from '@assets/CircleCheck';
 import CircleClose from '@assets/CircleClose';
 import Close from '@assets/Close';
@@ -5,11 +8,10 @@ import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
-import { FC } from 'react';
-import styled from 'styled-components';
-import theme from 'styles/theme';
-import InfoGrid from './InfoGrid';
 import { useApplicationDetailQuery } from '@queries/auth/useApplicationDetailQuery';
+import theme from 'styles/theme';
+
+import InfoGrid from './InfoGrid';
 
 interface Props {
   id: string;
@@ -23,7 +25,7 @@ const DetailPopup: FC<Props> = ({ id, onClose }) => {
     <PopupContainer>
       <Container>
         <Header>
-          <Typography variant="headline1Bold" color="label-normal">
+          <Typography color="label-normal" variant="headline1Bold">
             가입 신청서 상세
           </Typography>
           <IconButton onClick={onClose}>
@@ -33,7 +35,7 @@ const DetailPopup: FC<Props> = ({ id, onClose }) => {
 
         <Content>
           <Section>
-            <Typography variant="headline2Bold" color="label-normal">
+            <Typography color="label-normal" variant="headline2Bold">
               유저 입력 정보
             </Typography>
             <SectionContent>
@@ -47,7 +49,7 @@ const DetailPopup: FC<Props> = ({ id, onClose }) => {
           </Section>
 
           <Section borderLeft>
-            <Typography variant="headline2Bold" color="label-normal">
+            <Typography color="label-normal" variant="headline2Bold">
               활동 정보
             </Typography>
             <SectionContent>
@@ -65,8 +67,8 @@ const DetailPopup: FC<Props> = ({ id, onClose }) => {
 
         <ButtonContainer>
           <OutlinedButton
-            size="medium"
             color="status-positive"
+            size="medium"
             variant="assistive"
             leftIcon={
               <CircleCheck color={theme.colors.status.positive} size="18" />
@@ -75,8 +77,8 @@ const DetailPopup: FC<Props> = ({ id, onClose }) => {
             승인
           </OutlinedButton>
           <OutlinedButton
-            size="medium"
             color="status-negative"
+            size="medium"
             variant="assistive"
             leftIcon={
               <CircleClose color={theme.colors.status.nagative} size="18" />

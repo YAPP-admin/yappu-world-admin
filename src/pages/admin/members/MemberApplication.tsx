@@ -1,3 +1,6 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import CircleCheck from '@assets/CircleCheck';
 import CircleClose from '@assets/CircleClose';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -14,8 +17,6 @@ import TableRow from '@compnents/table/TableRow';
 import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
 import DetailPopup from 'features/member/application/DetailPopup';
-import { FC } from 'react';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const columns = [
@@ -74,7 +75,7 @@ const MemberApplication: FC = () => {
         <Typography variant="title2Bold">가입신청서</Typography>
 
         <FlexBox direction="column" gap={8}>
-          <FlexBox height="fit-content" justify="space-between" align="center">
+          <FlexBox align="center" height="fit-content" justify="space-between">
             <FlexBox gap={8} height="fit-content" width="fit-content">
               <Typography variant="headline1Bold">신청리스트</Typography>
               <Typography
@@ -88,7 +89,7 @@ const MemberApplication: FC = () => {
               </Typography>
             </FlexBox>
 
-            <FlexBox gap={8} align="center" width="fit-content">
+            <FlexBox align="center" gap={8} width="fit-content">
               <OutlinedButton
                 color="status-positive"
                 disabled={!selectedIndexes.length}
@@ -121,11 +122,11 @@ const MemberApplication: FC = () => {
                   />
                 </TableCell>
                 {columns.map((col) => (
-                  <TableCell as="th" key={col}>
+                  <TableCell key={col} as="th">
                     <Typography
                       color="label-normal"
-                      variant="body1Normal"
                       style={{ fontWeight: 600 }}
+                      variant="body1Normal"
                     >
                       {col}
                     </Typography>
@@ -163,9 +164,9 @@ const MemberApplication: FC = () => {
                     <TableCell>
                       <Typography color="label-normal" variant="body1Normal">
                         <Chip
-                          text={el.status}
-                          size="large"
                           color={getChipColor(el.status).color}
+                          size="large"
+                          text={el.status}
                           variant={getChipColor(el.status).variant}
                         />
                       </Typography>
@@ -200,7 +201,7 @@ const MemberApplication: FC = () => {
         </FlexBox>
       </Container>
       {isDetailPopup && (
-        <DetailPopup onClose={() => setIsDetailPopup(false)} id={selectedId} />
+        <DetailPopup id={selectedId} onClose={() => setIsDetailPopup(false)} />
       )}
     </>
   );

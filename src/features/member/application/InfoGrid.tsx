@@ -1,6 +1,7 @@
-import Typography from '@compnents/commons/Typography';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import Typography from '@compnents/commons/Typography';
 
 interface Props {
   label: string;
@@ -8,10 +9,10 @@ interface Props {
 }
 const InfoGrid: FC<Props> = ({ label, value }) => (
   <GridRow>
-    <Typography variant="body1Normal" color="label-alternative">
+    <Typography color="label-alternative" variant="body1Normal">
       {label}
     </Typography>
-    <Typography variant="body1Normal" color="label-normal">
+    <Typography color="label-normal" variant="body1Normal">
       {value}
     </Typography>
   </GridRow>

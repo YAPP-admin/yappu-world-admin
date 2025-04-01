@@ -33,7 +33,8 @@ const NoticeList: FC = () => {
     setIsDeleteCompletePopup,
   } = useNoticeStore();
 
-  const noticeIds = data?.data.map((notice) => Number(notice.noticeId)) || [];
+  const noticeIds =
+    data?.data.data.map((notice) => Number(notice.noticeId)) || [];
 
   const isAllChecked =
     noticeIds.length > 0 &&
@@ -95,7 +96,7 @@ const NoticeList: FC = () => {
                     fontWeight: 600,
                   }}
                 >
-                  {data?.totalCount}개
+                  {data?.data?.totalCount}개
                 </Typography>
               </FlexBox>
               <OutlinedButton
@@ -178,7 +179,7 @@ const NoticeList: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.map((notice) => {
+              {data?.data.data.map((notice) => {
                 const id = Number(notice.noticeId);
                 const isChecked = selectedIndexes.includes(id);
                 return (

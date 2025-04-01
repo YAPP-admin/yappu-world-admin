@@ -6,7 +6,8 @@ export const useApplicationDetailQuery = (id: string) => {
     queryKey: ['application-detail', id],
     queryFn: () => getApplicationDetail(id),
     select: (data) => {
-      return data;
+      return data.data;
     },
+    enabled: !!id,
   });
 };

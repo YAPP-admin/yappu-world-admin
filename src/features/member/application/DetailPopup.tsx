@@ -9,12 +9,16 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
 import InfoGrid from './InfoGrid';
+import { useApplicationDetailQuery } from '@queries/auth/useApplicationDetailQuery';
 
 interface Props {
-  id?: string;
+  id: string;
+  onClose: () => void;
 }
 
-const DetailPopup: FC<Props> = ({ id }) => {
+const DetailPopup: FC<Props> = ({ id, onClose }) => {
+  const { data } = useApplicationDetailQuery(id);
+
   return (
     <PopupContainer>
       <Container>
@@ -22,7 +26,7 @@ const DetailPopup: FC<Props> = ({ id }) => {
           <Typography variant="headline1Bold" color="label-normal">
             가입 신청서 상세
           </Typography>
-          <IconButton>
+          <IconButton onClick={onClose}>
             <Close color={theme.colors.label.assistive} />
           </IconButton>
         </Header>
@@ -33,9 +37,12 @@ const DetailPopup: FC<Props> = ({ id }) => {
               유저 입력 정보
             </Typography>
             <SectionContent>
-              <InfoGrid label="이름" value="김현정" />
-              <InfoGrid label="이메일" value="cowguswjd@gmail.com" />
-              <InfoGrid label="가입요청일" value="2025.02.01" />
+              <InfoGrid label="이름" value={data?.details.name ?? ''} />
+              <InfoGrid label="이메일" value={data?.details.email ?? ''} />
+              <InfoGrid
+                label="가입요청일"
+                value={data?.details.applicationDate ?? ''}
+              />
             </SectionContent>
           </Section>
 
@@ -45,9 +52,13 @@ const DetailPopup: FC<Props> = ({ id }) => {
             </Typography>
             <SectionContent>
               <InfoGrid label="기수" value="직군" />
-              <InfoGrid label="23기" value="Design" />
-              <InfoGrid label="24기" value="PM" />
-              <InfoGrid label="25기" value="PM" />
+              {data?.details.activityUnits.map((unit) => (
+                <InfoGrid
+                  key={`${unit.generation}-${unit.position}`}
+                  label={`${unit.generation}기`}
+                  value={unit.position.label}
+                />
+              ))}
             </SectionContent>
           </Section>
         </Content>

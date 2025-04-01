@@ -1,3 +1,8 @@
+import { FC } from 'react';
+import { Control, Controller, useForm, useWatch } from 'react-hook-form';
+import removeMarkdown from 'remove-markdown';
+import styled from 'styled-components';
+
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
@@ -8,10 +13,6 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { useEditNoticeMutation } from '@queries/notice/useEditNoticeMutation';
 import { EditNoticeReq, NoticeDetailRes } from 'apis/notice/types';
-import { FC } from 'react';
-import { Control, Controller, useForm, useWatch } from 'react-hook-form';
-import removeMarkdown from 'remove-markdown';
-import styled from 'styled-components';
 
 interface Props {
   handleEdit: () => void;
@@ -19,7 +20,7 @@ interface Props {
 }
 
 const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
-  const { register, handleSubmit, control, watch } = useForm<EditNoticeReq>({
+  const { register, handleSubmit, control } = useForm<EditNoticeReq>({
     defaultValues: {
       id: data?.noticeId,
       type: data?.type,
@@ -32,12 +33,13 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
 
   const onSumbit = (data: EditNoticeReq) => {
     const plainText = removeMarkdown(data.content).replaceAll(
+      // eslint-disable-next-line no-control-regex
       /[\x00-\x1F\x7F]/g,
       '',
     );
     const newData = { ...data, planContent: plainText };
     console.log(newData);
-    // mutate(newData);
+    mutate(newData);
   };
 
   return (
@@ -51,52 +53,50 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
           <GridBox columnGap={16} columns={'80px 1fr'}>
             <Typography variant="headline1Bold">공지타입</Typography>
             <Controller
-              name="type"
               control={control}
+              name="type"
               render={({ field }) => (
                 <Select
+                  optionList={['전체', '운영', '세션']}
+                  selectedValue={field.value}
                   size="large"
                   width="191px"
-                  selectedValue={field.value}
-                  optionList={['전체', '운영', '세션']}
                   onChange={field.onChange}
                 />
               )}
             />
           </GridBox>
-          <GridBox columnGap={16} columns={'80px 1fr'} fullWidth>
+          <GridBox fullWidth columnGap={16} columns={'80px 1fr'}>
             <Typography variant="headline1Bold">제목</Typography>
             <TextInput
               {...register('title')}
-              placeholder="제목을 입력하세요"
               maxLength={50}
+              placeholder="제목을 입력하세요"
             />
           </GridBox>
           <GridBox
+            fullWidth
             columnGap={16}
             columns={'80px 1fr'}
-            fullWidth
             height={'400px'}
           >
             <Typography variant="headline1Bold">내용</Typography>
             <InputWrapper>
               <TextInputBox
                 {...register('content')}
-                placeholder="내용을 입력해주세요"
                 height={400}
-                letterCount
                 maxLength={1000}
-                maxCount={1000}
+                placeholder="내용을 입력해주세요"
               />
               <Counter control={control} maxCount={1000} />
             </InputWrapper>
           </GridBox>
         </FlexBox>
         <FlexBox gap={8} justify="flex-end">
-          <OutlinedButton variant="assistive" onClick={handleEdit} size="large">
+          <OutlinedButton size="large" variant="assistive" onClick={handleEdit}>
             취소
           </OutlinedButton>
-          <SolidButton type="submit" size="large">
+          <SolidButton size="large" type="submit">
             저장
           </SolidButton>
         </FlexBox>
@@ -106,16 +106,6 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
 };
 
 export default NoticeEdit;
-
-const Container = styled.form`
-  display: flex;
-  /* width: 1206px; */
-  /* height: 1024px; */
-  padding: 32px 40px;
-  flex-direction: column;
-  gap: 40px;
-  flex-shrink: 0;
-`;
 
 const InputWrapper = styled.div`
   position: relative;

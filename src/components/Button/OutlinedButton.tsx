@@ -39,11 +39,11 @@ const OutlinedButton: FC<Props> = (props) => {
   return (
     <StyledButton
       {...rest}
-      leftIcon={leftIcon}
-      rightIcon={rightIcon}
-      $variant={variant}
       $color={color}
       $size={size}
+      $variant={variant}
+      leftIcon={leftIcon}
+      rightIcon={rightIcon}
       type={buttonType}
     >
       {children}

@@ -1,3 +1,8 @@
+import { FC, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
@@ -7,10 +12,6 @@ import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation
 import { NoticeDetailRes } from 'apis/notice/types';
 import RegisteredTime from 'features/notice/RegisteredTime';
 import Writer from 'features/notice/Writer';
-import { FC, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 
 interface Props {
   handleEdit: () => void;
@@ -33,13 +34,13 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
       <Container>
         <FlexBox direction="column" gap={24}>
           <FlexBox direction="column" gap={8}>
-            <FlexBox justify="space-between" align="center">
-              <FlexBox gap={24} align="center">
+            <FlexBox align="center" justify="space-between">
+              <FlexBox align="center" gap={24}>
                 <Chip
-                  variant="weak"
-                  text={data?.type === 'OPERATION' ? '운영' : '세션'}
                   color={data?.type === 'OPERATION' ? 'primary' : 'secondary'}
                   size="large"
+                  text={data?.type === 'OPERATION' ? '운영' : '세션'}
+                  variant="weak"
                 />
                 <Writer name={data?.writer.name ?? ''} />
                 <RegisteredTime date={data?.createdAt ?? ''} />
@@ -70,11 +71,11 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
       </Container>
       {isDeletePopup && (
         <ConfirmPopup
-          title="공지사항을 삭제할까요?"
           comment="삭제후 복구가 불가능합니다. "
           confirmActionLabel="삭제"
-          onConfirmAction={onClickToDelete}
+          title="공지사항을 삭제할까요?"
           onCancelAction={() => setIsDeletePopup(false)}
+          onConfirmAction={onClickToDelete}
         />
       )}
     </>

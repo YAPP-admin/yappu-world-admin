@@ -1,50 +1,27 @@
 import { forwardRef } from 'react';
-import Typography from './Typography';
 import styled from 'styled-components';
 
-type TextInputSize = 'large' | 'medium';
-type TextInputState = 'defatult' | 'active' | 'success';
+import Typography from './Typography';
 
 interface Props extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   title?: string;
-  inputSize?: TextInputSize;
-  status?: TextInputState;
-  letterCount?: boolean;
-  maxCount?: number;
   height?: string | number;
 }
 
 const TextInputBox = forwardRef<HTMLTextAreaElement, Props>(
-  (
-    {
-      title,
-      inputSize = 'large',
-      status = 'defatult',
-      letterCount = false,
-      maxCount,
-      height,
-      value,
-      ...rest
-    },
-    ref,
-  ) => {
-    const currentLength = typeof value === 'string' ? value.length : 0;
-
+  ({ title, height, ...rest }, ref) => {
     return (
       <Container height={height}>
         {title && <Typography variant="label1Normal">{title}</Typography>}
         <TextAreaWrapper>
           <textarea ref={ref} {...rest} />
-          {/* {letterCount && (
-            <CountWrapper>
-              {currentLength} / {maxCount}
-            </CountWrapper>
-          )} */}
         </TextAreaWrapper>
       </Container>
     );
   },
 );
+
+TextInputBox.displayName = 'TextInputBox';
 
 export default TextInputBox;
 
@@ -83,12 +60,4 @@ const TextAreaWrapper = styled.div`
   textarea:focus {
     outline: none;
   }
-`;
-
-const CountWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 2px;
-  align-self: stretch;
 `;

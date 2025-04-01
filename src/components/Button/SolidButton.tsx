@@ -34,10 +34,10 @@ const SolidButton: FC<Props> = (props) => {
       {...rest}
       $disabled={disabled}
       $size={size}
-      type={type}
       $variant={variant}
       leftIcon={leftIcon}
       rightIcon={rightIcon}
+      type={type}
     >
       {children}
     </StyledButton>

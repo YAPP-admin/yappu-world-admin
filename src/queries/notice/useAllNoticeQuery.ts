@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { getAllNotice } from 'apis/notice/NoticeApis';
 
 export const useAllNoticeQuery = () => {

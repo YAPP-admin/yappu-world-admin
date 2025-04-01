@@ -6,9 +6,9 @@ import MemberApplication from '@pages/admin/members/MemberApplication';
 import MemberCode from '@pages/admin/members/MemberCode';
 import MemberGeneration from '@pages/admin/members/MemberGeneration';
 import MemberList from '@pages/admin/members/MemberList';
+import Notice from '@pages/admin/notices/Notice.tsx';
 import NoticeList from '@pages/admin/notices/NoticeList';
 import NoticeWrite from '@pages/admin/notices/NoticeWrite';
-import Notice from '@pages/admin/notices/Notice.tsx';
 import Session from '@pages/admin/sessions/Session.tsx';
 import SettingLink from '@pages/admin/settings/SettingLink';
 import SettingUpdate from '@pages/admin/settings/SettingUpdate';
@@ -33,11 +33,11 @@ export const RouteSetup = () => {
 
           <Route path="notices">
             <Route index element={<NoticeList />} />
-            <Route path="write" element={<NoticeWrite />} />
-            <Route path="detail/:id" element={<Notice />} />
+            <Route element={<NoticeWrite />} path="write" />
+            <Route element={<Notice />} path="detail/:id" />
           </Route>
 
-          <Route path="sessions" element={<Session />} />
+          <Route element={<Session />} path="sessions" />
 
           <Route path="settings">
             <Route index element={<Navigate replace to="update" />} />

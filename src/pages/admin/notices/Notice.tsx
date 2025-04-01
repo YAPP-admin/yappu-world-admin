@@ -1,11 +1,13 @@
-import ArrowLeft from '@assets/ArrowLeft';
-import IconButton from '@compnents/Button/IconButton';
 import { FC, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import NoticeEdit from './NoticeEdit';
-import NoticeDetail from './NoticeDetail';
+
+import ArrowLeft from '@assets/ArrowLeft';
+import IconButton from '@compnents/Button/IconButton';
 import { useNoticeDetailQuery } from '@queries/notice/useNoticeDetailQuery';
+
+import NoticeDetail from './NoticeDetail';
+import NoticeEdit from './NoticeEdit';
 
 const Notice: FC = () => {
   const params = useParams();
@@ -23,9 +25,9 @@ const Notice: FC = () => {
         <ArrowLeft size="20" />
       </IconButton>
       {isEdit ? (
-        <NoticeEdit handleEdit={() => setIsEdit(false)} data={data} />
+        <NoticeEdit data={data} handleEdit={() => setIsEdit(false)} />
       ) : (
-        <NoticeDetail handleEdit={() => setIsEdit(true)} data={data} />
+        <NoticeDetail data={data} handleEdit={() => setIsEdit(true)} />
       )}
     </Container>
   );

@@ -36,19 +36,19 @@ const GridBox: FC<GridBoxProps> = ({
 }) => {
   return (
     <StyledGridBox
-      columns={columns}
-      rows={rows}
-      gap={gap}
-      columnGap={columnGap}
-      rowGap={rowGap}
-      width={width}
-      height={height}
-      fullWidth={fullWidth}
-      fullHeight={fullHeight}
-      padding={padding}
-      margin={margin}
       align={align}
+      columnGap={columnGap}
+      columns={columns}
+      fullHeight={fullHeight}
+      fullWidth={fullWidth}
+      gap={gap}
+      height={height}
       justify={justify}
+      margin={margin}
+      padding={padding}
+      rowGap={rowGap}
+      rows={rows}
+      width={width}
     >
       {children}
     </StyledGridBox>

@@ -1,3 +1,8 @@
+import dayjs from 'dayjs';
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import Trash from '@assets/Trash';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
@@ -14,10 +19,6 @@ import TableRow from '@compnents/table/TableRow';
 import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
 import { useNoticeStore } from '@stores/noticeStore';
 import { deleteNotice } from 'apis/notice/NoticeApis';
-import dayjs from 'dayjs';
-import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import theme from 'styles/theme';
 
 const NoticeList: FC = () => {
@@ -76,20 +77,20 @@ const NoticeList: FC = () => {
   return (
     <>
       <Container>
-        <FlexBox justify="space-between" height="fit-content">
+        <FlexBox height="fit-content" justify="space-between">
           <Typography variant="title2Bold">공지사항</Typography>
           <SolidButton size="medium" onClick={onClickMoveToWrite}>
             글쓰기
           </SolidButton>
         </FlexBox>
         <FlexBox direction="column" gap={8}>
-          <FlexBox justify="space-between" height="fit-content">
-            <FlexBox justify="space-between" height="fit-content">
+          <FlexBox height="fit-content" justify="space-between">
+            <FlexBox height="fit-content" justify="space-between">
               <FlexBox gap={8} height="fit-content" width="fit-content">
                 <Typography variant="headline1Bold">공지리스트</Typography>
                 <Typography
-                  variant="body1Normal"
                   color="label-alternative"
+                  variant="body1Normal"
                   style={{
                     fontWeight: 600,
                   }}
@@ -99,11 +100,11 @@ const NoticeList: FC = () => {
               </FlexBox>
               <OutlinedButton
                 color="status-negative"
-                leftIcon={
-                  <Trash size="16" color={theme.colors.status.nagative} />
-                }
-                variant="assistive"
                 disabled={!selectedIndexes.length}
+                variant="assistive"
+                leftIcon={
+                  <Trash color={theme.colors.status.nagative} size="16" />
+                }
                 onClick={() => setIsDeletePopup(true)}
               >
                 삭제
@@ -121,8 +122,8 @@ const NoticeList: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -132,8 +133,8 @@ const NoticeList: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -143,8 +144,8 @@ const NoticeList: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -154,8 +155,8 @@ const NoticeList: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -165,8 +166,8 @@ const NoticeList: FC = () => {
                 </TableCell>
                 <TableCell as="th" justifyContent="center">
                   <Typography
-                    variant="body1Normal"
                     color="label-normal"
+                    variant="body1Normal"
                     style={{
                       fontWeight: 600,
                     }}
@@ -195,27 +196,27 @@ const NoticeList: FC = () => {
                       />
                     </TableCell>
                     <TableCell justifyContent="center">
-                      <Typography variant="body1Normal" color="label-normal">
+                      <Typography color="label-normal" variant="body1Normal">
                         {notice.noticeId}
                       </Typography>
                     </TableCell>
                     <TableCell justifyContent="center">
-                      <Typography variant="body1Normal" color="label-normal">
+                      <Typography color="label-normal" variant="body1Normal">
                         {notice.title}
                       </Typography>
                     </TableCell>
                     <TableCell justifyContent="center">
-                      <Typography variant="body1Normal" color="label-normal">
+                      <Typography color="label-normal" variant="body1Normal">
                         {notice.noticeType}
                       </Typography>
                     </TableCell>
                     <TableCell justifyContent="center">
-                      <Typography variant="body1Normal" color="label-normal">
+                      <Typography color="label-normal" variant="body1Normal">
                         {notice.writer.name}
                       </Typography>
                     </TableCell>
                     <TableCell justifyContent="center">
-                      <Typography variant="body1Normal" color="label-normal">
+                      <Typography color="label-normal" variant="body1Normal">
                         {dayjs(notice.createdAt).format('YYYY.MM.DD hh:mm')}
                       </Typography>
                     </TableCell>
@@ -228,17 +229,17 @@ const NoticeList: FC = () => {
       </Container>
       {isDeletePopup && (
         <ConfirmPopup
-          title="링크 삭제"
           comment={`선택하신 ${selectedIndexes.length}개의 링크를 삭제하시겠습니까?`}
           confirmActionLabel="삭제"
-          onConfirmAction={onClickToDelete}
+          title="링크 삭제"
           onCancelAction={() => setIsDeletePopup(false)}
+          onConfirmAction={onClickToDelete}
         />
       )}
       {isDeleteCompletePopup && (
         <CompletePopup
-          title="삭제 완료"
           comment="삭제되었습니다."
+          title="삭제 완료"
           onClose={() => setIsDeleteCompletePopup(false)}
         />
       )}

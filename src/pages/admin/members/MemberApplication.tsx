@@ -12,6 +12,7 @@ import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { useApplicationStore } from '@stores/applicationStore';
+import DetailPopup from 'features/member/application/DetailPopup';
 import { FC } from 'react';
 import styled from 'styled-components';
 import theme from 'styles/theme';
@@ -104,131 +105,134 @@ const MemberApplication: FC = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="title2Bold">가입신청서</Typography>
+    <>
+      <Container>
+        <Typography variant="title2Bold">가입신청서</Typography>
 
-      <FlexBox direction="column" gap={8}>
-        <FlexBox height="fit-content" justify="space-between" align="center">
-          <FlexBox gap={8} height="fit-content" width="fit-content">
-            <Typography variant="headline1Bold">신청리스트</Typography>
-            <Typography
-              color="label-alternative"
-              variant="body1Normal"
-              style={{
-                fontWeight: 600,
-              }}
-            >
-              {data.totalCount}개
-            </Typography>
-          </FlexBox>
+        <FlexBox direction="column" gap={8}>
+          <FlexBox height="fit-content" justify="space-between" align="center">
+            <FlexBox gap={8} height="fit-content" width="fit-content">
+              <Typography variant="headline1Bold">신청리스트</Typography>
+              <Typography
+                color="label-alternative"
+                variant="body1Normal"
+                style={{
+                  fontWeight: 600,
+                }}
+              >
+                {data.totalCount}개
+              </Typography>
+            </FlexBox>
 
-          <FlexBox gap={8} align="center" width="fit-content">
-            <OutlinedButton
-              color="status-positive"
-              disabled={!selectedIndexes.length}
-              variant="assistive"
-              leftIcon={
-                <CircleCheck color={theme.colors.status.positive} size="16" />
-              }
-            >
-              승인
-            </OutlinedButton>
-            <OutlinedButton
-              color="status-negative"
-              disabled={!selectedIndexes.length}
-              variant="assistive"
-              leftIcon={
-                <CircleClose color={theme.colors.status.nagative} size="16" />
-              }
-            >
-              삭제
-            </OutlinedButton>
+            <FlexBox gap={8} align="center" width="fit-content">
+              <OutlinedButton
+                color="status-positive"
+                disabled={!selectedIndexes.length}
+                variant="assistive"
+                leftIcon={
+                  <CircleCheck color={theme.colors.status.positive} size="16" />
+                }
+              >
+                승인
+              </OutlinedButton>
+              <OutlinedButton
+                color="status-negative"
+                disabled={!selectedIndexes.length}
+                variant="assistive"
+                leftIcon={
+                  <CircleClose color={theme.colors.status.nagative} size="16" />
+                }
+              >
+                거절
+              </OutlinedButton>
+            </FlexBox>
           </FlexBox>
-        </FlexBox>
-        <StyledTable>
-          <TableHead>
-            <TableRow>
-              <TableCell as="th">
-                <Checkbox
-                  state={isAllChecked ? 'checked' : 'unchecked'}
-                  onClick={onClickAllCheck}
-                />
-              </TableCell>
-              {columns.map((col) => (
-                <TableCell as="th" key={col}>
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{ fontWeight: 600 }}
-                  >
-                    {col}
-                  </Typography>
+          <StyledTable>
+            <TableHead>
+              <TableRow>
+                <TableCell as="th">
+                  <Checkbox
+                    state={isAllChecked ? 'checked' : 'unchecked'}
+                    onClick={onClickAllCheck}
+                  />
                 </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.data.map((el) => {
-              const id = Number(el.applicationId);
-              const isChecked = selectedIndexes.includes(id);
-              return (
-                <TableRow key={el.applicationId}>
-                  <TableCell>
-                    <Checkbox
-                      state={isChecked ? 'checked' : 'unchecked'}
-                      onClick={() => onClickRowCheck(id)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      {el.applicationId}
+                {columns.map((col) => (
+                  <TableCell as="th" key={col}>
+                    <Typography
+                      color="label-normal"
+                      variant="body1Normal"
+                      style={{ fontWeight: 600 }}
+                    >
+                      {col}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      {el.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      {el.email}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      <Chip
-                        text={el.status}
-                        size="large"
-                        color={getChipColor(el.status).color}
-                        variant={getChipColor(el.status).variant}
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.data.map((el) => {
+                const id = Number(el.applicationId);
+                const isChecked = selectedIndexes.includes(id);
+                return (
+                  <TableRow key={el.applicationId}>
+                    <TableCell>
+                      <Checkbox
+                        state={isChecked ? 'checked' : 'unchecked'}
+                        onClick={() => onClickRowCheck(id)}
                       />
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      {el.activityUnit.generation}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      {el.activityUnit.position.label}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="label-normal" variant="body1Normal">
-                      {el.applicationDate}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <TextButton>상세보기</TextButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </StyledTable>
-      </FlexBox>
-    </Container>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.applicationId}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.email}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        <Chip
+                          text={el.status}
+                          size="large"
+                          color={getChipColor(el.status).color}
+                          variant={getChipColor(el.status).variant}
+                        />
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.activityUnit.generation}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.activityUnit.position.label}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.applicationDate}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <TextButton>상세보기</TextButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </StyledTable>
+        </FlexBox>
+      </Container>
+      <DetailPopup />
+    </>
   );
 };
 

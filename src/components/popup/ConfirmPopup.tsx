@@ -10,7 +10,7 @@ interface Props {
   title: string;
   comment: string;
   confirmActionLabel: string;
-  cancelActionLabel: string;
+  cancelActionLabel?: string;
   onConfirmAction: () => void;
   onCancelAction: () => void;
 }
@@ -20,7 +20,7 @@ const ConfirmPopup: FC<Props> = (props) => {
     title,
     comment,
     confirmActionLabel,
-    cancelActionLabel,
+    cancelActionLabel = '취소',
     onConfirmAction,
     onCancelAction,
   } = props;

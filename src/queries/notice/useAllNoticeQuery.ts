@@ -6,7 +6,7 @@ export const useAllNoticeQuery = () => {
     queryKey: ['notice-list'],
     queryFn: () => getAllNotice(1, 10, 'ALL'),
     select: (data) => {
-      console.log('data :', data);
+      // console.log('data :', data);
       return data.data;
     },
   });

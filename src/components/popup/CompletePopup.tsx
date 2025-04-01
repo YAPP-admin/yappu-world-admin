@@ -7,12 +7,12 @@ import styled from 'styled-components';
 interface Props {
   title: string;
   comment: string;
-  buttonText: string;
   onClose: () => void;
+  buttonText?: string;
 }
 
 const CompletePopup: FC<Props> = (props) => {
-  const { title, comment, buttonText, onClose } = props;
+  const { title, comment, onClose, buttonText = '확인' } = props;
   return (
     <PopupContainer onClose={onClose}>
       <Container>

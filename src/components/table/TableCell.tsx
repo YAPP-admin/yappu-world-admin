@@ -9,7 +9,7 @@ type JustifyContent =
   | 'space-between'
   | 'space-around';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLTableCellElement> {
   as?: 'th' | 'td';
   scope?: 'row' | 'col';
   align?: 'left' | 'center' | 'right';
@@ -26,10 +26,11 @@ const TableCell: FC<Props> = (props) => {
     align = 'center',
     alignItems = 'flex-start',
     justifyContent = 'flex-start',
+    ...rest
   } = props;
 
   return (
-    <StyledTableCell align={align} as={as}>
+    <StyledTableCell {...rest} align={align} as={as}>
       <Wrapper $alignItems={alignItems} $justifyContent={justifyContent}>
         {children}
       </Wrapper>

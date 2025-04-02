@@ -34,4 +34,5 @@ const Styled = styled.span<{
 }>(({ $variant, $color }) => ({
   ...typography[$variant],
   color: semanticColor[$color],
+  whiteSpace: 'pre-line',
 }));

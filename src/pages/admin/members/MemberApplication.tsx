@@ -5,10 +5,11 @@ import CircleCheck from '@assets/CircleCheck';
 import CircleClose from '@assets/CircleClose';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import TextButton from '@compnents/Button/TextButton';
-import Chip, { ChipColor, ChipStyle } from '@compnents/commons/Chip';
+import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
+import CompletePopup from '@compnents/popup/CompletePopup';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
@@ -16,6 +17,9 @@ import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
+import { getChipColor } from '@utils/getChipColor';
+import { ApplicationListRes } from 'apis/auth/types';
+import ApprovePopup from 'features/member/application/ApprovePopup';
 import DetailPopup from 'features/member/application/DetailPopup';
 import theme from 'styles/theme';
 
@@ -37,16 +41,20 @@ const MemberApplication: FC = () => {
     setSelectedIndexes,
     isDetailPopup,
     setIsDetailPopup,
-    selectedId,
-    setSelectedId,
+    selectedList,
+    setSelectedList,
+    isApprovePopup,
+    setIsApprovePopup,
+    isApproveCompletePopup,
+    setIsApproveCompletePopup,
   } = useApplicationStore();
 
   const applicationIds =
-    data?.data.map((application) => Number(application.applicationId)) || [];
+    data?.data.data.map((application) => application.applicationId) || [];
 
   const isAllChecked =
     applicationIds.length > 0 &&
-    applicationIds.every((id) => selectedIndexes.includes(id));
+    applicationIds.every((id) => selectedIndexes.includes(id.toString()));
 
   const onClickAllCheck = () => {
     if (isAllChecked) {
@@ -56,7 +64,7 @@ const MemberApplication: FC = () => {
     }
   };
 
-  const onClickRowCheck = (id: number) => {
+  const onClickRowCheck = (id: string) => {
     if (selectedIndexes.includes(id)) {
       setSelectedIndexes(selectedIndexes.filter((v) => v !== id));
     } else {
@@ -64,8 +72,8 @@ const MemberApplication: FC = () => {
     }
   };
 
-  const onClickToDetail = (id: string) => {
-    setSelectedId(id);
+  const onClickToDetail = (list: ApplicationListRes) => {
+    setSelectedList(list);
     setIsDetailPopup(true);
   };
 
@@ -85,7 +93,7 @@ const MemberApplication: FC = () => {
                   fontWeight: 600,
                 }}
               >
-                {data?.totalCount}개
+                {data?.data.totalCount}개
               </Typography>
             </FlexBox>
 
@@ -97,6 +105,7 @@ const MemberApplication: FC = () => {
                 leftIcon={
                   <CircleCheck color={theme.colors.status.positive} size="16" />
                 }
+                onClick={() => setIsApprovePopup(true)}
               >
                 승인
               </OutlinedButton>
@@ -135,8 +144,8 @@ const MemberApplication: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.map((el) => {
-                const id = Number(el.applicationId);
+              {data?.data.data.map((el) => {
+                const id = el.applicationId;
                 const isChecked = selectedIndexes.includes(id);
                 return (
                   <TableRow key={el.applicationId}>
@@ -187,9 +196,7 @@ const MemberApplication: FC = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <TextButton
-                        onClick={() => onClickToDetail(el.applicationId)}
-                      >
+                      <TextButton onClick={() => onClickToDetail(el)}>
                         상세보기
                       </TextButton>
                     </TableCell>
@@ -201,7 +208,24 @@ const MemberApplication: FC = () => {
         </FlexBox>
       </Container>
       {isDetailPopup && (
-        <DetailPopup id={selectedId} onClose={() => setIsDetailPopup(false)} />
+        <DetailPopup
+          selectedList={selectedList}
+          onClose={() => setIsDetailPopup(false)}
+        />
+      )}
+      {isApprovePopup && (
+        <ApprovePopup
+          isBulk
+          selectedIndexes={selectedIndexes}
+          onClose={() => setIsApprovePopup(false)}
+        />
+      )}
+      {isApproveCompletePopup && (
+        <CompletePopup
+          comment="승인 처리되었습니다."
+          title="승인 완료"
+          onClose={() => setIsApproveCompletePopup(false)}
+        />
       )}
     </>
   );
@@ -215,18 +239,3 @@ const Container = styled.div`
   padding: 32px 40px;
   gap: 24px;
 `;
-
-const getChipColor = (
-  type: string,
-): { color: ChipColor; variant: ChipStyle } => {
-  switch (type) {
-    case '대기':
-      return { color: 'neutral', variant: 'weak' };
-    case '거절':
-      return { color: 'primary', variant: 'fill' };
-    case '승인':
-      return { color: 'secondary', variant: 'fill' };
-    default:
-      return { color: 'neutral', variant: 'weak' };
-  }
-};

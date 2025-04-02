@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import CircleCheck from '@assets/CircleCheck';
@@ -9,86 +9,101 @@ import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { useApplicationDetailQuery } from '@queries/auth/useApplicationDetailQuery';
+import { ApplicationListRes } from 'apis/auth/types';
 import theme from 'styles/theme';
 
+import ApprovePopup from './ApprovePopup';
 import InfoGrid from './InfoGrid';
 
 interface Props {
-  id: string;
+  selectedList: ApplicationListRes | null;
   onClose: () => void;
 }
 
-const DetailPopup: FC<Props> = ({ id, onClose }) => {
-  const { data } = useApplicationDetailQuery(id);
+const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
+  const { data } = useApplicationDetailQuery(selectedList?.applicationId ?? '');
+  const [approve, setApprove] = useState(false);
 
   return (
-    <PopupContainer>
-      <Container>
-        <Header>
-          <Typography color="label-normal" variant="headline1Bold">
-            가입 신청서 상세
-          </Typography>
-          <IconButton onClick={onClose}>
-            <Close color={theme.colors.label.assistive} />
-          </IconButton>
-        </Header>
-
-        <Content>
-          <Section>
-            <Typography color="label-normal" variant="headline2Bold">
-              유저 입력 정보
+    <>
+      <PopupContainer>
+        <Container>
+          <Header>
+            <Typography color="label-normal" variant="headline1Bold">
+              가입 신청서 상세
             </Typography>
-            <SectionContent>
-              <InfoGrid label="이름" value={data?.details.name ?? ''} />
-              <InfoGrid label="이메일" value={data?.details.email ?? ''} />
-              <InfoGrid
-                label="가입요청일"
-                value={data?.details.applicationDate ?? ''}
-              />
-            </SectionContent>
-          </Section>
+            <IconButton onClick={onClose}>
+              <Close color={theme.colors.label.assistive} />
+            </IconButton>
+          </Header>
 
-          <Section borderLeft>
-            <Typography color="label-normal" variant="headline2Bold">
-              활동 정보
-            </Typography>
-            <SectionContent>
-              <InfoGrid label="기수" value="직군" />
-              {data?.details.activityUnits.map((unit) => (
+          <Content>
+            <Section>
+              <Typography color="label-normal" variant="headline2Bold">
+                유저 입력 정보
+              </Typography>
+              <SectionContent>
+                <InfoGrid label="이름" value={data?.data.details.name ?? ''} />
                 <InfoGrid
-                  key={`${unit.generation}-${unit.position}`}
-                  label={`${unit.generation}기`}
-                  value={unit.position.label}
+                  label="이메일"
+                  value={data?.data.details.email ?? ''}
                 />
-              ))}
-            </SectionContent>
-          </Section>
-        </Content>
+                <InfoGrid
+                  label="가입요청일"
+                  value={data?.data.details.applicationDate ?? ''}
+                />
+              </SectionContent>
+            </Section>
 
-        <ButtonContainer>
-          <OutlinedButton
-            color="status-positive"
-            size="medium"
-            variant="assistive"
-            leftIcon={
-              <CircleCheck color={theme.colors.status.positive} size="18" />
-            }
-          >
-            승인
-          </OutlinedButton>
-          <OutlinedButton
-            color="status-negative"
-            size="medium"
-            variant="assistive"
-            leftIcon={
-              <CircleClose color={theme.colors.status.nagative} size="18" />
-            }
-          >
-            거절
-          </OutlinedButton>
-        </ButtonContainer>
-      </Container>
-    </PopupContainer>
+            <Section borderLeft>
+              <Typography color="label-normal" variant="headline2Bold">
+                활동 정보
+              </Typography>
+              <SectionContent>
+                <InfoGrid label="기수" value="직군" />
+                {data?.data.details.activityUnits.map((unit) => (
+                  <InfoGrid
+                    key={`${unit.generation}-${unit.position}`}
+                    label={`${unit.generation}기`}
+                    value={unit.position.label}
+                  />
+                ))}
+              </SectionContent>
+            </Section>
+          </Content>
+
+          <ButtonContainer>
+            <OutlinedButton
+              color="status-positive"
+              size="medium"
+              variant="assistive"
+              leftIcon={
+                <CircleCheck color={theme.colors.status.positive} size="18" />
+              }
+              onClick={() => setApprove(true)}
+            >
+              승인
+            </OutlinedButton>
+            <OutlinedButton
+              color="status-negative"
+              size="medium"
+              variant="assistive"
+              leftIcon={
+                <CircleClose color={theme.colors.status.nagative} size="18" />
+              }
+            >
+              거절
+            </OutlinedButton>
+          </ButtonContainer>
+        </Container>
+      </PopupContainer>
+      {approve && (
+        <ApprovePopup
+          selectedList={selectedList}
+          onClose={() => setApprove(false)}
+        />
+      )}
+    </>
   );
 };
 

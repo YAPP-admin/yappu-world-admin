@@ -28,9 +28,9 @@ export type PrimaryColorKey =
   | 'primary-heavy';
 
 export const Primary = {
-  'primary-normal': Blue['blue-50'],
-  'primary-strong': Blue['blue-45'],
-  'primary-heavy': Blue['blue-40'],
+  'primary-normal': Orange['orange-50'],
+  'primary-strong': Orange['orange-45'],
+  'primary-heavy': Orange['orange-40'],
 } as const;
 
 export type LabelColorKey =

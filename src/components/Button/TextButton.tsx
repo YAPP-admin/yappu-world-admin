@@ -14,7 +14,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  disabled?: boolean;
 }
 
 const TextButton: FC<Props> = (props) => {
@@ -24,14 +23,12 @@ const TextButton: FC<Props> = (props) => {
     children,
     variant = 'primary',
     size = 'small',
-    disabled = false,
     ...rest
   } = props;
 
   return (
     <StyledButton
       {...rest}
-      $disabled={disabled}
       $size={size}
       $variant={variant}
       leftIcon={leftIcon}
@@ -47,7 +44,6 @@ export default TextButton;
 const StyledButton = styled(ButtonBase)<{
   $variant: ButtonVariant;
   $size: ButtonSize;
-  $disabled: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -58,25 +54,25 @@ const StyledButton = styled(ButtonBase)<{
 
   ${({ $size }) => textButtonSizeStyles[$size]}
 
-  ${({ $variant, $disabled }) => {
+  ${({ $variant }) => {
     if ($variant === 'primary') {
-      return $disabled
-        ? css`
-            color: rgba(55, 56, 60, 0.16);
-          `
-        : css`
-            color: #fa6027;
-          `;
+      return css`
+        color: #fa6027;
+
+        &:disabled {
+          color: rgba(55, 56, 60, 0.16);
+        }
+      `;
     }
 
     if ($variant === 'assistive') {
-      return $disabled
-        ? css`
-            color: rgba(55, 56, 60, 0.16);
-          `
-        : css`
-            color: rgba(55, 56, 60, 0.61);
-          `;
+      return css`
+        color: rgba(55, 56, 60, 0.61);
+
+        &:disabled {
+          color: rgba(55, 56, 60, 0.16);
+        }
+      `;
     }
   }}
 `;

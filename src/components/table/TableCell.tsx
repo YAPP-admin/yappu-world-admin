@@ -23,8 +23,8 @@ const TableCell: FC<Props> = (props) => {
     children,
     as = 'td',
     align = 'center',
-    alignItems = 'flex-start',
-    justifyContent = 'flex-start',
+    alignItems = 'center',
+    justifyContent = 'center',
     ...rest
   } = props;
 

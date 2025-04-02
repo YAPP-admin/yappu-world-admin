@@ -1,7 +1,21 @@
 import axiosInstance from 'apis/common/axiosInstance';
-import { ApiResponse } from 'apis/common/types';
+import {
+  ApiResponse,
+  PaginatedApiResponse,
+  PaginatedReq,
+} from 'apis/common/types';
 
-import { LoginReq, LoginRes, MemberCodeReq, MemberCodeRes } from './types';
+import {
+  ApplicationApproveReq,
+  ApplicationDetailRes,
+  ApplicationListRes,
+  ApplicationRejectReq,
+  EidtUserRoleReq,
+  LoginReq,
+  LoginRes,
+  MemberCodeReq,
+  MemberCodeRes,
+} from './types';
 
 export const postLogin = async (data: LoginReq) => {
   return axiosInstance.post<ApiResponse<LoginRes>>(
@@ -61,3 +75,33 @@ const memberCode: MemberCodeRes[] = [
     },
   },
 ];
+
+export const postApplicationReject = (data: ApplicationRejectReq) => {
+  return axiosInstance.post<ApiResponse<void>>(
+    '/admin/v1/auth/applications/reject',
+    data,
+  );
+};
+
+export const postApplicationApprove = (data: ApplicationApproveReq) => {
+  return axiosInstance.post<ApiResponse<void>>(
+    '/admin/v1/auth/applications/approve',
+    data,
+  );
+};
+
+export const patchUserRole = (data: EidtUserRoleReq) => {
+  return axiosInstance.post<ApiResponse<void>>('/admin/v1/users/role', data);
+};
+
+export const getApplicationList = ({ page, size }: PaginatedReq) => {
+  return axiosInstance.get<PaginatedApiResponse<ApplicationListRes>>(
+    `/admin/v1/auth/applications?page=${page}&size=${size}`,
+  );
+};
+
+export const getApplicationDetail = (applicationId: string) => {
+  return axiosInstance.get<ApiResponse<ApplicationDetailRes>>(
+    `/admin/v1/auth/applications/${applicationId}`,
+  );
+};

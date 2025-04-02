@@ -21,6 +21,7 @@ import { getChipColor } from '@utils/getChipColor';
 import { ApplicationListRes } from 'apis/auth/types';
 import ApprovePopup from 'features/member/application/ApprovePopup';
 import DetailPopup from 'features/member/application/DetailPopup';
+import RefusePopup from 'features/member/application/RejectPopup';
 import theme from 'styles/theme';
 
 const columns = [
@@ -47,6 +48,10 @@ const MemberApplication: FC = () => {
     setIsApprovePopup,
     isApproveCompletePopup,
     setIsApproveCompletePopup,
+    isRejectPopup,
+    setIsRejectPopup,
+    isRejectCompletePopup,
+    setIsRejectCompletePopup,
   } = useApplicationStore();
 
   const applicationIds =
@@ -116,6 +121,7 @@ const MemberApplication: FC = () => {
                 leftIcon={
                   <CircleClose color={theme.colors.status.nagative} size="16" />
                 }
+                onClick={() => setIsRejectPopup(true)}
               >
                 거절
               </OutlinedButton>
@@ -225,6 +231,20 @@ const MemberApplication: FC = () => {
           comment="승인 처리되었습니다."
           title="승인 완료"
           onClose={() => setIsApproveCompletePopup(false)}
+        />
+      )}
+      {isRejectPopup && (
+        <RefusePopup
+          isBulk
+          selectedIndexes={selectedIndexes}
+          onClose={() => setIsRejectPopup(false)}
+        />
+      )}
+      {isRejectCompletePopup && (
+        <CompletePopup
+          comment="거절 처리되었습니다."
+          title="거절 완료"
+          onClose={() => setIsRejectCompletePopup(false)}
         />
       )}
     </>

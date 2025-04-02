@@ -15,6 +15,12 @@ interface ApplicationState {
   setIsApproveConfirmPopup: (value: boolean) => void;
   isApproveCompletePopup: boolean;
   setIsApproveCompletePopup: (value: boolean) => void;
+  isRejectPopup: boolean;
+  setIsRejectPopup: (value: boolean) => void;
+  isRejectConfirmPopup: boolean;
+  setIsRejectConfirmPopup: (value: boolean) => void;
+  isRejectCompletePopup: boolean;
+  setIsRejectCompletePopup: (value: boolean) => void;
 }
 
 export const useApplicationStore = create<ApplicationState>((set) => ({
@@ -33,4 +39,12 @@ export const useApplicationStore = create<ApplicationState>((set) => ({
   isApproveCompletePopup: false,
   setIsApproveCompletePopup: (value: boolean) =>
     set({ isApproveCompletePopup: value }),
+  isRejectPopup: false,
+  setIsRejectPopup: (value: boolean) => set({ isRejectPopup: value }),
+  isRejectConfirmPopup: false,
+  setIsRejectConfirmPopup: (value: boolean) =>
+    set({ isRejectConfirmPopup: value }),
+  isRejectCompletePopup: false,
+  setIsRejectCompletePopup: (value: boolean) =>
+    set({ isRejectCompletePopup: value }),
 }));

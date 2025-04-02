@@ -124,5 +124,11 @@ const OptionWrapper = styled.ul`
     font-weight: 400;
     line-height: 24px;
     letter-spacing: 0.091px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  li:hover {
+    background: ${theme.colors.fill.normal};
   }
 `;

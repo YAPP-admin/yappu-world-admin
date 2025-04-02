@@ -14,6 +14,7 @@ import theme from 'styles/theme';
 
 import ApprovePopup from './ApprovePopup';
 import InfoGrid from './InfoGrid';
+import RefusePopup from './RejectPopup';
 
 interface Props {
   selectedList: ApplicationListRes | null;
@@ -23,6 +24,7 @@ interface Props {
 const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
   const { data } = useApplicationDetailQuery(selectedList?.applicationId ?? '');
   const [approve, setApprove] = useState(false);
+  const [reject, setReject] = useState(false);
 
   return (
     <>
@@ -91,6 +93,7 @@ const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
               leftIcon={
                 <CircleClose color={theme.colors.status.nagative} size="18" />
               }
+              onClick={() => setReject(true)}
             >
               거절
             </OutlinedButton>
@@ -101,6 +104,12 @@ const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
         <ApprovePopup
           selectedList={selectedList}
           onClose={() => setApprove(false)}
+        />
+      )}
+      {reject && (
+        <RefusePopup
+          selectedList={selectedList}
+          onClose={() => setReject(false)}
         />
       )}
     </>

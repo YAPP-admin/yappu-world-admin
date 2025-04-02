@@ -10,7 +10,7 @@ interface Props<T> {
   width?: string;
   optionList: T[];
   selectedValue: T;
-  onChange: (value: T) => void;
+  onChange?: (value: T) => void;
   getLabel?: (option: T) => string;
   size?: 'medium' | 'large';
 }
@@ -65,7 +65,7 @@ const Select = <T,>({
             <li
               key={index}
               onClick={() => {
-                onChange(option);
+                onChange?.(option);
                 setIsClick(false);
               }}
             >

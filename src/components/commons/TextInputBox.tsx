@@ -6,12 +6,13 @@ import Typography from './Typography';
 interface Props extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   title?: string;
   height?: string | number;
+  width?: string | number;
 }
 
 const TextInputBox = forwardRef<HTMLTextAreaElement, Props>(
-  ({ title, height, ...rest }, ref) => {
+  ({ title, height, width, ...rest }, ref) => {
     return (
-      <Container height={height}>
+      <Container height={height} width={width}>
         {title && <Typography variant="label1Normal">{title}</Typography>}
         <TextAreaWrapper>
           <textarea ref={ref} {...rest} />
@@ -25,7 +26,10 @@ TextInputBox.displayName = 'TextInputBox';
 
 export default TextInputBox;
 
-const Container = styled.div<{ height?: string | number }>`
+const Container = styled.div<{
+  height?: string | number;
+  width?: string | number;
+}>`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -34,6 +38,9 @@ const Container = styled.div<{ height?: string | number }>`
     height
       ? `height: ${typeof height === 'number' ? `${height}px` : height};`
       : ''}
+
+  ${({ width }) =>
+    width ? `width: ${typeof width === 'number' ? `${width}px` : width};` : ''}
 `;
 
 const TextAreaWrapper = styled.div`

@@ -103,7 +103,6 @@ const SettingLink: FC = () => {
       {isEditPopupOpen && (
         <EditPopup
           linkInfo={selectedLinkInfo}
-          setIsEditCompletePopupOpen={() => setIsEditCompletePopupOpen(true)}
           onClose={() => setIsEditPopupOpen(false)}
         />
       )}

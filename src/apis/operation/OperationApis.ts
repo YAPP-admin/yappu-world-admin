@@ -10,7 +10,7 @@ import {
   EditGenerationReq,
   EditGenerationRes,
   GenerationListRes,
-  OperationListInfo,
+  OperationEditReq,
   OperationListRes,
 } from './types';
 
@@ -21,7 +21,7 @@ export const getOperationsList = async () => {
 };
 
 export const putOperationList = async (
-  data: OperationListInfo,
+  data: OperationEditReq,
 ): Promise<void> => {
   return axiosInstance.put('/admin/v1/operations/links', data);
 };

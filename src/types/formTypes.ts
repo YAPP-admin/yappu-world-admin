@@ -20,3 +20,9 @@ export interface BaseNoticeType {
 export interface EditNoticeType extends BaseNoticeType {
   id: string;
 }
+
+export interface OperationListType {
+  id: string;
+  name: string;
+  link: string;
+}

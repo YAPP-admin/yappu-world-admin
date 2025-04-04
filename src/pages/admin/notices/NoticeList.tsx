@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Trash from '@assets/Trash';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
+import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
@@ -17,13 +18,14 @@ import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
+import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
 import { useNoticeStore } from '@stores/noticeStore';
-import { deleteNotice } from 'apis/notice/NoticeApis';
 import theme from 'styles/theme';
 
 const NoticeList: FC = () => {
   const { data } = useAllNoticeQuery();
   const navigate = useNavigate();
+  const { mutate } = useDeleteNoticeMutation();
   const {
     selectedIndexes,
     setSelectedIndexes,
@@ -31,10 +33,11 @@ const NoticeList: FC = () => {
     setIsDeletePopup,
     isDeleteCompletePopup,
     setIsDeleteCompletePopup,
+    isAddNoticeComplete,
+    setIsAddNoticeComplete,
   } = useNoticeStore();
 
-  const noticeIds =
-    data?.data.data.map((notice) => Number(notice.noticeId)) || [];
+  const noticeIds = data?.data.map((notice) => notice.noticeId) || [];
 
   const isAllChecked =
     noticeIds.length > 0 &&
@@ -48,7 +51,7 @@ const NoticeList: FC = () => {
     }
   };
 
-  const onClickRowCheck = (id: number) => {
+  const onClickRowCheck = (id: string) => {
     if (selectedIndexes.includes(id)) {
       setSelectedIndexes(selectedIndexes.filter((v) => v !== id));
     } else {
@@ -65,14 +68,7 @@ const NoticeList: FC = () => {
   };
 
   const onClickToDelete = async () => {
-    try {
-      await Promise.all(
-        selectedIndexes.map((id) => deleteNotice({ id: String(id) })),
-      );
-      setIsDeleteCompletePopup(true);
-    } catch (err) {
-      console.error('삭제 중 일부 실패:', err);
-    }
+    mutate({ noticeIds: selectedIndexes });
   };
 
   return (
@@ -96,7 +92,7 @@ const NoticeList: FC = () => {
                     fontWeight: 600,
                   }}
                 >
-                  {data?.data?.totalCount}개
+                  {data?.totalCount}개
                 </Typography>
               </FlexBox>
               <OutlinedButton
@@ -179,8 +175,8 @@ const NoticeList: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.data.data.map((notice) => {
-                const id = Number(notice.noticeId);
+              {data?.data.map((notice, index) => {
+                const id = notice.noticeId;
                 const isChecked = selectedIndexes.includes(id);
                 return (
                   <TableRow
@@ -198,7 +194,7 @@ const NoticeList: FC = () => {
                     </TableCell>
                     <TableCell justifyContent="center">
                       <Typography color="label-normal" variant="body1Normal">
-                        {notice.noticeId}
+                        {index + 1}
                       </Typography>
                     </TableCell>
                     <TableCell justifyContent="center">
@@ -207,9 +203,14 @@ const NoticeList: FC = () => {
                       </Typography>
                     </TableCell>
                     <TableCell justifyContent="center">
-                      <Typography color="label-normal" variant="body1Normal">
-                        {notice.noticeType}
-                      </Typography>
+                      <Chip
+                        size="large"
+                        text={notice.noticeType}
+                        variant="weak"
+                        color={
+                          notice.noticeType === '운영' ? 'primary' : 'secondary'
+                        }
+                      />
                     </TableCell>
                     <TableCell justifyContent="center">
                       <Typography color="label-normal" variant="body1Normal">
@@ -242,6 +243,13 @@ const NoticeList: FC = () => {
           comment="삭제되었습니다."
           title="삭제 완료"
           onClose={() => setIsDeleteCompletePopup(false)}
+        />
+      )}
+      {isAddNoticeComplete && (
+        <CompletePopup
+          comment="작성하신 공지사항이 등록되었습니다."
+          title="등록 완료"
+          onClose={() => setIsAddNoticeComplete(false)}
         />
       )}
     </>

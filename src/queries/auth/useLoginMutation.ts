@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
+import { UseFormSetError } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuthStore } from '@stores/authStore';
 import { postLogin } from 'apis/auth/AuthApis';
 import { LoginReq, LoginRes } from 'apis/auth/types';
 import { ApiResponse, ErrorResponse } from 'apis/common/types';
-import { UseFormSetError } from 'react-hook-form';
 import { LoginType } from 'types/formTypes';
-import { useNavigate } from 'react-router-dom';
 
 export const useLoginMutation = (setError: UseFormSetError<LoginType>) => {
   const setToken = useAuthStore((state) => state.setToken);
@@ -20,15 +20,12 @@ export const useLoginMutation = (setError: UseFormSetError<LoginType>) => {
   >({
     mutationFn: (data) => postLogin(data),
     onSuccess: (res) => {
-      console.log('res :', res);
-
       if (res.data.isSuccess) {
         setToken(res.data.data);
         naviagte('/admin/members/list');
       }
     },
     onError: (err) => {
-      console.log('err :', err);
       if (err.response) {
         const errorData = err.response.data;
         if (err.response.status === 400) {

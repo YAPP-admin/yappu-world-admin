@@ -1,11 +1,12 @@
+import { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
+
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { useLoginMutation } from '@queries/auth/useLoginMutation';
-import { FC } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import styled from 'styled-components';
 import { LoginType } from 'types/formTypes';
 
 const LoginForm: FC = () => {
@@ -20,13 +21,11 @@ const LoginForm: FC = () => {
   });
 
   const { mutate } = useLoginMutation(setError);
-  //   const emailValue = useWatch({ name: 'email' }); // 👈 실시간으로 안정적으로 값 추적
 
   const onSubmit = (data: LoginType) => {
-    console.log('submit data :', data);
     mutate(data);
   };
-  console.log('email ', watch('email'), ', boolean ', !!watch('email'));
+
   return (
     <Wrapper onSubmit={handleSubmit(onSubmit)}>
       <InputArea>
@@ -35,19 +34,19 @@ const LoginForm: FC = () => {
             {...register('email', {
               required: true,
             })}
+            autoComplete="on"
             placeholder="이메일을 입력해주세요."
             title="이메일"
-            autoComplete="on"
             state={
               errors.email && !!watch('email')
                 ? 'error'
-                : !!watch('email')
+                : watch('email')
                   ? 'success'
                   : 'default'
             }
           />
           {errors.email && !!watch('email') && (
-            <Typography variant="caption1Regular" color="status-negative">
+            <Typography color="status-negative" variant="caption1Regular">
               {errors.email.message}
             </Typography>
           )}
@@ -58,20 +57,20 @@ const LoginForm: FC = () => {
               required: true,
             })}
             isShow
+            autoComplete="on"
             placeholder="비밀번호를 입력해주세요."
             title="비밀번호"
             type="password"
-            autoComplete="on"
             state={
               errors.email && !!watch('password')
                 ? 'error'
-                : !!watch('password')
+                : watch('password')
                   ? 'success'
                   : 'default'
             }
           />
           {errors.password && (
-            <Typography variant="caption1Regular" color="status-negative">
+            <Typography color="status-negative" variant="caption1Regular">
               {errors.password.message}
             </Typography>
           )}{' '}
@@ -79,9 +78,9 @@ const LoginForm: FC = () => {
       </InputArea>
 
       <SolidButton
+        disabled={!isValid || isSubmitting}
         size="xlarge"
         type="submit"
-        disabled={!isValid || isSubmitting}
       >
         로그인
       </SolidButton>

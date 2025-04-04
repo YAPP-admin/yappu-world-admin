@@ -8,7 +8,7 @@ export interface PaginatedResponse<T> {
   totalCount: number;
   page: number;
   size: number;
-  totalPage?: number;
+  totalPages?: number;
 }
 
 export type PaginatedApiResponse<T> = ApiResponse<PaginatedResponse<T>>;

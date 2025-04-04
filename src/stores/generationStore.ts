@@ -11,6 +11,8 @@ interface GenerationState {
   handleAddPopupOpen: (value: boolean) => void;
   isAddCompletePopupOpen: boolean;
   handleAddCompletePopupOpen: (value: boolean) => void;
+  page: number;
+  setPage: (value: number) => void;
 }
 
 export const useGenerationStore = create<GenerationState>((set) => ({
@@ -24,4 +26,6 @@ export const useGenerationStore = create<GenerationState>((set) => ({
   isAddCompletePopupOpen: false,
   handleAddCompletePopupOpen: (value: boolean) =>
     set({ isAddCompletePopupOpen: value }),
+  page: 1,
+  setPage: (value: number) => set({ page: value }),
 }));

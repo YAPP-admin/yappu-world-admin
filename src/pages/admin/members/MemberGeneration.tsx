@@ -20,6 +20,9 @@ import { EditGenerationReq, GenerationListRes } from 'apis/operation/types';
 import AddGenerationPopup from 'features/member/generation/AddGenerationPopup';
 import StatusChangeMenu from 'features/member/generation/StatusChangeMenu';
 import theme from 'styles/theme';
+import { generationHeader } from '@constants/tableHeader';
+import FlexBox from '@compnents/commons/FlexBox';
+import Pagination from '@compnents/table/Pagination';
 
 const MemberGeneration: FC = () => {
   const {
@@ -29,8 +32,10 @@ const MemberGeneration: FC = () => {
     handleAddPopupOpen,
     isAddCompletePopupOpen,
     handleAddCompletePopupOpen,
+    page,
+    setPage,
   } = useGenerationStore();
-  const { data } = useGenerationListQuery();
+  const { data } = useGenerationListQuery(page);
   const { mutate } = useEditGenerationMutation();
 
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(
@@ -96,101 +101,88 @@ const MemberGeneration: FC = () => {
       <Container>
         <Typography variant="title2Bold">기수 관리</Typography>
         <Wrapper>
-          <TableHeader>
-            <TitleWrapper>
-              <Typography variant="headline1Bold">기수 리스트</Typography>
-              <Typography
-                color="label-alternative"
-                variant="body1Normal"
-                style={{
-                  fontWeight: 600,
-                }}
+          <FlexBox direction="column" gap={8}>
+            <FlexBox justify="space-between">
+              <FlexBox gap={8} align="center">
+                <Typography variant="headline1Bold">기수 리스트</Typography>
+                <Typography
+                  color="label-alternative"
+                  variant="body1Normal"
+                  style={{
+                    fontWeight: 600,
+                  }}
+                >
+                  {data?.totalCount}개
+                </Typography>
+              </FlexBox>
+              <OutlinedButton
+                leftIcon={<Plus />}
+                variant="assistive"
+                onClick={onClickToAdd}
               >
-                {data?.data?.totalCount}개
-              </Typography>
-            </TitleWrapper>
-            <OutlinedButton
-              leftIcon={<Plus />}
-              variant="assistive"
-              onClick={onClickToAdd}
-            >
-              추가
-            </OutlinedButton>
-          </TableHeader>
-          <StyledTable>
-            <TableHead>
-              <TableRow>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    기수
-                  </Typography>
-                </TableCell>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    활동기간
-                  </Typography>
-                </TableCell>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    상태
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data?.data.data?.map((generation) => (
-                <TableRow key={generation.generation}>
-                  <TableCell justifyContent="center">
-                    <Typography color="label-normal" variant="body1Normal">
-                      {generation.generation}기
-                    </Typography>
-                  </TableCell>
-                  <TableCell justifyContent="center">
-                    <Typography color="label-normal" variant="body1Normal">
-                      {generation.startDate} - {generation.endDate}
-                    </Typography>
-                  </TableCell>
-                  <TableCell justifyContent="center">
-                    <StatusWrapper>
-                      <div />
-                      <Chip
-                        color={generation.isActive ? 'primary' : 'neutral'}
-                        size="large"
-                        text={generation.isActive ? '활동중' : '종료'}
-                        variant={generation.isActive ? 'fill' : 'weak'}
-                      />
-                      <IconButton
-                        size="custom"
-                        onClick={(e) =>
-                          handleOpenMenu(e, generation as GenerationListRes)
-                        }
+                추가
+              </OutlinedButton>
+            </FlexBox>
+            <StyledTable>
+              <TableHead>
+                <TableRow>
+                  {generationHeader.map((el) => (
+                    <TableCell key={el} as="th" justifyContent="center">
+                      <Typography
+                        color="label-normal"
+                        variant="body1Normal"
+                        style={{
+                          fontWeight: 600,
+                        }}
                       >
-                        <MoreVertical color={theme.colors.label.assistive} />
-                      </IconButton>
-                    </StatusWrapper>
-                  </TableCell>
+                        {el}
+                      </Typography>
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </StyledTable>
+              </TableHead>
+              <TableBody>
+                {data?.data?.map((generation) => (
+                  <TableRow key={generation.generation}>
+                    <TableCell justifyContent="center">
+                      <Typography color="label-normal" variant="body1Normal">
+                        {generation.generation}기
+                      </Typography>
+                    </TableCell>
+                    <TableCell justifyContent="center">
+                      <Typography color="label-normal" variant="body1Normal">
+                        {generation.startDate} - {generation.endDate}
+                      </Typography>
+                    </TableCell>
+                    <TableCell justifyContent="center">
+                      <FlexBox align="center" justify="space-between">
+                        <div />
+                        <Chip
+                          color={generation.isActive ? 'primary' : 'neutral'}
+                          size="large"
+                          text={generation.isActive ? '활동중' : '종료'}
+                          variant={generation.isActive ? 'fill' : 'weak'}
+                        />
+                        <IconButton
+                          size="custom"
+                          onClick={(e) =>
+                            handleOpenMenu(e, generation as GenerationListRes)
+                          }
+                        >
+                          <MoreVertical color={theme.colors.label.assistive} />
+                        </IconButton>
+                      </FlexBox>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </StyledTable>
+          </FlexBox>
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 0}
+            onPageChange={setPage}
+          />
         </Wrapper>
       </Container>
       {isAddCompletePopupOpen && (
@@ -230,25 +222,11 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-`;
 
-const TableHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const StatusWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
+  > div:first-child {
+    flex: 1;
+  }
 `;

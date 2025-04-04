@@ -10,9 +10,13 @@ export interface LoginRes {
   refreshToken: string;
 }
 
-export interface MemberCodeRes {
+export interface MemberCodeInfo {
   code: string;
   role: UserRole;
+}
+
+export interface MemberCodeRes {
+  codes: MemberCodeInfo[];
 }
 
 export interface MemberCodeReq {

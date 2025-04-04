@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -11,47 +10,27 @@ import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
-import { useMemberCodeMutation } from '@queries/auth/useMemberCodeMutation';
 import useMemberCodeQuery from '@queries/auth/useMemberCodeQuery';
 import { useMemberCodeStore } from '@stores/memberCodeStore';
-import { UserRole } from 'apis/user/types';
+import { MemberCodeInfo } from 'apis/auth/types';
 
+const tableHeaders = ['코드이름', '코드값', ''];
 
 const MemberCode: FC = () => {
   const { data } = useMemberCodeQuery();
-  const { mutate } = useMemberCodeMutation();
-  const queryClient = useQueryClient();
 
   const {
-    code,
-    onChangeCode,
+    selectedCode,
+    setSelectedCode,
     editPopupOpen,
     handleEditPopup,
     confirmPopupOpen,
     handleConfirmPopup,
-    role,
-    onChangeRole,
   } = useMemberCodeStore();
 
-  const onClickToEdit = (role: UserRole, code: string) => {
-    onChangeCode(code);
-    onChangeRole(role);
+  const onClickToEdit = (value: MemberCodeInfo) => {
+    setSelectedCode(value);
     handleEditPopup();
-  };
-
-  const refresh = () => {
-    handleEditPopup();
-    onChangeCode('');
-    onChangeRole(null);
-  };
-
-  const onSubmit = () => {
-    if (role) {
-      mutate({ role: role.name, code });
-    }
-    handleEditPopup();
-    handleConfirmPopup();
-    queryClient.invalidateQueries({ queryKey: ['member-code'] });
   };
 
   return (
@@ -68,39 +47,29 @@ const MemberCode: FC = () => {
                 fontWeight: 600,
               }}
             >
-              {data?.length}개
+              {data?.codes.length}개
             </Typography>
           </TitleWrapper>
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    코드이름
-                  </Typography>
-                </TableCell>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    코드값
-                  </Typography>
-                </TableCell>
-                <TableCell as="th" justifyContent="center" />
+                {tableHeaders.map((el) => (
+                  <TableCell key={el} as="th" justifyContent="center">
+                    <Typography
+                      color="label-normal"
+                      variant="body1Normal"
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      {el}
+                    </Typography>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.map((code) => (
+              {data?.codes.map((code) => (
                 <TableRow key={code.code}>
                   <TableCell justifyContent="center">
                     <Chip
@@ -115,9 +84,7 @@ const MemberCode: FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell justifyContent="center">
-                    <TextButton
-                      onClick={() => onClickToEdit(code.role, code.code)}
-                    >
+                    <TextButton onClick={() => onClickToEdit(code)}>
                       수정
                     </TextButton>
                   </TableCell>
@@ -129,13 +96,10 @@ const MemberCode: FC = () => {
       </Container>
       {editPopupOpen && (
         <CodeEditPopup
-          code={code}
           confirmPopupOpen={confirmPopupOpen}
           handleConfirmPopup={handleConfirmPopup}
-          handleEditPopup={refresh}
-          role={role}
-          onChange={onChangeCode}
-          onSave={onSubmit}
+          handleEditPopup={handleEditPopup}
+          selectedCode={selectedCode}
         />
       )}
     </>

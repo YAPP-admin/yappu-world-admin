@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import { patchMemberCode } from 'apis/auth/AuthApis';
@@ -6,14 +6,16 @@ import { MemberCodeReq } from 'apis/auth/types';
 import { ApiResponse, ErrorResponse } from 'apis/common/types';
 
 export const useMemberCodeMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     AxiosResponse<ApiResponse<null>>,
     AxiosError<ErrorResponse>,
     MemberCodeReq
   >({
     mutationFn: (data) => patchMemberCode(data),
-    onSuccess: (res) => {
-      console.log('res :', res);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['member-code-list'] });
     },
     onError: (err) => {
       if (err.response) {

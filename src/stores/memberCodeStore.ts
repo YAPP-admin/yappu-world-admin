@@ -1,12 +1,10 @@
 import { create } from 'zustand';
 
-import { UserRole } from 'apis/user/types';
+import { MemberCodeInfo } from 'apis/auth/types';
 
 interface MemberCodeState {
-  code: string;
-  onChangeCode: (value: string) => void;
-  role: UserRole | null;
-  onChangeRole: (value: UserRole | null) => void;
+  selectedCode: MemberCodeInfo | null;
+  setSelectedCode: (value: MemberCodeInfo | null) => void;
   editPopupOpen: boolean;
   handleEditPopup: () => void;
   confirmPopupOpen: boolean;
@@ -14,10 +12,8 @@ interface MemberCodeState {
 }
 
 export const useMemberCodeStore = create<MemberCodeState>((set) => ({
-  code: '',
-  onChangeCode: (value) => set({ code: value }),
-  role: null,
-  onChangeRole: (value) => set({ role: value }),
+  selectedCode: null,
+  setSelectedCode: (value) => set({ selectedCode: value }),
   editPopupOpen: false,
   handleEditPopup: () =>
     set((state) => ({ editPopupOpen: !state.editPopupOpen })),

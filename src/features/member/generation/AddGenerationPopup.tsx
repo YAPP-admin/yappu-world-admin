@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -11,9 +12,8 @@ import Typography from '@compnents/commons/Typography';
 import Switch from '@compnents/Control/Switch';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { useAddGenerationMutation } from '@queries/operation/useAddGenerationMutation';
-import { AddGenerationType } from 'types/formTypes';
 import { AddGenerationReq } from 'apis/operation/types';
-import dayjs from 'dayjs';
+import { AddGenerationType } from 'types/formTypes';
 
 interface Props {
   onClose: () => void;
@@ -90,15 +90,9 @@ const AddGenerationPopup: FC<Props> = ({ onClose }) => {
               취소
             </OutlinedButton>
             <SolidButton
+              disabled={!method.watch('generation')}
               size="xlarge"
               type="submit"
-              disabled={
-                !(
-                  method.watch('generation') &&
-                  method.watch('startDate') &&
-                  method.watch('endDate')
-                )
-              }
             >
               저장
             </SolidButton>

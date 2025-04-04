@@ -83,7 +83,7 @@ const MemberGeneration: FC = () => {
         <Wrapper>
           <FlexBox direction="column" gap={8}>
             <FlexBox justify="space-between">
-              <FlexBox gap={8} align="center">
+              <FlexBox align="center" gap={8}>
                 <Typography variant="headline1Bold">기수 리스트</Typography>
                 <Typography
                   color="label-alternative"

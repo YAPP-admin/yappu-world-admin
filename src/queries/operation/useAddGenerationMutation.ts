@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
+import { useGenerationStore } from '@stores/generationStore';
 import { ErrorResponse } from 'apis/common/types';
 import { postGeneration } from 'apis/operation/OperationApis';
 import { AddGenerationReq } from 'apis/operation/types';
-import { useGenerationStore } from '@stores/generationStore';
 
 export const useAddGenerationMutation = () => {
   const queryClient = useQueryClient();

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { useAuthStore } from '@stores/authStore';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -12,7 +13,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
 
-  if (accessToken) {
+  if (accessToken && config.url !== '/admin/v1/auth/login') {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
@@ -29,6 +30,8 @@ axiosInstance.interceptors.response.use(
     }
     const { config, response } = error;
     const { status } = response;
+    const clearUserIdStorage = useAuthStore.persist.clearStorage;
+    const resetToken = useAuthStore((state) => state.resetToken);
 
     console.log(response.data.errorCode);
 
@@ -40,7 +43,10 @@ axiosInstance.interceptors.response.use(
       [401].includes(status) &&
       response.data.errorCode === 'TKN_0001'
     ) {
+      console.log('a');
       window.alert('토큰 만료');
+      resetToken();
+      clearUserIdStorage();
       return Promise.reject(error); // react-query에는 넘기지 않음
 
       const originConfig = config;

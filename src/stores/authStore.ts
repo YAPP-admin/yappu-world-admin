@@ -7,6 +7,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   setToken: (data: LoginRes) => void;
+  resetToken: () => void;
 }
 
 export const useAuthStore = create(
@@ -18,6 +19,11 @@ export const useAuthStore = create(
         set({
           accessToken: token.accessToken,
           refreshToken: token.refreshToken,
+        }),
+      resetToken: () =>
+        set({
+          accessToken: null,
+          refreshToken: null,
         }),
     }),
     {

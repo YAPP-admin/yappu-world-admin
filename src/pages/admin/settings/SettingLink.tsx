@@ -13,6 +13,7 @@ import { useOperationQuery } from '@queries/operation/useOperationQuery';
 import { useSettingLinkStore } from '@stores/SettingLinkStore';
 import { OperationListInfo } from 'apis/operation/types';
 import EditPopup from 'features/setting/components/EditPopup';
+import { linkHeader } from '@constants/tableHeader';
 
 const SettingLink: FC = () => {
   const { data } = useOperationQuery();
@@ -52,39 +53,19 @@ const SettingLink: FC = () => {
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    링크 이름
-                  </Typography>
-                </TableCell>
-                <TableCell as="th">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    URL
-                  </Typography>
-                </TableCell>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    수정
-                  </Typography>
-                </TableCell>
+                {linkHeader.map((el) => (
+                  <TableCell key={el} as="th" justifyContent="center">
+                    <Typography
+                      color="label-normal"
+                      variant="body1Normal"
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      {el}
+                    </Typography>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>

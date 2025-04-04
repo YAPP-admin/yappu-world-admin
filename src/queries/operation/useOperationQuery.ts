@@ -6,6 +6,9 @@ export const useOperationQuery = () => {
   return useQuery({
     queryKey: ['link'],
     queryFn: () => getOperationsList(),
+    select: (data) => {
+      return data.data.data;
+    },
     retry: false,
   });
 };

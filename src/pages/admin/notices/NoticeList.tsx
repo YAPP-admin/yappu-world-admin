@@ -195,7 +195,7 @@ const NoticeList: FC = () => {
           </FlexBox>
           <Pagination
             currentPage={page}
-            totalPages={20}
+            totalPages={data?.totalPage ?? 0}
             onPageChange={setPage}
           />
         </Wrapper>

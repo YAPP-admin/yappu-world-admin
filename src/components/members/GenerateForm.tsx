@@ -28,12 +28,12 @@ const GenerateForm: FC<Props> = (props) => {
       />
       <Select
         optionList={positionOptionList}
+        width="120px"
         selectedValue={
           positionOptionList.find(
             (item) => item.value === watch(`activityUnits.${index}.position`),
           )?.value ?? ''
         }
-        width="120px"
         onChange={(value: string) =>
           setValue(`activityUnits.${index}.position`, value)
         }

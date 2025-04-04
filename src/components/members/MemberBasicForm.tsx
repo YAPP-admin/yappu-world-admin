@@ -62,11 +62,11 @@ const MemberBasicForm: FC = () => {
           </Typography>
           <Select
             optionList={userRoleOptionList}
+            width="120px"
             selectedValue={
               userRoleOptionList.find((item) => item.value === watch('role'))
                 ?.value ?? ''
             }
-            width="120px"
             onChange={(value: string) => setValue('role', value as RoleLabel)}
           />
         </Wrapper>

@@ -120,13 +120,13 @@ const ApprovePopup: FC<Props> = ({
             name="role"
             render={({ field }) => (
               <Select
+                optionList={userRoleOptionList}
+                size="large"
                 selectedValue={
                   userRoleOptionList.find(
                     (item) => item.value === watch('role'),
                   )?.value ?? ''
                 }
-                size="large"
-                optionList={userRoleOptionList}
                 onChange={field.onChange}
               />
             )}

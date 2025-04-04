@@ -8,6 +8,12 @@ export interface OperationListInfo {
   value: string;
 }
 
+export interface OperationEditReq {
+  id: string;
+  name: string;
+  link: string;
+}
+
 export interface GenerationListRes {
   generation: number;
   startDate: string;

@@ -1,8 +1,10 @@
 import React, { forwardRef, useState } from 'react';
 import styled from 'styled-components';
 
+import CircleClose from '@assets/CircleClose';
 import { View } from '@assets/View';
 import { ViewSlash } from '@assets/ViewSlash';
+import IconButton from '@compnents/Button/IconButton';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
@@ -17,6 +19,8 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   unitText?: string;
   width?: string;
   state?: State;
+  remove?: boolean;
+  onRemove?: () => void;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -28,6 +32,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       unitText,
       width,
       state,
+      remove,
+      onRemove,
       ...rest
     },
     ref,
@@ -52,6 +58,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             </IconWrapper>
           )}
           {unitText && <UnitText>{unitText}</UnitText>}
+          {remove && (
+            <IconButton onClick={onRemove}>
+              <CircleClose color={theme.colors.label.assistive} />
+            </IconButton>
+          )}
         </InputWrapper>
       </Container>
     );
@@ -108,6 +119,10 @@ const Input = styled.input<{ $inputSize: TextInputSize }>`
   letter-spacing: ${({ $inputSize }) =>
     $inputSize === 'large' ? '0.091px' : '0.144px'};
   width: 100%;
+
+  &:disabled {
+    background: none;
+  }
 `;
 
 const IconWrapper = styled.div`

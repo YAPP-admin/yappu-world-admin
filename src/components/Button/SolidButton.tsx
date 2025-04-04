@@ -14,7 +14,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  disabled?: boolean;
 }
 
 const SolidButton: FC<Props> = (props) => {
@@ -24,7 +23,6 @@ const SolidButton: FC<Props> = (props) => {
     children,
     variant = 'primary',
     size = 'small',
-    disabled = false,
     type,
     ...rest
   } = props;
@@ -32,7 +30,6 @@ const SolidButton: FC<Props> = (props) => {
   return (
     <StyledButton
       {...rest}
-      $disabled={disabled}
       $size={size}
       $variant={variant}
       leftIcon={leftIcon}
@@ -49,7 +46,6 @@ export default SolidButton;
 const StyledButton = styled(ButtonBase)<{
   $variant: ButtonVariant;
   $size: ButtonSize;
-  $disabled: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -59,29 +55,29 @@ const StyledButton = styled(ButtonBase)<{
 
   ${({ $size }) => sizeStyles[$size]}
 
-  ${({ $variant, $disabled }) => {
+  ${({ $variant }) => {
     if ($variant === 'primary') {
-      return $disabled
-        ? css`
-            background: #f4f4f5;
-            color: rgba(55, 56, 60, 0.28);
-          `
-        : css`
-            background: #fa6027;
-            color: #ffffff;
-          `;
+      return css`
+        background: #fa6027;
+        color: #ffffff;
+
+        &:disabled {
+          background: #f4f4f5;
+          color: rgba(55, 56, 60, 0.28);
+        }
+      `;
     }
 
     if ($variant === 'secondary') {
-      return $disabled
-        ? css`
-            background: #fff8f5;
-            color: #fdbba2;
-          `
-        : css`
-            background: #ffefe9;
-            color: #fa6027;
-          `;
+      return css`
+        background: #ffefe9;
+        color: #fa6027;
+
+        &:disabled {
+          background: #fff8f5;
+          color: #fdbba2;
+        }
+      `;
     }
   }}
 `;

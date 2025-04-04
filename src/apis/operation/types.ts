@@ -22,9 +22,9 @@ export interface GenerationListRes {
 }
 
 export interface AddGenerationReq {
-  generation: number | null;
-  startDate: Date | null;
-  endDate: Date | null;
+  generation: number;
+  startDate: string | null;
+  endDate: string | null;
   isActive: boolean;
 }
 

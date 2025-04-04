@@ -9,11 +9,11 @@ import Select from '@compnents/commons/Select';
 import Typography from '@compnents/commons/Typography';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import PopupContainer from '@compnents/popup/PopupContainer';
-import { userRole } from '@constants/role';
+import { userRoleOptionList } from '@constants/optionList';
 import { useApplicationApproveMutation } from '@queries/auth/useApplicationApproveMutation';
 import { useApplicationStore } from '@stores/applicationStore';
 import { ApplicationApproveReq, ApplicationListRes } from 'apis/auth/types';
-import { RoleLabel } from 'apis/user/types';
+import { RoleLabel, RoleName } from 'apis/user/types';
 import theme from 'styles/theme';
 
 interface Props {
@@ -65,7 +65,9 @@ const ApprovePopup: FC<Props> = ({
     }
     const req: ApplicationApproveReq = {
       applicationIds: data.ids,
-      role: userRole.find((el) => el.label === data.role)?.name ?? '',
+      role:
+        (userRoleOptionList.find((el) => el.label === data.role)
+          ?.value as RoleName) ?? '',
     };
     mutate(req);
     onClose();
@@ -78,7 +80,9 @@ const ApprovePopup: FC<Props> = ({
 
     const req: ApplicationApproveReq = {
       applicationIds: approveData.ids,
-      role: userRole.find((el) => el.label === approveData.role)?.name ?? '',
+      role:
+        (userRoleOptionList.find((el) => el.label === approveData.role)
+          ?.value as RoleName) ?? '',
     };
     mutate(req);
     setIsApproveConfirmPopup(false);
@@ -116,15 +120,13 @@ const ApprovePopup: FC<Props> = ({
             name="role"
             render={({ field }) => (
               <Select
-                selectedValue={field.value}
+                optionList={userRoleOptionList}
                 size="large"
-                optionList={[
-                  '관리자',
-                  '운영진',
-                  '정회원',
-                  '수료회원',
-                  '활동회원',
-                ]}
+                selectedValue={
+                  userRoleOptionList.find(
+                    (item) => item.value === watch('role'),
+                  )?.value ?? ''
+                }
                 onChange={field.onChange}
               />
             )}

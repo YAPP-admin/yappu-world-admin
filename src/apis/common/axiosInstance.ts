@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { useAuthStore } from '@stores/authStore';
-import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

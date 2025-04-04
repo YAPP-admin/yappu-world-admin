@@ -10,6 +10,7 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import PopupContainer from '@compnents/popup/PopupContainer';
+import { rejectOptionList } from '@constants/optionList';
 import { useApplicationStore } from '@stores/applicationStore';
 import { ApplicationListRes } from 'apis/auth/types';
 import theme from 'styles/theme';
@@ -113,7 +114,7 @@ const RejectPopup: FC<Props> = ({
             </Typography>
           </FlexBox>
           <Select
-            optionList={['직접입력']}
+            optionList={rejectOptionList}
             selectedValue={'직접입력'}
             size="large"
           />

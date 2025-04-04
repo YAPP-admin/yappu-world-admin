@@ -12,7 +12,7 @@ import NoticeEdit from './NoticeEdit';
 const Notice: FC = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { data } = useNoticeDetailQuery(Number(params.id ?? 0));
+  const { data } = useNoticeDetailQuery(params?.id ?? '');
 
   const [isEdit, setIsEdit] = useState(false);
   const onClickBack = () => {

@@ -14,13 +14,14 @@ import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
+import { noticeOptionList } from '@constants/optionList';
 import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
 import { BaseNoticeReq } from 'apis/notice/types';
-import { noticeOptionList } from '@constants/optionList';
+import { BaseNoticeType } from 'types/formTypes';
 
 const NoticeWrite: FC = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, control, watch } = useForm<BaseNoticeReq>({
+  const { register, handleSubmit, control, watch } = useForm<BaseNoticeType>({
     defaultValues: {
       type: undefined,
       title: '',
@@ -34,13 +35,13 @@ const NoticeWrite: FC = () => {
     navigate('/admin/notices');
   };
 
-  const onSumbit = (data: BaseNoticeReq) => {
+  const onSumbit = (data: BaseNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
       /[\x00-\x1F\x7F]/g,
       '',
     );
-    const newData = { ...data, planContent: plainText };
+    const newData = { ...data, plainContent: plainText };
     mutate(newData);
     navigate('/admin/notices');
   };
@@ -65,12 +66,12 @@ const NoticeWrite: FC = () => {
             render={({ field }) => (
               <Select
                 optionList={noticeOptionList}
+                size="large"
+                width="191px"
                 selectedValue={
                   noticeOptionList.find((item) => item.value === field.value)
                     ?.value ?? ''
                 }
-                size="large"
-                width="191px"
                 onChange={field.onChange}
               />
             )}

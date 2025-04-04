@@ -79,23 +79,6 @@ const MemberGeneration: FC = () => {
     handleAddPopupOpen(true);
   };
 
-  // 활성화 수정 함수
-  const patchGeneration = () => {
-    if (!selectedGeneration) return;
-
-    const updated = {
-      ...selectedGeneration,
-      isActive: !selectedGeneration.isActive,
-    };
-    setSelectedGeneration(updated);
-
-    const req: EditGenerationReq = {
-      generation: updated.generation,
-      targetActive: updated.isActive,
-    };
-    mutate(req);
-  };
-
   return (
     <>
       <Container>
@@ -200,13 +183,7 @@ const MemberGeneration: FC = () => {
         />
       )}
       {menuPos && (
-        <StatusChangeMenu
-          ref={menuRef}
-          active={selectedGeneration?.isActive ?? false}
-          left={menuPos.left}
-          top={menuPos.top}
-          onToggle={patchGeneration}
-        />
+        <StatusChangeMenu ref={menuRef} left={menuPos.left} top={menuPos.top} />
       )}
     </>
   );

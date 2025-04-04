@@ -26,3 +26,8 @@ export interface OperationListType {
   name: string;
   link: string;
 }
+
+export interface EditGenerationType {
+  generation: number;
+  targetActive: boolean;
+}

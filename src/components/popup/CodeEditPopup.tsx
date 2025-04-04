@@ -1,54 +1,91 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import SolidButton from '@compnents/Button/SolidButton';
 import Chip from '@compnents/commons/Chip';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
-import { UserRole } from 'apis/user/types';
+import { useMemberCodeMutation } from '@queries/auth/useMemberCodeMutation';
+import { MemberCodeInfo, MemberCodeReq } from 'apis/auth/types';
+import { RoleName } from 'apis/user/types';
+import { UserRoleType } from 'types/formTypes';
 
 import CodeEditConfirmPopup from './CodeEditConfirmPopup';
 import PopupContainer from './PopupContainer';
 
 interface Props {
   handleEditPopup: () => void;
-  role: UserRole | null;
-  code: string;
-  onChange: (value: string) => void;
   handleConfirmPopup: () => void;
   confirmPopupOpen: boolean;
-  onSave: () => void;
+  selectedCode: MemberCodeInfo | null;
 }
 
 const CodeEditPopup: FC<Props> = (props) => {
   const {
     handleEditPopup,
-    role,
-    code,
-    onChange,
+    selectedCode,
     handleConfirmPopup,
     confirmPopupOpen,
-    onSave,
   } = props;
+  const { mutate } = useMemberCodeMutation();
+  const { handleSubmit, register, setValue } = useForm<UserRoleType>({
+    defaultValues: {
+      name: selectedCode?.role?.name,
+      code: selectedCode?.code,
+    },
+  });
+
+  const [formData, setFormData] = useState<UserRoleType | null>(null);
+
+  const onSubmit = (data: UserRoleType) => {
+    setFormData(data);
+    handleConfirmPopup();
+  };
+
+  const onSave = () => {
+    if (!formData) return;
+    const req: MemberCodeReq = {
+      role: formData.name as RoleName,
+      code: formData?.code.toString(),
+    };
+    mutate(req);
+  };
 
   return (
     <>
       <PopupContainer onClose={handleEditPopup}>
-        <Container onClick={(e) => e.stopPropagation()}>
+        <Container
+          onClick={(e) => e.stopPropagation()}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Typography color="label-normal" variant="headline1Bold">
             코드값 수정
           </Typography>
-          <Chip size="large" text={role?.label} variant="weak" />
-          <TextInput value={code} onChange={(e) => onChange(e.target.value)} />
+          <Chip
+            role={selectedCode?.role?.name}
+            size="large"
+            text={selectedCode?.role?.label}
+            variant="weak"
+          />
+          <TextInput
+            {...register('code', {
+              onChange: (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+              },
+            })}
+            maxLength={6}
+          />
           <ButtonWrapper>
             <SolidButton
               size="xlarge"
+              type="button"
               variant="secondary"
-              onClick={() => onChange('')}
+              onClick={() => setValue('code', '')}
             >
               초기화
             </SolidButton>
-            <SolidButton size="xlarge" onClick={handleConfirmPopup}>
+            <SolidButton size="xlarge" type="submit">
               저장
             </SolidButton>
           </ButtonWrapper>
@@ -63,7 +100,7 @@ const CodeEditPopup: FC<Props> = (props) => {
 
 export default CodeEditPopup;
 
-const Container = styled.div`
+const Container = styled.form`
   display: flex;
   width: 396px;
   padding: 16px;

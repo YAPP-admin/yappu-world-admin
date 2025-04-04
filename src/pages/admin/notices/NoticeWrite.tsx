@@ -16,6 +16,7 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
 import { BaseNoticeReq } from 'apis/notice/types';
+import { noticeOptionList } from '@constants/optionList';
 
 const NoticeWrite: FC = () => {
   const navigate = useNavigate();
@@ -63,8 +64,11 @@ const NoticeWrite: FC = () => {
             name="type"
             render={({ field }) => (
               <Select
-                optionList={['전체', '운영', '세션']}
-                selectedValue={field.value}
+                optionList={noticeOptionList}
+                selectedValue={
+                  noticeOptionList.find((item) => item.value === field.value)
+                    ?.value ?? ''
+                }
                 size="large"
                 width="191px"
                 onChange={field.onChange}

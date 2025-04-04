@@ -15,6 +15,7 @@ import { ApplicationListRes } from 'apis/auth/types';
 import theme from 'styles/theme';
 
 import { useApplicationRejectMutaion } from '../../../queries/auth/useApplicationRejectMutation';
+import { rejectOptionList } from '@constants/optionList';
 
 interface Props {
   onClose?: () => void;
@@ -113,7 +114,7 @@ const RejectPopup: FC<Props> = ({
             </Typography>
           </FlexBox>
           <Select
-            optionList={['직접입력']}
+            optionList={rejectOptionList}
             selectedValue={'직접입력'}
             size="large"
           />

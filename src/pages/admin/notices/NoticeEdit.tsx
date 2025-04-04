@@ -13,6 +13,8 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { useEditNoticeMutation } from '@queries/notice/useEditNoticeMutation';
 import { EditNoticeReq, NoticeDetailRes } from 'apis/notice/types';
+import { EditNoticeType } from 'types/formTypes';
+import { noticeOptionList } from '@constants/optionList';
 
 interface Props {
   handleEdit: () => void;
@@ -20,7 +22,7 @@ interface Props {
 }
 
 const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
-  const { register, handleSubmit, control } = useForm<EditNoticeReq>({
+  const { register, handleSubmit, control } = useForm<EditNoticeType>({
     defaultValues: {
       id: data?.noticeId,
       type: data?.type,
@@ -31,14 +33,14 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
   });
   const { mutate } = useEditNoticeMutation();
 
-  const onSumbit = (data: EditNoticeReq) => {
+  const onSumbit = (data: EditNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
       /[\x00-\x1F\x7F]/g,
       '',
     );
+    console.log(data.type);
     const newData = { ...data, planContent: plainText };
-    console.log(newData);
     mutate(newData);
   };
 
@@ -57,8 +59,11 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
               name="type"
               render={({ field }) => (
                 <Select
-                  optionList={['전체', '운영', '세션']}
-                  selectedValue={field.value}
+                  optionList={noticeOptionList}
+                  selectedValue={
+                    noticeOptionList.find((item) => item.value === field.value)
+                      ?.value ?? ''
+                  }
                   size="large"
                   width="191px"
                   onChange={field.onChange}

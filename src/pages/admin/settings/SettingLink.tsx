@@ -9,11 +9,11 @@ import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { linkHeader } from '@constants/tableHeader';
 import { useOperationQuery } from '@queries/operation/useOperationQuery';
 import { useSettingLinkStore } from '@stores/SettingLinkStore';
 import { OperationListInfo } from 'apis/operation/types';
 import EditPopup from 'features/setting/components/EditPopup';
-import { linkHeader } from '@constants/tableHeader';
 
 const SettingLink: FC = () => {
   const { data } = useOperationQuery();

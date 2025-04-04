@@ -52,7 +52,7 @@ const EditPopup: FC<Props> = (props) => {
           <OutlinedButton size="xlarge" variant="secondary" onClick={onClose}>
             취소
           </OutlinedButton>
-          <SolidButton size="xlarge" type="submit" disabled={!watch('link')}>
+          <SolidButton disabled={!watch('link')} size="xlarge" type="submit">
             저장
           </SolidButton>
         </ButtonWrapper>

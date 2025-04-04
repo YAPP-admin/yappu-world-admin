@@ -1,13 +1,13 @@
 import React, { forwardRef, useState } from 'react';
 import styled from 'styled-components';
 
+import CircleClose from '@assets/CircleClose';
 import { View } from '@assets/View';
 import { ViewSlash } from '@assets/ViewSlash';
+import IconButton from '@compnents/Button/IconButton';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
-import IconButton from '@compnents/Button/IconButton';
-import CircleClose from '@assets/CircleClose';
 
 type TextInputSize = 'large' | 'medium';
 type State = 'default' | 'active' | 'error' | 'success';

@@ -237,7 +237,6 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  border: 1px solid red;
   flex: 1;
   display: flex;
   flex-direction: column;

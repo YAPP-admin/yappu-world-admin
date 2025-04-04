@@ -11,10 +11,10 @@ import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
+import { noticeOptionList } from '@constants/optionList';
 import { useEditNoticeMutation } from '@queries/notice/useEditNoticeMutation';
 import { EditNoticeReq, NoticeDetailRes } from 'apis/notice/types';
 import { EditNoticeType } from 'types/formTypes';
-import { noticeOptionList } from '@constants/optionList';
 
 interface Props {
   handleEdit: () => void;
@@ -39,8 +39,7 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
       /[\x00-\x1F\x7F]/g,
       '',
     );
-    console.log(data.type);
-    const newData = { ...data, planContent: plainText };
+    const newData = { ...data, plainContent: plainText };
     mutate(newData);
   };
 
@@ -60,12 +59,12 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
               render={({ field }) => (
                 <Select
                   optionList={noticeOptionList}
+                  size="large"
+                  width="191px"
                   selectedValue={
                     noticeOptionList.find((item) => item.value === field.value)
                       ?.value ?? ''
                   }
-                  size="large"
-                  width="191px"
                   onChange={field.onChange}
                 />
               )}

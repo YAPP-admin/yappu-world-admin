@@ -1,5 +1,3 @@
-import { NoticeCategory } from 'apis/notice/types';
-
 export const getTypeName = (type: string) => {
   switch (type) {
     case 'OPERATION':

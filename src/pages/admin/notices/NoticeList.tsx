@@ -12,17 +12,17 @@ import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
+import Pagination from '@compnents/table/Pagination';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { noticeHeader } from '@constants/tableHeader';
 import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
 import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
 import { useNoticeStore } from '@stores/noticeStore';
 import theme from 'styles/theme';
-import { noticeHeader } from '@constants/tableHeader';
-import Pagination from '@compnents/table/Pagination';
 
 const NoticeList: FC = () => {
   const {
@@ -194,8 +194,8 @@ const NoticeList: FC = () => {
             </StyledTable>
           </FlexBox>
           <Pagination
-            totalPages={20}
             currentPage={page}
+            totalPages={20}
             onPageChange={setPage}
           />
         </Wrapper>

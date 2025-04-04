@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -12,32 +11,36 @@ import Typography from '@compnents/commons/Typography';
 import Switch from '@compnents/Control/Switch';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { useAddGenerationMutation } from '@queries/operation/useAddGenerationMutation';
+import { AddGenerationType } from 'types/formTypes';
 import { AddGenerationReq } from 'apis/operation/types';
+import dayjs from 'dayjs';
 
 interface Props {
   onClose: () => void;
-  handleAddCompletePopupOpen: (value: boolean) => void;
 }
 
-const AddGenerationPopup: FC<Props> = (props) => {
-  const { onClose, handleAddCompletePopupOpen } = props;
-  const method = useForm<AddGenerationReq>({
+const AddGenerationPopup: FC<Props> = ({ onClose }) => {
+  const method = useForm<AddGenerationType>({
     defaultValues: {
-      generation: null,
+      generation: undefined,
       startDate: null,
       endDate: null,
       isActive: false,
     },
   });
-  const queryClient = useQueryClient();
   const { mutate } = useAddGenerationMutation();
 
-  const onSubmit = (data: AddGenerationReq) => {
-    console.log('onSubmit data :', data);
-    mutate(data);
-    queryClient.invalidateQueries({ queryKey: ['generation-list'] });
-    onClose();
-    handleAddCompletePopupOpen(true);
+  const onSubmit = (data: AddGenerationType) => {
+    const req: AddGenerationReq = {
+      generation: data.generation,
+      startDate: data.startDate
+        ? dayjs(data.startDate).format('YYYY-MM-DD')
+        : null,
+      endDate: data.endDate ? dayjs(data.endDate).format('YYYY-MM-DD') : null,
+      isActive: data.isActive,
+    };
+    console.log(req);
+    mutate(req);
   };
 
   return (
@@ -51,7 +54,11 @@ const AddGenerationPopup: FC<Props> = (props) => {
           <FlexBox direction="column" gap={24}>
             <TextInput
               title="기수"
-              {...method.register('generation')}
+              {...method.register('generation', {
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/\D/g, '');
+                },
+              })}
               placeholder="00기"
             />
             <FlexBox gap={16}>

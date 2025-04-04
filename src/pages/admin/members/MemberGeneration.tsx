@@ -6,27 +6,25 @@ import Plus from '@assets/Plus';
 import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Chip from '@compnents/commons/Chip';
+import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import CompletePopup from '@compnents/popup/CompletePopup';
+import Pagination from '@compnents/table/Pagination';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
-import { useEditGenerationMutation } from '@queries/operation/useEditGenerationMutation';
+import { generationHeader } from '@constants/tableHeader';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useGenerationStore } from '@stores/generationStore';
-import { EditGenerationReq, GenerationListRes } from 'apis/operation/types';
+import { GenerationListRes } from 'apis/operation/types';
 import AddGenerationPopup from 'features/member/generation/AddGenerationPopup';
 import StatusChangeMenu from 'features/member/generation/StatusChangeMenu';
 import theme from 'styles/theme';
-import { generationHeader } from '@constants/tableHeader';
-import FlexBox from '@compnents/commons/FlexBox';
-import Pagination from '@compnents/table/Pagination';
 
 const MemberGeneration: FC = () => {
   const {
-    selectedGeneration,
     setSelectedGeneration,
     isAddPopupOpen,
     handleAddPopupOpen,
@@ -36,7 +34,6 @@ const MemberGeneration: FC = () => {
     setPage,
   } = useGenerationStore();
   const { data } = useGenerationListQuery(page);
-  const { mutate } = useEditGenerationMutation();
 
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(
     null,
@@ -177,10 +174,7 @@ const MemberGeneration: FC = () => {
         />
       )}
       {isAddPopupOpen && (
-        <AddGenerationPopup
-          handleAddCompletePopupOpen={handleAddCompletePopupOpen}
-          onClose={() => handleAddPopupOpen(false)}
-        />
+        <AddGenerationPopup onClose={() => handleAddPopupOpen(false)} />
       )}
       {menuPos && (
         <StatusChangeMenu ref={menuRef} left={menuPos.left} top={menuPos.top} />

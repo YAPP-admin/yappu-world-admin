@@ -31,3 +31,10 @@ export interface EditGenerationType {
   generation: number;
   targetActive: boolean;
 }
+
+export interface AddGenerationType {
+  generation: number;
+  startDate: Date | null;
+  endDate: Date | null;
+  isActive: boolean;
+}

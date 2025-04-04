@@ -17,7 +17,7 @@ import {
   MemberCodeRes,
 } from './types';
 
-export const postLogin = async (data: LoginReq) => {
+export const postLogin = (data: LoginReq) => {
   return axiosInstance.post<ApiResponse<LoginRes>>(
     '/admin/v1/auth/login',
     data,

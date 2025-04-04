@@ -8,6 +8,7 @@ import theme from 'styles/theme';
 import Typography from './Typography';
 
 type TextInputSize = 'large' | 'medium';
+type State = 'default' | 'active' | 'error' | 'success';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputSize?: TextInputSize;
@@ -15,7 +16,7 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isShow?: boolean;
   unitText?: string;
   width?: string;
-  borderColor?: string;
+  state?: State;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -26,7 +27,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       title,
       unitText,
       width,
-      borderColor,
+      state,
       ...rest
     },
     ref,
@@ -43,7 +44,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     return (
       <Container width={width}>
         {title && <Typography variant="label1Normal">{title}</Typography>}
-        <InputWrapper $inputSize={inputSize} border={borderColor}>
+        <InputWrapper $inputSize={inputSize} $state={state}>
           <Input ref={ref} {...rest} $inputSize={inputSize} type={inputType} />
           {isShow && (
             <IconWrapper onClick={handleVisible}>
@@ -70,7 +71,7 @@ const Container = styled.div<{ width?: string }>`
 
 const InputWrapper = styled.div<{
   $inputSize: TextInputSize;
-  border?: string;
+  $state?: State;
 }>`
   display: flex;
   gap: 12px;
@@ -79,10 +80,20 @@ const InputWrapper = styled.div<{
   padding: 12px 16px;
   border-radius: ${({ $inputSize }) =>
     $inputSize === 'large' ? '10px' : '8px'};
-  border: ${({ border }) =>
-    border
-      ? `1px solid ${border}`
-      : `1px solid ${theme.colors.lineNormal.normal}`};
+  border: 1px solid
+    ${({ $state }) => {
+      switch ($state) {
+        case 'active':
+          return theme.colors.primary.normal;
+        case 'success':
+          return theme.colors.lineNormal.strong;
+        case 'error':
+          return theme.colors.status.nagative;
+        case 'default':
+        default:
+          return theme.colors.lineNormal.normal;
+      }
+    }};
   width: 100%;
   box-sizing: border-box;
   height: ${({ $inputSize }) => ($inputSize === 'large' ? '48px' : '40px')};

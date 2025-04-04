@@ -10,8 +10,8 @@ import Typography from '@compnents/commons/Typography';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
 import { NoticeDetailRes } from 'apis/notice/types';
-import RegisteredTime from 'features/notice/RegisteredTime';
-import Writer from 'features/notice/Writer';
+import RegisteredTime from 'features/notice/components/RegisteredTime';
+import Writer from 'features/notice/components/Writer';
 
 interface Props {
   handleEdit: () => void;
@@ -25,12 +25,11 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
 
   const onClickToDelete = () => {
     if (!params.id) return;
-    mutate({ id: params.id });
+    mutate({ noticeIds: [params.id] });
   };
 
   return (
     <>
-      {' '}
       <Container>
         <FlexBox direction="column" gap={24}>
           <FlexBox direction="column" gap={8}>
@@ -71,7 +70,7 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
       </Container>
       {isDeletePopup && (
         <ConfirmPopup
-          comment="삭제후 복구가 불가능합니다. "
+          comment="삭제 후 복구가 불가능합니다. "
           confirmActionLabel="삭제"
           title="공지사항을 삭제할까요?"
           onCancelAction={() => setIsDeletePopup(false)}

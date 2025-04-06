@@ -18,6 +18,7 @@ export const RouteSetup = () => {
   return (
     <Layout>
       <Routes>
+        <Route element={<Login />} path="/" />
         <Route element={<Login />} path="/login" />
 
         <Route element={<AdminLayer />} path="/admin">

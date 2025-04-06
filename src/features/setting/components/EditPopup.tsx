@@ -8,26 +8,28 @@ import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { useOperationMutation } from '@queries/operation/useOperationMutation';
-import { OperationListInfo } from 'apis/operation/types';
+import { OperationEditReq, OperationListInfo } from 'apis/operation/types';
+import { OperationListType } from 'types/formTypes';
 
 interface Props {
   linkInfo: OperationListInfo;
   onClose: () => void;
-  setIsEditCompletePopupOpen: () => void;
 }
 
 const EditPopup: FC<Props> = (props) => {
-  const { linkInfo, onClose, setIsEditCompletePopupOpen } = props;
-  const { register, handleSubmit } = useForm<OperationListInfo>({
-    defaultValues: linkInfo,
-  });
+  const { linkInfo, onClose } = props;
   const { mutate } = useOperationMutation();
+  const { register, handleSubmit, setValue, watch } =
+    useForm<OperationListType>({
+      defaultValues: {
+        id: linkInfo.id,
+        name: linkInfo.label,
+        link: linkInfo.value,
+      },
+    });
 
-  const onSubmit = (data: OperationListInfo) => {
-    console.log(data);
+  const onSubmit = (data: OperationEditReq) => {
     mutate(data);
-    onClose();
-    setIsEditCompletePopupOpen();
   };
 
   return (
@@ -38,14 +40,19 @@ const EditPopup: FC<Props> = (props) => {
       >
         <Typography variant="headline1Bold">링크 수정</Typography>
         <InputWrapper>
-          <TextInput title={'링크 이름'} {...register('label')} disabled />
-          <TextInput title={'URL'} {...register('value')} />
+          <TextInput title={'링크 이름'} {...register('name')} disabled />
+          <TextInput
+            title={'URL'}
+            {...register('link', { required: true })}
+            remove
+            onRemove={() => setValue('link', '')}
+          />
         </InputWrapper>
         <ButtonWrapper>
           <OutlinedButton size="xlarge" variant="secondary" onClick={onClose}>
             취소
           </OutlinedButton>
-          <SolidButton size="xlarge" type="submit">
+          <SolidButton disabled={!watch('link')} size="xlarge" type="submit">
             저장
           </SolidButton>
         </ButtonWrapper>

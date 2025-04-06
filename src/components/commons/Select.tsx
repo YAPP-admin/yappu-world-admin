@@ -1,59 +1,52 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import DropDown from '@assets/DropDown';
+import useOutsideClick from '@hooks/useOutsideClick';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
 
-interface Props<T> {
+interface OptionType {
+  label: string;
+  value: string;
+}
+
+interface Props {
   width?: string;
-  optionList: T[];
-  selectedValue: T;
-  onChange?: (value: T) => void;
-  getLabel?: (option: T) => string;
+  optionList: OptionType[];
+  selectedValue: string;
+  onChange?: (value: string) => void;
   size?: 'medium' | 'large';
 }
 
-const Select = <T,>({
+const Select = ({
   width,
   optionList,
   selectedValue,
   onChange,
-  getLabel,
   size = 'medium',
-}: Props<T>) => {
+}: Props) => {
   const [isClick, setIsClick] = useState(false);
-  const selectRef = useRef<HTMLDivElement>(null);
+  const containerRef = useOutsideClick<HTMLDivElement>(
+    useCallback(() => {
+      setIsClick(false);
+    }, []),
+  );
 
   const openOptionList = () => {
     setIsClick((prev) => !prev);
   };
 
-  useEffect(() => {
-    function handleInteraction(e: MouseEvent) {
-      if (selectRef?.current && !selectRef.current.contains(e.target as Node)) {
-        setIsClick(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleInteraction);
-    return () => {
-      document.removeEventListener('mousedown', handleInteraction);
-    };
-  }, []);
-
   return (
-    <Container ref={selectRef} width={width}>
+    <Container ref={containerRef} width={width}>
       <SelectButton size={size} type="button" onClick={openOptionList}>
         <Typography
+          style={{ whiteSpace: 'nowrap' }}
           variant={size === 'medium' ? 'body2Reading' : 'body1Normal'}
         >
-          {getLabel
-            ? getLabel(selectedValue)
-            : selectedValue
-              ? (selectedValue as string)
-              : '선택하세요'}
+          {optionList.find((option) => option.value === selectedValue)?.label ??
+            '선택하세요'}
         </Typography>
         <IconWrapper $isOpen={isClick}>
           <DropDown size={size === 'medium' ? '20' : '24'} />
@@ -65,11 +58,11 @@ const Select = <T,>({
             <li
               key={index}
               onClick={() => {
-                onChange?.(option);
+                onChange?.(option.value);
                 setIsClick(false);
               }}
             >
-              {getLabel ? getLabel(option) : (option as string)}
+              {option.label}
             </li>
           ))}
         </OptionWrapper>

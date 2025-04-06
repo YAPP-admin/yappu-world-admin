@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { ErrorResponse } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -9,11 +12,11 @@ import Select from '@compnents/commons/Select';
 import Typography from '@compnents/commons/Typography';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import PopupContainer from '@compnents/popup/PopupContainer';
-import { userRole } from '@constants/role';
+import { userRoleOptionList } from '@constants/optionList';
 import { useApplicationApproveMutation } from '@queries/auth/useApplicationApproveMutation';
 import { useApplicationStore } from '@stores/applicationStore';
 import { ApplicationApproveReq, ApplicationListRes } from 'apis/auth/types';
-import { RoleLabel } from 'apis/user/types';
+import { RoleLabel, RoleName } from 'apis/user/types';
 import theme from 'styles/theme';
 
 interface Props {
@@ -34,13 +37,14 @@ const ApprovePopup: FC<Props> = ({
   selectedIndexes,
   isBulk = false,
 }) => {
+  const { mutateAsync } = useApplicationApproveMutation();
+  const queryClient = useQueryClient();
   const { handleSubmit, control, watch } = useForm<ApplicationApproveType>({
     defaultValues: {
-      ids: isBulk ? selectedIndexes : [selectedList?.applicationId],
+      ids: isBulk ? selectedIndexes : [selectedList?.id],
       role: undefined,
     },
   });
-  const { mutate } = useApplicationApproveMutation();
   const setIsApproveCompletePopup = useApplicationStore(
     (state) => state.setIsApproveCompletePopup,
   );
@@ -53,37 +57,60 @@ const ApprovePopup: FC<Props> = ({
   const setIsDetailPopup = useApplicationStore(
     (state) => state.setIsDetailPopup,
   );
+  const page = useApplicationStore((state) => state.page);
   const [approveData, setApproveData] = useState<ApplicationApproveType | null>(
     null,
   );
 
-  const onSumbit = (data: ApplicationApproveType) => {
+  const onSubmit = async (data: ApplicationApproveType) => {
     if (isBulk) {
       setApproveData(data);
       setIsApproveConfirmPopup(true);
       return;
     }
+
     const req: ApplicationApproveReq = {
       applicationIds: data.ids,
-      role: userRole.find((el) => el.label === data.role)?.name ?? '',
+      role:
+        (userRoleOptionList.find((el) => el.value === data.role)
+          ?.value as RoleName) ?? '',
     };
-    mutate(req);
-    onClose();
-    setIsDetailPopup(false);
-    setIsApproveCompletePopup(true);
+
+    try {
+      await mutateAsync(req);
+      queryClient.invalidateQueries({ queryKey: ['application-list', page] });
+      onClose();
+      setIsApproveCompletePopup(true);
+      setIsDetailPopup(false);
+    } catch (error) {
+      console.log(error);
+      if (isAxiosError<ErrorResponse>(error)) {
+        console.error('Approve error:', error.response?.data);
+      }
+    }
   };
 
-  const handleBulkConfirm = () => {
+  const handleBulkConfirm = async () => {
     if (!approveData) return;
 
     const req: ApplicationApproveReq = {
       applicationIds: approveData.ids,
-      role: userRole.find((el) => el.label === approveData.role)?.name ?? '',
+      role:
+        (userRoleOptionList.find((el) => el.value === approveData.role)
+          ?.value as RoleName) ?? '',
     };
-    mutate(req);
-    setIsApproveConfirmPopup(false);
-    onClose();
-    setIsApproveCompletePopup(true);
+
+    try {
+      await mutateAsync(req);
+      queryClient.invalidateQueries({ queryKey: ['application-list', page] });
+      onClose();
+      setIsApproveCompletePopup(true);
+      setIsApproveConfirmPopup(false);
+    } catch (error) {
+      if (isAxiosError<ErrorResponse>(error)) {
+        console.error('Bulk Approve error:', error.response?.data);
+      }
+    }
   };
 
   return (
@@ -91,7 +118,7 @@ const ApprovePopup: FC<Props> = ({
       <PopupContainer onClose={onClose}>
         <Container
           onClick={(e) => e.stopPropagation()}
-          onSubmit={handleSubmit(onSumbit)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <FlexBox direction="column" gap={8}>
             {isBulk ? (
@@ -116,15 +143,13 @@ const ApprovePopup: FC<Props> = ({
             name="role"
             render={({ field }) => (
               <Select
-                selectedValue={field.value}
+                optionList={userRoleOptionList}
                 size="large"
-                optionList={[
-                  '관리자',
-                  '운영진',
-                  '정회원',
-                  '수료회원',
-                  '활동회원',
-                ]}
+                selectedValue={
+                  userRoleOptionList.find(
+                    (item) => item.value === watch('role'),
+                  )?.value ?? ''
+                }
                 onChange={field.onChange}
               />
             )}

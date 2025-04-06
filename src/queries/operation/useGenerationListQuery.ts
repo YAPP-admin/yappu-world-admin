@@ -2,13 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getGenerationList } from 'apis/operation/OperationApis';
 
-export const useGenerationListQuery = () => {
+export const useGenerationListQuery = (page: number) => {
   return useQuery({
-    queryKey: ['generation-list'],
-    queryFn: () => getGenerationList({ page: 1, size: 10 }),
+    queryKey: ['generation-list', page],
+    queryFn: () => getGenerationList({ page, size: 10 }),
     select: (data) => {
-      console.log('data :', data);
-      return data.data;
+      return data.data.data;
     },
     retry: false,
   });

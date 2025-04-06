@@ -8,6 +8,12 @@ export interface OperationListInfo {
   value: string;
 }
 
+export interface OperationEditReq {
+  id: string;
+  name: string;
+  link: string;
+}
+
 export interface GenerationListRes {
   generation: number;
   startDate: string;
@@ -16,9 +22,9 @@ export interface GenerationListRes {
 }
 
 export interface AddGenerationReq {
-  generation: number | null;
-  startDate: Date | null;
-  endDate: Date | null;
+  generation: number;
+  startDate: string | null;
+  endDate: string | null;
   isActive: boolean;
 }
 

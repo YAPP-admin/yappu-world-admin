@@ -3,16 +3,41 @@ import styled from 'styled-components';
 
 import Typography from '@compnents/commons/Typography';
 import Switch from '@compnents/Control/Switch';
+import { useEditGenerationMutation } from '@queries/operation/useEditGenerationMutation';
+import { useGenerationStore } from '@stores/generationStore';
+import { EditGenerationReq } from 'apis/operation/types';
 
 interface Props {
-  active: boolean;
-  onToggle?: () => void;
   top: number | null;
   left: number | null;
 }
 
 const StatusChangeMenu = forwardRef<HTMLDivElement, Props>(
-  ({ active, onToggle, top, left }, ref) => {
+  ({ top, left }, ref) => {
+    const { mutate } = useEditGenerationMutation();
+    const selectedGeneration = useGenerationStore(
+      (state) => state.selectedGeneration,
+    );
+    const setSelectedGeneration = useGenerationStore(
+      (state) => state.setSelectedGeneration,
+    );
+
+    const patchGeneration = () => {
+      if (!selectedGeneration) return;
+
+      const updated = {
+        ...selectedGeneration,
+        isActive: !selectedGeneration.isActive,
+      };
+      setSelectedGeneration(updated);
+
+      const req: EditGenerationReq = {
+        generation: updated.generation,
+        targetActive: updated.isActive,
+      };
+      mutate(req);
+    };
+
     return (
       <Container ref={ref} left={left} top={top}>
         <Header>
@@ -24,7 +49,11 @@ const StatusChangeMenu = forwardRef<HTMLDivElement, Props>(
           <Typography color="static-black" variant="label1Normal">
             활동중
           </Typography>
-          <Switch checked={active} size="small" onToggle={onToggle} />
+          <Switch
+            checked={selectedGeneration?.isActive ?? false}
+            size="small"
+            onToggle={patchGeneration}
+          />
         </ToggleWrapper>
       </Container>
     );

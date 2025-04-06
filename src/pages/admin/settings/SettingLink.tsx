@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import TextButton from '@compnents/Button/TextButton';
 import Typography from '@compnents/commons/Typography';
 import CompletePopup from '@compnents/popup/CompletePopup';
-import StyledTable from '@compnents/table/StyledTable';
+import StyledTable from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { linkHeader } from '@constants/tableHeader';
 import { useOperationQuery } from '@queries/operation/useOperationQuery';
 import { useSettingLinkStore } from '@stores/SettingLinkStore';
 import { OperationListInfo } from 'apis/operation/types';
@@ -52,39 +53,19 @@ const SettingLink: FC = () => {
           <StyledTable>
             <TableHead>
               <TableRow>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    링크 이름
-                  </Typography>
-                </TableCell>
-                <TableCell as="th">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    URL
-                  </Typography>
-                </TableCell>
-                <TableCell as="th" justifyContent="center">
-                  <Typography
-                    color="label-normal"
-                    variant="body1Normal"
-                    style={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    수정
-                  </Typography>
-                </TableCell>
+                {linkHeader.map((el) => (
+                  <TableCell key={el} as="th" justifyContent="center">
+                    <Typography
+                      color="label-normal"
+                      variant="body1Normal"
+                      style={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      {el}
+                    </Typography>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -122,7 +103,6 @@ const SettingLink: FC = () => {
       {isEditPopupOpen && (
         <EditPopup
           linkInfo={selectedLinkInfo}
-          setIsEditCompletePopupOpen={() => setIsEditCompletePopupOpen(true)}
           onClose={() => setIsEditPopupOpen(false)}
         />
       )}

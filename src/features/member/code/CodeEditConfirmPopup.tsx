@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import SolidButton from '@compnents/Button/SolidButton';
 import Button from '@compnents/commons/Button';
 import Typography from '@compnents/commons/Typography';
-
-import PopupContainer from './PopupContainer';
-
+import PopupContainer from '@compnents/popup/PopupContainer';
 
 interface Props {
   onClose: () => void;

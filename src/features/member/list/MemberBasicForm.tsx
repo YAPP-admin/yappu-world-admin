@@ -6,7 +6,7 @@ import RadioGroup from '@compnents/commons/RadioGroup';
 import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
-import { roleList } from '@constants/role';
+import { userRoleOptionList } from '@constants/optionList';
 import { RoleLabel, UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
 
@@ -24,11 +24,7 @@ const MemberBasicForm: FC = () => {
           >
             이름
           </Typography>
-          <TextInput
-            borderColor={theme.colors.lineNormal.strong}
-            inputSize="medium"
-            {...register('name')}
-          />
+          <TextInput inputSize="medium" {...register('name')} />
         </Wrapper>
         <Wrapper>
           <Typography
@@ -37,11 +33,7 @@ const MemberBasicForm: FC = () => {
           >
             이메일
           </Typography>
-          <TextInput
-            borderColor={theme.colors.lineNormal.strong}
-            inputSize="medium"
-            {...register('email')}
-          />
+          <TextInput inputSize="medium" {...register('email')} />
         </Wrapper>
         <Wrapper>
           <Typography
@@ -50,11 +42,7 @@ const MemberBasicForm: FC = () => {
           >
             전화번호
           </Typography>
-          <TextInput
-            borderColor={theme.colors.lineNormal.strong}
-            inputSize="medium"
-            {...register('phoneNumber')}
-          />
+          <TextInput inputSize="medium" {...register('phoneNumber')} />
         </Wrapper>
         <Wrapper>
           <Typography
@@ -73,10 +61,13 @@ const MemberBasicForm: FC = () => {
             권한
           </Typography>
           <Select
-            optionList={roleList}
-            selectedValue={watch('role')}
+            optionList={userRoleOptionList}
             width="120px"
-            onChange={(value: RoleLabel) => setValue('role', value)}
+            selectedValue={
+              userRoleOptionList.find((item) => item.label === watch('role'))
+                ?.value ?? ''
+            }
+            onChange={(value: string) => setValue('role', value as RoleLabel)}
           />
         </Wrapper>
         <Wrapper>
@@ -90,7 +81,7 @@ const MemberBasicForm: FC = () => {
             style={{ color: theme.colors.label.alternative }}
             variant="body1Normal"
           >
-            {watch('joinDate')}
+            {watch('registrationDate')}
           </Typography>
         </Wrapper>
       </div>

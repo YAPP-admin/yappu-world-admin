@@ -9,12 +9,21 @@ interface PaginationProps {
 
 const Pagination: FC<PaginationProps> = (props) => {
   const { totalPages, currentPage, onPageChange } = props;
+  const groupSize = 10;
+  const currentGroup = Math.floor((currentPage - 1) / groupSize); // 0-based
+  const startPage = currentGroup * groupSize + 1;
+  const endPage = Math.min(startPage + groupSize - 1, totalPages);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
     }
   };
+
+  const pages = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i,
+  );
 
   return (
     <PaginationContainer>
@@ -30,15 +39,17 @@ const Pagination: FC<PaginationProps> = (props) => {
       >
         &lt;
       </PaginationButton>
-      {[...Array(totalPages)].map((_, index) => (
+
+      {pages.map((page) => (
         <PaginationButton
-          key={index + 1}
-          $active={currentPage === index + 1}
-          onClick={() => handlePageChange(index + 1)}
+          key={page}
+          $active={currentPage === page}
+          onClick={() => handlePageChange(page)}
         >
-          {index + 1}
+          {page}
         </PaginationButton>
       ))}
+
       <PaginationButton
         disabled={currentPage === totalPages}
         onClick={() => handlePageChange(currentPage + 1)}
@@ -62,7 +73,6 @@ const PaginationContainer = styled.div`
   gap: 8px;
   justify-content: center;
   align-items: center;
-  margin-top: 32px;
 `;
 
 const PaginationButton = styled.button<{ $active?: boolean }>`

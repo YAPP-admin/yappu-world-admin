@@ -24,39 +24,22 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
+    console.log('error ', error);
     if (!error.response) {
       return Promise.reject(error);
     }
-    const { config, response } = error;
-    const { status } = response;
-    const clearUserIdStorage = useAuthStore.persist.clearStorage;
-    const resetToken = useAuthStore((state) => state.resetToken);
+    const { response } = error;
 
-    console.log(response.data.errorCode);
-
-    if ([500].includes(status)) {
-      console.error(`[공통 에러] ${status} 에러 발생`);
-      // 예: 500일 경우 사용자에게 알림
-      return Promise.reject(error); // react-query에는 넘기지 않음
+    if ([500].includes(response.status)) {
+      console.error(`[공통 에러] ${response.status} 에러 발생`);
+      return Promise.reject(error);
     } else if (
-      [401].includes(status) &&
+      response.status === 401 &&
       response.data.errorCode === 'TKN_0001'
     ) {
-      console.log('a');
-      window.alert('토큰 만료');
-      resetToken();
-      clearUserIdStorage();
-      return Promise.reject(error); // react-query에는 넘기지 않음
-
-      const originConfig = config;
-      try {
-        return axiosInstance.request(originConfig);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          window.alert('axios error');
-        }
-        return Promise.reject(error);
-      }
+      await useAuthStore.persist.clearStorage();
+      useAuthStore.getState().resetToken();
+      window.alert('토큰이 만료됐습니다. 다시 로그인 해주세요.');
     }
 
     return Promise.reject(error);

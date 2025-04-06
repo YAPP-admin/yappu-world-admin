@@ -12,16 +12,30 @@ import NoticeWrite from '@pages/admin/notices/NoticeWrite';
 import Session from '@pages/admin/sessions/Session.tsx';
 import SettingLink from '@pages/admin/settings/SettingLink';
 import SettingUpdate from '@pages/admin/settings/SettingUpdate';
+import AuthGuard from '@pages/auth/AuthGuard';
 import Login from '@pages/login/Login.tsx';
 
 export const RouteSetup = () => {
   return (
     <Layout>
       <Routes>
-        <Route element={<Login />} path="/" />
         <Route element={<Login />} path="/login" />
-
-        <Route element={<AdminLayer />} path="/admin">
+        <Route
+          path="/"
+          element={
+            <AuthGuard>
+              <Navigate replace to="/admin/members/list" />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AuthGuard>
+              <AdminLayer />
+            </AuthGuard>
+          }
+        >
           <Route index element={<Navigate replace to="members/list" />} />
 
           <Route path="members">

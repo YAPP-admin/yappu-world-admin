@@ -2,30 +2,32 @@ import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
+
+import SolidButton from '@compnents/Button/SolidButton';
+import { useLogout } from '@hooks/useLogout';
 import theme from 'styles/theme';
 
-import Button from './Button';
 import Logo from './Logo';
 import SideNavList from './SideNavList';
 import UserInfo from './UserInfo';
 
 const SideNav: FC = () => {
   const { pathname } = useLocation();
+  const logout = useLogout();
+
   return (
-    <Container>
-      <Wrapper>
-        <Logo />
-        <UserInfo authority="어드민" userName="김현정" />
-        <SideNavList pathname={pathname} />
-      </Wrapper>
-      <Button
-        buttonSize="medium"
-        style={{ width: '100%' }}
-        text="로그아웃"
-        variant="contained"
-        variantType="primary"
-      ></Button>
-    </Container>
+    <>
+      <Container>
+        <Wrapper>
+          <Logo />
+          <UserInfo authority="어드민" userName="김현정" />
+          <SideNavList pathname={pathname} />
+        </Wrapper>
+        <SolidButton size="medium" onClick={logout}>
+          로그아웃
+        </SolidButton>
+      </Container>
+    </>
   );
 };
 
@@ -42,6 +44,10 @@ const Container = styled.div`
   padding: 20px 24px;
   background: ${theme.colors.backgroundNormal.alternative};
   border-radius: 16px;
+
+  button {
+    width: 100%;
+  }
 `;
 
 const Wrapper = styled.div`

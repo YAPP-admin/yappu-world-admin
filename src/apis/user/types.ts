@@ -40,7 +40,7 @@ export interface UserList {
   name: string;
   generation: number;
   position: string;
-  role: RoleLabel;
+  role: UserRole;
   registrationDate: string;
   isActive: string;
 }

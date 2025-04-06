@@ -3,12 +3,14 @@ import { create } from 'zustand';
 import { UserDetailRes } from 'apis/user/types';
 
 interface MemberState {
-  selectedUserId: number | null;
-  setSelectedUserId: (userId: number) => void;
+  selectedUserId: string | null;
+  setSelectedUserId: (userId: string) => void;
   userDetailInfo: UserDetailRes | null;
   setUserDetailInfo: (data: UserDetailRes) => void;
   detailPopupOpen: boolean;
   setDetailPopupOpen: () => void;
+  page: number;
+  setPage: (value: number) => void;
 }
 
 export const useMemberStore = create<MemberState>((set) => ({
@@ -19,4 +21,6 @@ export const useMemberStore = create<MemberState>((set) => ({
   detailPopupOpen: false,
   setDetailPopupOpen: () =>
     set((state) => ({ detailPopupOpen: !state.detailPopupOpen })),
+  page: 1,
+  setPage: (value: number) => set({ page: value }),
 }));

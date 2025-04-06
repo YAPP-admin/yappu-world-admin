@@ -11,4 +11,6 @@ const TableRow: FC<Props> = ({ children, ...rest }) => {
 
 export default TableRow;
 
-const StyledRow = styled.tr``;
+const StyledRow = styled.tr`
+  cursor: pointer;
+`;

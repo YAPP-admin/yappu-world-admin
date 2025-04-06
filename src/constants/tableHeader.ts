@@ -15,3 +15,13 @@ export const applicationHeader = [
   '처리일',
   '상세보기',
 ];
+
+export const memberListHeader = [
+  '번호',
+  '이름',
+  '최근활동기수',
+  '직군',
+  '권한',
+  '가입일',
+  '탈퇴여부',
+];

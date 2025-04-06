@@ -29,10 +29,10 @@ axiosInstance.interceptors.response.use(
     }
     const { config, response } = error;
     const { status } = response;
-    const clearUserIdStorage = useAuthStore.persist.clearStorage;
-    const resetToken = useAuthStore((state) => state.resetToken);
+    // const clearUserIdStorage = useAuthStore.persist.clearStorage;
+    // const resetUser = useAuthStore((state) => state.resetUser);
 
-    console.log(response.data.errorCode);
+    // console.log(response.data.errorCode);
 
     if ([500].includes(status)) {
       console.error(`[공통 에러] ${status} 에러 발생`);
@@ -44,8 +44,8 @@ axiosInstance.interceptors.response.use(
     ) {
       console.log('a');
       window.alert('토큰 만료');
-      resetToken();
-      clearUserIdStorage();
+      // resetUser();
+      // clearUserIdStorage();
       return Promise.reject(error); // react-query에는 넘기지 않음
 
       const originConfig = config;

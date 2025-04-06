@@ -1,12 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  ErrorResponse,
-  PaginatedApiResponse,
-  PaginatedReq,
-  PaginatedResponse,
-} from 'apis/common/types';
-import { UserList, UserListRes } from 'apis/user/types';
+import { PaginatedReq } from 'apis/common/types';
 import { getUserList } from 'apis/user/UserApis';
 
 export const useUserListQuery = ({ page, size }: PaginatedReq) => {

@@ -8,7 +8,7 @@ import theme from 'styles/theme';
 import GenerateInfo from './GenerateInfo';
 
 interface Props {
-  userInfo: UserDetailRes | null;
+  userInfo: UserDetailRes | undefined;
 }
 
 const MemberActivityInfo: FC<Props> = (props) => {
@@ -37,11 +37,10 @@ const MemberActivityInfo: FC<Props> = (props) => {
             직군
           </Typography>
         </Wrapper>
-        {userInfo?.activityUnits?.map((el) => (
+        {userInfo?.activityUnits?.map((unit) => (
           <GenerateInfo
-            key={`${el.generation}-${el.position}`}
-            generation={el.generation}
-            role={el.position}
+            key={`${unit.generation}-${unit.position}`}
+            unit={unit}
           />
         ))}
       </div>

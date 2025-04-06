@@ -56,7 +56,7 @@ export interface UserDetailRes {
   role: RoleLabel;
   isActive: boolean;
   activityUnits: ActivityUnit[];
-  joinDate: string;
+  registrationDate: string;
 }
 
 export interface UserDetailReq {

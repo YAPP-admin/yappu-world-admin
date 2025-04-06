@@ -15,12 +15,10 @@ import { memberListHeader } from '@constants/tableHeader';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
 import { UserList } from 'apis/user/types';
-import { getUserDetail } from 'apis/user/UserApis';
 
 const MemberList: FC = () => {
   const {
     setSelectedUserId,
-    setUserDetailInfo,
     detailPopupOpen,
     setDetailPopupOpen,
     page,
@@ -28,14 +26,8 @@ const MemberList: FC = () => {
   } = useMemberStore();
   const { data } = useUserListQuery({ page, size: 10 });
 
-  const fetchUserDetail = async (userId: string) => {
-    const response = await getUserDetail(userId);
-    setUserDetailInfo(response.data.data);
-  };
-
   const onClickRow = (row: UserList) => {
     setSelectedUserId(row.userId);
-    fetchUserDetail(row.userId);
     setDetailPopupOpen();
   };
 

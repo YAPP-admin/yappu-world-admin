@@ -5,6 +5,7 @@ import MemberActivityInfo from '@compnents/members/MemberActivityInfo';
 import MemberBasicInfo from '@compnents/members/MemberBasicInfo';
 import MemberDetailHeader from '@compnents/members/MemberDetailHeader';
 import MemberForm from '@compnents/members/MemberForm';
+import { useUserDetailQuery } from '@queries/user/useUserDetailQuery';
 import { useMemberStore } from '@stores/memberStore';
 
 import PopupContainer from './PopupContainer';
@@ -16,7 +17,8 @@ interface Props {
 const MemberDetailPopup: FC<Props> = (props) => {
   const { onClose } = props;
   const [isEdit, setIsEdit] = useState(false);
-  const { userDetailInfo } = useMemberStore();
+  const selectedId = useMemberStore((state) => state.selectedUserId);
+  const { data } = useUserDetailQuery(selectedId ?? '');
 
   return (
     <PopupContainer>
@@ -24,16 +26,16 @@ const MemberDetailPopup: FC<Props> = (props) => {
         <MemberDetailHeader
           isEdit={isEdit}
           title="회원 상세 정보"
-          userName={userDetailInfo?.name}
+          userName={data?.name}
           onClickToEdit={() => setIsEdit(true)}
           onClose={onClose}
         />
         {isEdit ? (
-          <MemberForm cancelToEdit={() => setIsEdit(false)} isEdit={isEdit} />
+          <MemberForm cancelToEdit={() => setIsEdit(false)} userInfo={data} />
         ) : (
           <Wrapper>
-            <MemberBasicInfo userInfo={userDetailInfo} />
-            <MemberActivityInfo userInfo={userDetailInfo} />
+            <MemberBasicInfo userInfo={data} />
+            <MemberActivityInfo userInfo={data} />
           </Wrapper>
         )}
       </Container>

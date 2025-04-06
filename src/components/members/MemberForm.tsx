@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import Button from '@compnents/commons/Button';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
-import { useMemberStore } from '@stores/memberStore';
 import { UserDetailReq, UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
 
@@ -15,19 +14,19 @@ import MemberBasicForm from './MemberBasicForm';
 
 interface Props {
   cancelToEdit: () => void;
+  userInfo: UserDetailRes | undefined;
 }
 
 const MemberForm: FC<Props> = (props) => {
-  const { cancelToEdit } = props;
+  const { cancelToEdit, userInfo } = props;
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { userDetailInfo } = useMemberStore();
   const [formData, setFormData] = useState<UserDetailReq | null>(null);
   const queryClient = useQueryClient();
 
   const { mutate } = useUserDetailMutation();
 
   const method = useForm<UserDetailRes>({
-    defaultValues: userDetailInfo ?? {},
+    defaultValues: userInfo ?? {},
   });
 
   const onSubmit = (data: UserDetailRes) => {

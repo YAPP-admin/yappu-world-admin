@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import SolidButton from '@compnents/Button/SolidButton';
 import { useLogout } from '@hooks/useLogout';
+import { useAuthStore } from '@stores/authStore';
 import theme from 'styles/theme';
 
 import Logo from './Logo';
@@ -13,6 +14,8 @@ import UserInfo from './UserInfo';
 
 const SideNav: FC = () => {
   const { pathname } = useLocation();
+  const userProfile = useAuthStore((state) => state.userProfile);
+
   const logout = useLogout();
 
   return (
@@ -20,7 +23,7 @@ const SideNav: FC = () => {
       <Container>
         <Wrapper>
           <Logo />
-          <UserInfo authority="어드민" userName="김현정" />
+          <UserInfo userProfile={userProfile} />
           <SideNavList pathname={pathname} />
         </Wrapper>
         <SolidButton size="medium" onClick={logout}>

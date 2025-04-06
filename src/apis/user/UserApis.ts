@@ -5,7 +5,12 @@ import {
   PaginatedReq,
 } from 'apis/common/types';
 
-import { UserDetailReq, UserDetailRes, UserListRes } from './types';
+import {
+  UserDetailReq,
+  UserDetailRes,
+  UserListRes,
+  UserProfileRes,
+} from './types';
 
 export const getUserList = ({ page, size }: PaginatedReq) => {
   return axiosInstance.get<PaginatedApiResponse<UserListRes>>(
@@ -21,4 +26,10 @@ export const getUserDetail = (userId: string) => {
 
 export const putUserDetail = (data: UserDetailReq) => {
   return axiosInstance.put<ApiResponse<string>>(`/admin/v1/users`, data);
+};
+
+export const getUserProfile = () => {
+  return axiosInstance.get<ApiResponse<UserProfileRes>>(
+    '/admin/v1/users/profile',
+  );
 };

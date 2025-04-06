@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
       response.data.errorCode === 'TKN_0001'
     ) {
       await useAuthStore.persist.clearStorage();
-      useAuthStore.getState().resetToken();
+      useAuthStore.getState().resetUser();
       window.alert('토큰이 만료됐습니다. 다시 로그인 해주세요.');
     }
 

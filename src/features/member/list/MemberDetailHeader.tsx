@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Close from '@assets/Close';
 import Pencil from '@assets/Pencil';
 import IconButton from '@compnents/Button/IconButton';
-import Button from '@compnents/commons/Button';
+import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Typography from '@compnents/commons/Typography';
 import theme from 'styles/theme';
 
@@ -41,14 +41,14 @@ const MemberDetailHeader: FC<Props> = (props) => {
           {userName}
         </Typography>
         {!isEdit && (
-          <Button
-            buttonSize="xsmall"
+          <OutlinedButton
             leftIcon={<Pencil height="16" width="16" />}
-            text="수정"
-            variant="outlined"
-            variantType="assistive"
+            size="xsmall"
+            variant="assistive"
             onClick={onClickToEdit}
-          />
+          >
+            수정
+          </OutlinedButton>
         )}
       </div>
     </Header>

@@ -1,5 +1,5 @@
-import { ButtonVariant, ButtonVariantType } from '@compnents/commons/Button';
 import { variantStyles } from '@constants/buttonStyles';
+import { ButtonVariant, ButtonVariantType } from 'types/buttonTypes';
 
 export const getButtonVariantStyle = (
   variant: ButtonVariant,

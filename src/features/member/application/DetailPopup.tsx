@@ -22,7 +22,7 @@ interface Props {
 }
 
 const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
-  const { data } = useApplicationDetailQuery(selectedList?.applicationId ?? '');
+  const { data } = useApplicationDetailQuery(selectedList?.id ?? '');
   const [approve, setApprove] = useState(false);
   const [reject, setReject] = useState(false);
 

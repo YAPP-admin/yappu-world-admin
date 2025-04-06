@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ErrorResponse } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -16,9 +19,6 @@ import { ApplicationListRes } from 'apis/auth/types';
 import theme from 'styles/theme';
 
 import { useApplicationRejectMutaion } from '../../../queries/auth/useApplicationRejectMutation';
-import { useQueryClient } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
-import { ErrorResponse } from 'react-router-dom';
 
 interface Props {
   onClose?: () => void;

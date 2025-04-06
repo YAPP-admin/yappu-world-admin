@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -10,11 +11,13 @@ import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
+import Pagination from '@compnents/table/Pagination';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { applicationHeader } from '@constants/tableHeader';
 import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
 import { getChipColor } from '@utils/getChipColor';
@@ -23,9 +26,6 @@ import ApprovePopup from 'features/member/application/ApprovePopup';
 import DetailPopup from 'features/member/application/DetailPopup';
 import RefusePopup from 'features/member/application/RejectPopup';
 import theme from 'styles/theme';
-import dayjs from 'dayjs';
-import { applicationHeader } from '@constants/tableHeader';
-import Pagination from '@compnents/table/Pagination';
 
 const MemberApplication: FC = () => {
   const {
@@ -87,10 +87,10 @@ const MemberApplication: FC = () => {
               justify="space-between"
             >
               <FlexBox
+                align="center"
                 gap={8}
                 height="fit-content"
                 width="fit-content"
-                align="center"
               >
                 <Typography variant="headline1Bold">신청리스트</Typography>
                 <Typography

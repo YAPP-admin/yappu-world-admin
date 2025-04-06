@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { ErrorResponse } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -15,9 +18,6 @@ import { useApplicationStore } from '@stores/applicationStore';
 import { ApplicationApproveReq, ApplicationListRes } from 'apis/auth/types';
 import { RoleLabel, RoleName } from 'apis/user/types';
 import theme from 'styles/theme';
-import { isAxiosError } from 'axios';
-import { ErrorResponse } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   onClose: () => void;
@@ -37,14 +37,14 @@ const ApprovePopup: FC<Props> = ({
   selectedIndexes,
   isBulk = false,
 }) => {
+  const { mutateAsync } = useApplicationApproveMutation();
+  const queryClient = useQueryClient();
   const { handleSubmit, control, watch } = useForm<ApplicationApproveType>({
     defaultValues: {
       ids: isBulk ? selectedIndexes : [selectedList?.id],
       role: undefined,
     },
   });
-  const { mutateAsync } = useApplicationApproveMutation();
-  const queryClient = useQueryClient();
   const setIsApproveCompletePopup = useApplicationStore(
     (state) => state.setIsApproveCompletePopup,
   );
@@ -83,6 +83,7 @@ const ApprovePopup: FC<Props> = ({
       setIsApproveCompletePopup(true);
       setIsDetailPopup(false);
     } catch (error) {
+      console.log(error);
       if (isAxiosError<ErrorResponse>(error)) {
         console.error('Approve error:', error.response?.data);
       }

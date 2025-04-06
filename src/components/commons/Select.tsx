@@ -42,6 +42,7 @@ const Select = ({
     <Container ref={containerRef} width={width}>
       <SelectButton size={size} type="button" onClick={openOptionList}>
         <Typography
+          style={{ whiteSpace: 'nowrap' }}
           variant={size === 'medium' ? 'body2Reading' : 'body1Normal'}
         >
           {optionList.find((option) => option.value === selectedValue)?.label ??

@@ -64,7 +64,7 @@ const MemberBasicForm: FC = () => {
             optionList={userRoleOptionList}
             width="120px"
             selectedValue={
-              userRoleOptionList.find((item) => item.value === watch('role'))
+              userRoleOptionList.find((item) => item.label === watch('role'))
                 ?.value ?? ''
             }
             onChange={(value: string) => setValue('role', value as RoleLabel)}
@@ -81,7 +81,7 @@ const MemberBasicForm: FC = () => {
             style={{ color: theme.colors.label.alternative }}
             variant="body1Normal"
           >
-            {watch('joinDate')}
+            {watch('registrationDate')}
           </Typography>
         </Wrapper>
       </div>

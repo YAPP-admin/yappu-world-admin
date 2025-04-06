@@ -12,7 +12,7 @@ import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import Pagination from '@compnents/table/Pagination';
-import StyledTable from '@compnents/table/StyledTable';
+import StyledTable from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';

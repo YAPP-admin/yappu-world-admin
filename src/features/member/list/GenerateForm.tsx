@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 import Minus from '@assets/Minus';
-import Icon from '@compnents/commons/Icon';
+import IconButton from '@compnents/Button/IconButton';
 import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import { positionOptionList } from '@constants/optionList';
@@ -38,10 +38,9 @@ const GenerateForm: FC<Props> = (props) => {
           setValue(`activityUnits.${index}.position`, value)
         }
       />
-      <Icon
-        icon={<Minus color={theme.colors.status.nagative} />}
-        onClick={onRemove}
-      />
+      <IconButton size="custom" variant="outlined" onClick={onRemove}>
+        <Minus color={theme.colors.status.nagative} size="16" />
+      </IconButton>
     </Container>
   );
 };

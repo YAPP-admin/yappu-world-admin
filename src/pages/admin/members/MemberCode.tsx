@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
-import StyledTable from '@compnents/table/StyledTable';
+import StyledTable from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';

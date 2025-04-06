@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -7,7 +8,7 @@ import { UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
 
 interface Props {
-  userInfo: UserDetailRes | null;
+  userInfo: UserDetailRes | undefined;
 }
 
 const MemberBasicInfo: FC<Props> = (props) => {
@@ -102,7 +103,9 @@ const MemberBasicInfo: FC<Props> = (props) => {
             style={{ color: theme.colors.label.normal }}
             variant="body1Normal"
           >
-            {userInfo?.joinDate ?? '-'}
+            {dayjs(new Date(userInfo?.registrationDate ?? '')).format(
+              'YYYY.MM.DD',
+            )}
           </Typography>
         </Wrapper>
       </div>

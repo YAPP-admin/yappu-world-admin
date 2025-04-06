@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 import Close from '@assets/Close';
 import Pencil from '@assets/Pencil';
+import IconButton from '@compnents/Button/IconButton';
 import Button from '@compnents/commons/Button';
-import Icon from '@compnents/commons/Icon';
 import Typography from '@compnents/commons/Typography';
 import theme from 'styles/theme';
 
@@ -29,16 +29,9 @@ const MemberDetailHeader: FC<Props> = (props) => {
         }}
       >
         <Typography variant="headline1Bold">{title}</Typography>
-        <Icon
-          icon={
-            <Close
-              color={theme.colors.label.alternative}
-              height="16"
-              width="16"
-            />
-          }
-          onClick={onClose}
-        />
+        <IconButton onClick={onClose}>
+          <Close color={theme.colors.label.alternative} />
+        </IconButton>
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
         <Typography

@@ -1,35 +1,39 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import Chip from '@compnents/commons/Chip';
+import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
+import { ActivityUnit } from 'apis/user/types';
 import theme from 'styles/theme';
 
 interface Props {
-  generation: number;
-  role: string;
-  isActive?: boolean;
+  unit: ActivityUnit;
 }
 
 const GenerateInfo: FC<Props> = (props) => {
-  const { generation, role } = props;
+  const { unit } = props;
 
   return (
     <Container>
+      <FlexBox align="center" gap={8} width="100px">
+        <Typography
+          variant="body1Normal"
+          style={{
+            color: theme.colors.label.normal,
+          }}
+        >
+          {unit.generation}기
+        </Typography>
+        {unit.isActive && <Chip text="진행중" />}
+      </FlexBox>
       <Typography
         variant="body1Normal"
         style={{
           color: theme.colors.label.normal,
         }}
       >
-        {generation}기
-      </Typography>
-      <Typography
-        variant="body1Normal"
-        style={{
-          color: theme.colors.label.normal,
-        }}
-      >
-        {role}
+        {unit.position}
       </Typography>
     </Container>
   );
@@ -42,7 +46,7 @@ const Container = styled.div<{ width?: string }>`
   gap: 24px;
   align-items: center;
 
-  span:first-child {
+  /* span:first-child {
     width: 100px;
-  }
+  } */
 `;

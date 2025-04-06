@@ -12,13 +12,5 @@ export const useUserDetailMutation = () => {
     UserDetailReq
   >({
     mutationFn: (data) => putUserDetail(data),
-    onSuccess: (res) => {
-      console.log(res);
-    },
-    onError: (err) => {
-      if (err.response) {
-        console.log(err);
-      }
-    },
   });
 };

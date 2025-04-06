@@ -29,12 +29,12 @@ export const RouteSetup = () => {
           }
         />
         <Route
+          path="/admin"
           element={
             <AuthGuard>
               <AdminLayer />
             </AuthGuard>
           }
-          path="/admin"
         >
           <Route index element={<Navigate replace to="members/list" />} />
 

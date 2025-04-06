@@ -109,7 +109,7 @@ export const chipSizeStyles: Record<ChipSize, ReturnType<typeof css>> = {
 };
 
 export const roleChipStyleMap: Record<
-  RoleName,
+  Exclude<RoleName, ''>,
   { color: ChipColor; variant: ChipStyle }
 > = {
   ADMIN: {

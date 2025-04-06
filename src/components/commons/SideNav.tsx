@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { useAuthStore } from '@stores/authStore';
 import theme from 'styles/theme';
 
 import Button from './Button';
@@ -11,11 +12,13 @@ import UserInfo from './UserInfo';
 
 const SideNav: FC = () => {
   const { pathname } = useLocation();
+  const userProfile = useAuthStore((state) => state.userProfile);
+
   return (
     <Container>
       <Wrapper>
         <Logo />
-        <UserInfo authority="어드민" userName="김현정" />
+        <UserInfo userProfile={userProfile} />
         <SideNavList pathname={pathname} />
       </Wrapper>
       <Button

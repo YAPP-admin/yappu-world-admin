@@ -12,7 +12,5 @@ export const useApplicationApproveMutation = () => {
     ApplicationApproveReq
   >({
     mutationFn: (data) => postApplicationApprove(data),
-    onSuccess: (res) => console.log(res),
-    onError: (err) => console.log(err),
   });
 };

@@ -44,7 +44,7 @@ export interface EidtUserRoleReq {
 
 // 가입신청 목록 조회
 export interface ApplicationListRes {
-  applicationId: string;
+  id: string;
   name: string;
   email: string;
   applicationDate: string;
@@ -56,6 +56,7 @@ export interface ApplicationListRes {
     };
   };
   status: string;
+  processDate: string;
 }
 
 // 가입신청 상세

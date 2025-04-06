@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
-import CodeEditPopup from '@compnents/popup/CodeEditPopup';
 import StyledTable from '@compnents/table/StyledTable';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
@@ -13,6 +12,7 @@ import TableRow from '@compnents/table/TableRow';
 import useMemberCodeQuery from '@queries/auth/useMemberCodeQuery';
 import { useMemberCodeStore } from '@stores/memberCodeStore';
 import { MemberCodeInfo } from 'apis/auth/types';
+import CodeEditPopup from 'features/member/code/CodeEditPopup';
 
 const tableHeaders = ['코드이름', '코드값', ''];
 

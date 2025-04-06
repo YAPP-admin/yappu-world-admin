@@ -21,6 +21,8 @@ interface ApplicationState {
   setIsRejectConfirmPopup: (value: boolean) => void;
   isRejectCompletePopup: boolean;
   setIsRejectCompletePopup: (value: boolean) => void;
+  page: number;
+  setPage: (value: number) => void;
 }
 
 export const useApplicationStore = create<ApplicationState>((set) => ({
@@ -47,4 +49,6 @@ export const useApplicationStore = create<ApplicationState>((set) => ({
   isRejectCompletePopup: false,
   setIsRejectCompletePopup: (value: boolean) =>
     set({ isRejectCompletePopup: value }),
+  page: 1,
+  setPage: (value: number) => set({ page: value }),
 }));

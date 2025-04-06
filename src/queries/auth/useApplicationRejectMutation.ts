@@ -12,7 +12,5 @@ export const useApplicationRejectMutaion = () => {
     ApplicationRejectReq
   >({
     mutationFn: (data) => postApplicationReject(data),
-    onSuccess: (res) => console.log(res),
-    onError: (err) => console.log(err),
   });
 };

@@ -12,7 +12,7 @@ import { RoleName } from 'apis/user/types';
 import { UserRoleType } from 'types/formTypes';
 
 import CodeEditConfirmPopup from './CodeEditConfirmPopup';
-import PopupContainer from './PopupContainer';
+import PopupContainer from '../../../components/popup/PopupContainer';
 
 interface Props {
   handleEditPopup: () => void;

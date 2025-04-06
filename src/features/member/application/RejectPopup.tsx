@@ -1,5 +1,8 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ErrorResponse } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -37,12 +40,13 @@ const RejectPopup: FC<Props> = ({
 }) => {
   const { handleSubmit, register, watch } = useForm<ApplicationRefuseType>({
     defaultValues: {
-      applicationIds: isBulk ? selectedIndexes : [selectedList?.applicationId],
+      applicationIds: isBulk ? selectedIndexes : [selectedList?.id],
       reason: '',
     },
   });
 
-  const { mutate } = useApplicationRejectMutaion();
+  const { mutateAsync } = useApplicationRejectMutaion();
+  const queryClient = useQueryClient();
   const setIsRejectCompletePopup = useApplicationStore(
     (state) => state.setIsRejectCompletePopup,
   );
@@ -55,37 +59,58 @@ const RejectPopup: FC<Props> = ({
   const setIsDetailPopup = useApplicationStore(
     (state) => state.setIsDetailPopup,
   );
+  const page = useApplicationStore((state) => state.page);
+
   const [approveData, setApproveData] = useState<ApplicationRefuseType | null>(
     null,
   );
 
-  const onSumbit = (data: ApplicationRefuseType) => {
+  const onSubmit = async (data: ApplicationRefuseType) => {
+    console.log(data);
     if (isBulk) {
       setApproveData(data);
       setIsRejectConfirmPopup(true);
       return;
     }
+
     const req: ApplicationRefuseType = {
       applicationIds: data.applicationIds,
       reason: data.reason,
     };
-    mutate(req);
-    onClose?.();
-    setIsDetailPopup(false);
-    setIsRejectCompletePopup(true);
+
+    try {
+      await mutateAsync(req);
+      queryClient.invalidateQueries({ queryKey: ['application-list', page] });
+      onClose?.();
+      setIsDetailPopup(false);
+      setIsRejectCompletePopup(true);
+    } catch (error) {
+      if (isAxiosError<ErrorResponse>(error)) {
+        console.error('Approve error:', error.response?.data);
+      }
+    }
   };
 
-  const handleBulkConfirm = () => {
+  const handleBulkConfirm = async () => {
     if (!approveData) return;
 
     const req: ApplicationRefuseType = {
       applicationIds: approveData.applicationIds,
       reason: approveData.reason,
     };
-    mutate(req);
-    setIsRejectConfirmPopup(false);
-    onClose?.();
-    setIsRejectCompletePopup(true);
+
+    try {
+      await mutateAsync(req);
+      queryClient.invalidateQueries({ queryKey: ['application-list', page] });
+
+      setIsRejectConfirmPopup(false);
+      onClose?.();
+      setIsRejectCompletePopup(true);
+    } catch (error) {
+      if (isAxiosError<ErrorResponse>(error)) {
+        console.error('Bulk Approve error:', error.response?.data);
+      }
+    }
   };
 
   return (
@@ -93,7 +118,7 @@ const RejectPopup: FC<Props> = ({
       <PopupContainer onClose={onClose}>
         <Container
           onClick={(e) => e.stopPropagation()}
-          onSubmit={handleSubmit(onSumbit)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <FlexBox direction="column" gap={8}>
             {isBulk ? (

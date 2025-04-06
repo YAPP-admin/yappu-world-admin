@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import DropDown from '@assets/DropDown';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
+import useOutsideClick from '@hooks/useOutsideClick';
 
 interface OptionType {
   label: string;
@@ -27,27 +28,18 @@ const Select = ({
   size = 'medium',
 }: Props) => {
   const [isClick, setIsClick] = useState(false);
-  const selectRef = useRef<HTMLDivElement>(null);
+  const containerRef = useOutsideClick<HTMLDivElement>(
+    useCallback(() => {
+      setIsClick(false);
+    }, []),
+  );
 
   const openOptionList = () => {
     setIsClick((prev) => !prev);
   };
 
-  useEffect(() => {
-    function handleInteraction(e: MouseEvent) {
-      if (selectRef?.current && !selectRef.current.contains(e.target as Node)) {
-        setIsClick(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleInteraction);
-    return () => {
-      document.removeEventListener('mousedown', handleInteraction);
-    };
-  }, []);
-
   return (
-    <Container ref={selectRef} width={width}>
+    <Container ref={containerRef} width={width}>
       <SelectButton size={size} type="button" onClick={openOptionList}>
         <Typography
           variant={size === 'medium' ? 'body2Reading' : 'body1Normal'}

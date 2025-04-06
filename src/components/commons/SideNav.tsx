@@ -1,26 +1,19 @@
 import { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import theme from 'styles/theme';
 
 import SolidButton from '@compnents/Button/SolidButton';
-import { useAuthStore } from '@stores/authStore';
+import { useLogout } from '@hooks/useLogout';
+import theme from 'styles/theme';
+
 import Logo from './Logo';
 import SideNavList from './SideNavList';
 import UserInfo from './UserInfo';
 
 const SideNav: FC = () => {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const clearUserIdStorage = useAuthStore.persist.clearStorage;
-  const resetToken = useAuthStore((state) => state.resetToken);
-
-  const onClickToLogout = () => {
-    navigate('/login');
-    resetToken();
-    clearUserIdStorage();
-  };
+  const logout = useLogout();
 
   return (
     <>
@@ -30,7 +23,7 @@ const SideNav: FC = () => {
           <UserInfo authority="어드민" userName="김현정" />
           <SideNavList pathname={pathname} />
         </Wrapper>
-        <SolidButton onClick={onClickToLogout} size="medium">
+        <SolidButton size="medium" onClick={logout}>
           로그아웃
         </SolidButton>
       </Container>

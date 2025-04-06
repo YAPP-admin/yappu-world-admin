@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -6,8 +7,10 @@ import styled from 'styled-components';
 import Button from '@compnents/commons/Button';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
-import { UserDetailReq, UserDetailRes } from 'apis/user/types';
+import { ErrorResponse } from 'apis/common/types';
+import { UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
+import { UserDetailType } from 'types/formTypes';
 
 import MemberActivityForm from './MemberActivityForm';
 import MemberBasicForm from './MemberBasicForm';
@@ -20,16 +23,16 @@ interface Props {
 const MemberForm: FC<Props> = (props) => {
   const { cancelToEdit, userInfo } = props;
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [formData, setFormData] = useState<UserDetailReq | null>(null);
+  const [formData, setFormData] = useState<UserDetailType | null>(null);
   const queryClient = useQueryClient();
 
-  const { mutate } = useUserDetailMutation();
+  const { mutateAsync } = useUserDetailMutation();
 
-  const method = useForm<UserDetailRes>({
+  const method = useForm<UserDetailType>({
     defaultValues: userInfo ?? {},
   });
 
-  const onSubmit = (data: UserDetailRes) => {
+  const onSubmit = (data: UserDetailType) => {
     setOpenConfirm(true);
     setFormData({
       id: data.id,
@@ -44,13 +47,19 @@ const MemberForm: FC<Props> = (props) => {
     setOpenConfirm(false);
   };
 
-  const putUserDetail = () => {
+  const putUserDetail = async () => {
     if (!formData) return;
 
-    mutate(formData);
-    setOpenConfirm(false);
-    cancelToEdit();
-    queryClient.invalidateQueries({ queryKey: ['user-list'] });
+    try {
+      await mutateAsync(formData);
+      setOpenConfirm(false);
+      cancelToEdit();
+      queryClient.invalidateQueries({ queryKey: ['user-list'] });
+    } catch (error) {
+      if (isAxiosError<ErrorResponse>(error)) {
+        console.error(error.response?.data);
+      }
+    }
   };
 
   return (

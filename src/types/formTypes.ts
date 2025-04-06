@@ -1,4 +1,5 @@
 import { NoticeCategory } from 'apis/notice/types';
+import { ActivityUnit } from 'apis/user/types';
 
 export interface LoginType {
   email: string;
@@ -37,4 +38,11 @@ export interface AddGenerationType {
   startDate: Date | null;
   endDate: Date | null;
   isActive: boolean;
+}
+
+export interface UserDetailType {
+  id: string;
+  name: string;
+  email: string;
+  activityUnits: ActivityUnit[];
 }

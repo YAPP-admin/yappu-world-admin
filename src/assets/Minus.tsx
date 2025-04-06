@@ -1,18 +1,15 @@
 import { FC } from 'react';
 
-interface Props {
-  width?: string;
-  height?: string;
-  color: string;
-}
-const Minus: FC<Props> = (props) => {
-  const { width = '24', height = '24', color = '#171719' } = props;
+import { AssetProps } from 'types/AssetType';
+
+const Minus: FC<AssetProps> = (props) => {
+  const { size = '24', color = '#171719' } = props;
   return (
     <svg
       fill="none"
-      height={height}
+      height={size}
       viewBox="0 0 24 24"
-      width={width}
+      width={size}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

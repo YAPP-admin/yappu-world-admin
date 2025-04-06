@@ -1,12 +1,12 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 
+import { useUserDetailQuery } from '@queries/user/useUserDetailQuery';
+import { useMemberStore } from '@stores/memberStore';
 import MemberActivityInfo from 'features/member/list/MemberActivityInfo';
 import MemberBasicInfo from 'features/member/list/MemberBasicInfo';
 import MemberDetailHeader from 'features/member/list/MemberDetailHeader';
 import MemberForm from 'features/member/list/MemberForm';
-import { useUserDetailQuery } from '@queries/user/useUserDetailQuery';
-import { useMemberStore } from '@stores/memberStore';
 
 import PopupContainer from '../../../components/popup/PopupContainer';
 

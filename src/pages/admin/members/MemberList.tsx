@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
-import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
 import Pagination from '@compnents/table/Pagination';
 import StyledTable from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
@@ -15,6 +14,7 @@ import { memberListHeader } from '@constants/tableHeader';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
 import { UserList } from 'apis/user/types';
+import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
 
 const MemberList: FC = () => {
   const {

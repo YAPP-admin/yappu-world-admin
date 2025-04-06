@@ -8,7 +8,7 @@ import {
   ButtonSize,
   ButtonVariant,
   ButtonVariantType,
-} from '@compnents/commons/Button';
+} from 'types/buttonTypes';
 
 export const variantStyles: Record<
   ButtonVariant,

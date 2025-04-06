@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
-import Button from '@compnents/commons/Button';
 import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
 
@@ -24,13 +24,9 @@ const CodeEditConfirmPopup: FC<Props> = ({ onClose, onSave }) => {
           </Typography>
         </TitleWrapper>
         <ButtonWrapper>
-          <Button
-            buttonSize="xlarge"
-            text="취소"
-            variant="outlined"
-            variantType="secondary"
-            onClick={onClose}
-          />
+          <OutlinedButton size="xlarge" variant="secondary" onClick={onClose}>
+            취소
+          </OutlinedButton>
           <SolidButton size="xlarge" onClick={onSave}>
             저장
           </SolidButton>

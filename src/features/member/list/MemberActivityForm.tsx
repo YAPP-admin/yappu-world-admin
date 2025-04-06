@@ -3,7 +3,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 import Plus from '@assets/Plus';
-import Button from '@compnents/commons/Button';
+import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Typography from '@compnents/commons/Typography';
 import { UserDetailRes } from 'apis/user/types';
 import theme from 'styles/theme';
@@ -21,12 +21,10 @@ const MemberActivityForm: FC = () => {
     <Container className="wrapper">
       <Header>
         <Typography variant="heading2Bold">활동 정보</Typography>
-        <Button
-          buttonSize="xsmall"
+        <OutlinedButton
           leftIcon={<Plus />}
-          text="추가"
-          variant="outlined"
-          variantType="assistive"
+          size="xsmall"
+          variant="assistive"
           onClick={() =>
             append({
               generation: 0,
@@ -34,7 +32,9 @@ const MemberActivityForm: FC = () => {
               isActive: true,
             })
           }
-        />
+        >
+          추가
+        </OutlinedButton>
       </Header>
 
       <Content className="wrapper">

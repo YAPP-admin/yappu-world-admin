@@ -4,7 +4,8 @@ import { FC, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import Button from '@compnents/commons/Button';
+import OutlinedButton from '@compnents/Button/OutlinedButton';
+import SolidButton from '@compnents/Button/SolidButton';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
 import { ErrorResponse } from 'apis/common/types';
@@ -73,14 +74,17 @@ const MemberForm: FC<Props> = (props) => {
           <MemberActivityForm />
         </Wrapper>
         <ButtonWrapper>
-          <Button
-            buttonType="button"
-            text="취소"
-            variant="outlined"
-            variantType="assistive"
+          <OutlinedButton
+            size="medium"
+            type="button"
+            variant="assistive"
             onClick={cancelToEdit}
-          />
-          <Button buttonType="submit" text="저장" />
+          >
+            취소
+          </OutlinedButton>
+          <SolidButton size="medium" type="submit">
+            저장
+          </SolidButton>
         </ButtonWrapper>
       </Container>
       {openConfirm && (

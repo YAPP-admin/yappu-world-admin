@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import DropDown from '@assets/DropDown';
+import useOutsideClick from '@hooks/useOutsideClick';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
-import useOutsideClick from '@hooks/useOutsideClick';
 
 interface OptionType {
   label: string;

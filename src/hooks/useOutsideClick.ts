@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const useOutsideClick = <E extends HTMLElement = HTMLDivElement>(
   callback?: VoidFunction,

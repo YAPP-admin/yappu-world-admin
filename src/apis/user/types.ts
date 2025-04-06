@@ -65,3 +65,10 @@ export interface UserDetailReq {
   email: string;
   activityUnits: ActivityUnit[];
 }
+
+export interface UserProfileRes {
+  id: string;
+  name: string;
+  role: RoleLabel;
+  position: string;
+}

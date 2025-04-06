@@ -7,7 +7,7 @@ export const useApplicationListQuery = (page: number, size: number) => {
     queryKey: ['application-list', page],
     queryFn: () => getApplicationList({ page, size }),
     select: (data) => {
-      return data.data;
+      return data.data.data;
     },
   });
 };

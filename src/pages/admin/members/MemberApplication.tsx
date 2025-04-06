@@ -23,20 +23,11 @@ import ApprovePopup from 'features/member/application/ApprovePopup';
 import DetailPopup from 'features/member/application/DetailPopup';
 import RefusePopup from 'features/member/application/RejectPopup';
 import theme from 'styles/theme';
-
-const columns = [
-  '번호',
-  '이름',
-  '이메일',
-  '상태',
-  '활동기수',
-  '직군',
-  '가입 요청일',
-  '상세보기',
-];
+import dayjs from 'dayjs';
+import { applicationHeader } from '@constants/tableHeader';
+import Pagination from '@compnents/table/Pagination';
 
 const MemberApplication: FC = () => {
-  const { data } = useApplicationListQuery(1, 10);
   const {
     selectedIndexes,
     setSelectedIndexes,
@@ -52,14 +43,16 @@ const MemberApplication: FC = () => {
     setIsRejectPopup,
     isRejectCompletePopup,
     setIsRejectCompletePopup,
+    page,
+    setPage,
   } = useApplicationStore();
+  const { data } = useApplicationListQuery(page, 10);
 
-  const applicationIds =
-    data?.data.data.map((application) => application.applicationId) || [];
+  const applicationIds = data?.data.map((application) => application.id) || [];
 
   const isAllChecked =
     applicationIds.length > 0 &&
-    applicationIds.every((id) => selectedIndexes.includes(id.toString()));
+    applicationIds.every((id) => selectedIndexes.includes(id?.toString()));
 
   const onClickAllCheck = () => {
     if (isAllChecked) {
@@ -86,132 +79,160 @@ const MemberApplication: FC = () => {
     <>
       <Container>
         <Typography variant="title2Bold">가입신청서</Typography>
+        <Wrapper>
+          <FlexBox direction="column" gap={8}>
+            <FlexBox
+              align="center"
+              height="fit-content"
+              justify="space-between"
+            >
+              <FlexBox
+                gap={8}
+                height="fit-content"
+                width="fit-content"
+                align="center"
+              >
+                <Typography variant="headline1Bold">신청리스트</Typography>
+                <Typography
+                  color="label-alternative"
+                  variant="body1Normal"
+                  style={{
+                    fontWeight: 600,
+                  }}
+                >
+                  {data?.totalCount}개
+                </Typography>
+              </FlexBox>
 
-        <FlexBox direction="column" gap={8}>
-          <FlexBox align="center" height="fit-content" justify="space-between">
-            <FlexBox gap={8} height="fit-content" width="fit-content">
-              <Typography variant="headline1Bold">신청리스트</Typography>
-              <Typography
-                color="label-alternative"
-                variant="body1Normal"
-                style={{
-                  fontWeight: 600,
-                }}
-              >
-                {data?.data.totalCount}개
-              </Typography>
+              <FlexBox align="center" gap={8} width="fit-content">
+                <OutlinedButton
+                  color="status-positive"
+                  disabled={!selectedIndexes.length}
+                  variant="assistive"
+                  leftIcon={
+                    <CircleCheck
+                      color={theme.colors.status.positive}
+                      size="16"
+                    />
+                  }
+                  onClick={() => setIsApprovePopup(true)}
+                >
+                  승인
+                </OutlinedButton>
+                <OutlinedButton
+                  color="status-negative"
+                  disabled={!selectedIndexes.length}
+                  variant="assistive"
+                  leftIcon={
+                    <CircleClose
+                      color={theme.colors.status.nagative}
+                      size="16"
+                    />
+                  }
+                  onClick={() => setIsRejectPopup(true)}
+                >
+                  거절
+                </OutlinedButton>
+              </FlexBox>
             </FlexBox>
-
-            <FlexBox align="center" gap={8} width="fit-content">
-              <OutlinedButton
-                color="status-positive"
-                disabled={!selectedIndexes.length}
-                variant="assistive"
-                leftIcon={
-                  <CircleCheck color={theme.colors.status.positive} size="16" />
-                }
-                onClick={() => setIsApprovePopup(true)}
-              >
-                승인
-              </OutlinedButton>
-              <OutlinedButton
-                color="status-negative"
-                disabled={!selectedIndexes.length}
-                variant="assistive"
-                leftIcon={
-                  <CircleClose color={theme.colors.status.nagative} size="16" />
-                }
-                onClick={() => setIsRejectPopup(true)}
-              >
-                거절
-              </OutlinedButton>
-            </FlexBox>
-          </FlexBox>
-          <StyledTable>
-            <TableHead>
-              <TableRow>
-                <TableCell as="th">
-                  <Checkbox
-                    state={isAllChecked ? 'checked' : 'unchecked'}
-                    onClick={onClickAllCheck}
-                  />
-                </TableCell>
-                {columns.map((col) => (
-                  <TableCell key={col} as="th">
-                    <Typography
-                      color="label-normal"
-                      style={{ fontWeight: 600 }}
-                      variant="body1Normal"
-                    >
-                      {col}
-                    </Typography>
+            <StyledTable>
+              <TableHead>
+                <TableRow>
+                  <TableCell as="th">
+                    <Checkbox
+                      state={isAllChecked ? 'checked' : 'unchecked'}
+                      onClick={onClickAllCheck}
+                    />
                   </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data?.data.data.map((el) => {
-                const id = el.applicationId;
-                const isChecked = selectedIndexes.includes(id);
-                return (
-                  <TableRow key={el.applicationId}>
-                    <TableCell>
-                      <Checkbox
-                        state={isChecked ? 'checked' : 'unchecked'}
-                        onClick={() => onClickRowCheck(id)}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.applicationId}
+                  {applicationHeader.map((col) => (
+                    <TableCell key={col} as="th">
+                      <Typography
+                        color="label-normal"
+                        style={{ fontWeight: 600 }}
+                        variant="body1Normal"
+                      >
+                        {col}
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.email}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        <Chip
-                          color={getChipColor(el.status).color}
-                          size="large"
-                          text={el.status}
-                          variant={getChipColor(el.status).variant}
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data?.data.map((el, index) => {
+                  const id = el.id;
+                  const isChecked = selectedIndexes.includes(id);
+                  return (
+                    <TableRow key={el.id}>
+                      <TableCell>
+                        <Checkbox
+                          state={isChecked ? 'checked' : 'unchecked'}
+                          onClick={() => onClickRowCheck(id)}
                         />
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.activityUnit.generation}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.activityUnit.position.label}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.applicationDate}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <TextButton onClick={() => onClickToDetail(el)}>
-                        상세보기
-                      </TextButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </StyledTable>
-        </FlexBox>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {index + 1}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {el.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {el.email}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          <Chip
+                            color={getChipColor(el.status).color}
+                            size="large"
+                            text={el.status}
+                            variant={getChipColor(el.status).variant}
+                          />
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {el.activityUnit.generation}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {el.activityUnit.position.label}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {dayjs(el.applicationDate).format('YYYY-MM-DD')}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="label-normal" variant="body1Normal">
+                          {el.processDate
+                            ? dayjs(el.processDate).format('YYYY-MM-DD')
+                            : '-'}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <TextButton onClick={() => onClickToDetail(el)}>
+                          상세보기
+                        </TextButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </StyledTable>
+          </FlexBox>
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 0}
+            onPageChange={setPage}
+          />
+        </Wrapper>
       </Container>
       {isDetailPopup && (
         <DetailPopup
@@ -258,4 +279,14 @@ const Container = styled.div`
   flex-direction: column;
   padding: 32px 40px;
   gap: 24px;
+`;
+
+const Wrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  > div:first-child {
+    flex: 1;
+  }
 `;

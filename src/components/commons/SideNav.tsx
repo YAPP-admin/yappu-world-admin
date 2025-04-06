@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useAuthStore } from '@stores/authStore';
 
 import SolidButton from '@compnents/Button/SolidButton';
 import { useLogout } from '@hooks/useLogout';
+import { useAuthStore } from '@stores/authStore';
 import theme from 'styles/theme';
 
 import Logo from './Logo';

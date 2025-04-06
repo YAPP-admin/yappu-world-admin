@@ -4,12 +4,11 @@ import { useAuthStore } from '@stores/authStore';
 
 export const useLogout = () => {
   const clearUserIdStorage = useAuthStore.persist.clearStorage;
-  const resetToken = useAuthStore((state) => state.resetToken);
+  const resetUser = useAuthStore((state) => state.resetUser);
   const navigate = useNavigate();
-  console.log('logout');
 
   const logout = () => {
-    resetToken();
+    resetUser();
     clearUserIdStorage();
     navigate('/login');
   };

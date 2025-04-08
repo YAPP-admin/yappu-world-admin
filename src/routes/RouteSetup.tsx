@@ -52,7 +52,11 @@ export const RouteSetup = () => {
             <Route element={<Notice />} path="detail/:id" />
           </Route>
 
-          <Route element={<Session />} path="sessions" />
+          <Route path="sessions">
+            <Route index element={<Session />} />
+            <Route element={<NoticeWrite />} path="write" />
+            <Route element={<Notice />} path="detail/:id" />
+          </Route>
 
           <Route path="settings">
             <Route index element={<Navigate replace to="update" />} />

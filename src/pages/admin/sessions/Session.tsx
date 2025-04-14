@@ -9,7 +9,6 @@ import { useSessionDetailQuery } from '@queries/session/useSessionDetailQuery';
 import SessionDetail from './SessionDetail';
 import SessionEdit from './SessionEdit';
 
-
 const Session: FC = () => {
   const params = useParams();
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ const Session: FC = () => {
         <ArrowLeft size="20" />
       </IconButton>
       {isEdit ? (
-        <SessionEdit />
+        <SessionEdit handleEdit={() => setIsEdit(false)} />
       ) : (
         <SessionDetail data={data} handleEdit={() => setIsEdit(true)} />
       )}

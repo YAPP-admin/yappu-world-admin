@@ -7,7 +7,7 @@ import theme from 'styles/theme';
 
 import Typography from './Typography';
 
-interface OptionType {
+export interface OptionType {
   label: string;
   value: string;
 }

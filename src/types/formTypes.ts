@@ -1,4 +1,5 @@
 import { NoticeCategory } from 'apis/notice/types';
+import { SessionType } from 'apis/session/types';
 import { ActivityUnit } from 'apis/user/types';
 
 export interface LoginType {
@@ -45,4 +46,16 @@ export interface UserDetailType {
   name: string;
   email: string;
   activityUnits: ActivityUnit[];
+}
+
+export interface EditSessionType {
+  id: string;
+  name: string;
+  place: string;
+  date: string;
+  endDate: string;
+  time: string;
+  endTime: string;
+  generation: number;
+  sessionType: SessionType;
 }

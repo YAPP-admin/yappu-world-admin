@@ -1,3 +1,5 @@
+import { OptionType } from '@compnents/commons/Select';
+
 export const userRoleOptionList = [
   { label: '관리자', value: 'ADMIN' },
   { label: '운영진', value: 'STAFF' },
@@ -22,3 +24,25 @@ export const positionOptionList = [
 ];
 
 export const rejectOptionList = [{ label: '직접입력', value: '직접입력' }];
+
+export const sessionTypeList = [
+  { label: '오프라인', value: 'OFFLINE' },
+  { label: '온라인', value: 'ONLINE' },
+  { label: '팀', value: 'TEAM' },
+];
+
+export const hourOptions: OptionType[] = Array.from({ length: 24 }, (_, i) => {
+  const hour = i.toString().padStart(2, '0');
+  return {
+    label: `${hour}시`,
+    value: hour,
+  };
+});
+
+export const minuteOptions: OptionType[] = Array.from({ length: 6 }, (_, i) => {
+  const minute = (i * 10).toString().padStart(2, '0');
+  return {
+    label: `${minute}분`,
+    value: minute,
+  };
+});

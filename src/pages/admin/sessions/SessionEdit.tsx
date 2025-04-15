@@ -8,7 +8,6 @@ import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
-import RadioGroup from '@compnents/commons/RadioGroup';
 import Select, { OptionType } from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
@@ -184,16 +183,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           </FlexBox>
           <GridBox fullWidth columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">장소</Typography>
-            <PlaceWrapper>
-              <RadioGroup
-                name="sessionType"
-                options={[
-                  { label: '오프라인', value: 'OFFLINE' },
-                  { label: '온라인', value: 'ONLINE' },
-                ]}
-              />
-              <TextInput {...method.register('place')} />
-            </PlaceWrapper>
+            <TextInput {...method.register('place')} />
           </GridBox>
         </FlexBox>
 
@@ -216,16 +206,4 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 40px;
-`;
-
-const PlaceWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  #radio-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
 `;

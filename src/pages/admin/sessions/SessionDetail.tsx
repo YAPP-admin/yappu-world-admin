@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -12,6 +13,9 @@ import { getSessionType } from '@utils/getSessionType';
 import { SessionDetailRes } from 'apis/session/types';
 
 import 'dayjs/locale/ko';
+import { useQueryClient } from '@tanstack/react-query';
+
+import { useSessionStore } from '@stores/sessionStore';
 
 dayjs.locale('ko');
 
@@ -21,11 +25,25 @@ interface Props {
 }
 
 const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
-  const { mutate } = useDeleteSessionMutation();
+  const { mutateAsync } = useDeleteSessionMutation();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const page = useSessionStore((state) => state.page);
+  const setIsDeleteCompletePopup = useSessionStore(
+    (state) => state.setIsDeleteCompletePopup,
+  );
 
-  const onClickDelete = () => {
+  const onClickToDelete = async () => {
     if (!data?.id) return;
-    mutate({ id: [data.id] });
+
+    try {
+      await mutateAsync({ ids: [data.id] });
+      queryClient.invalidateQueries({ queryKey: ['session-list', page] });
+      setIsDeleteCompletePopup(true);
+      navigate('/admin/sessions');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -43,7 +61,7 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           <OutlinedButton
             size="xsmall"
             variant="assistive"
-            onClick={onClickDelete}
+            onClick={onClickToDelete}
           >
             삭제
           </OutlinedButton>

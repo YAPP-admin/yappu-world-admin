@@ -7,8 +7,5 @@ import { DeleteSessionReq } from 'apis/session/types';
 export const useDeleteSessionMutation = () => {
   return useMutation<void, ErrorResponse, DeleteSessionReq>({
     mutationFn: (data) => deleteSession(data),
-    onSuccess: (res) => {
-      console.log('res :', res);
-    },
   });
 };

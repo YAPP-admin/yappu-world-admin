@@ -37,7 +37,7 @@ export interface EditSessionReq {
 }
 
 export interface DeleteSessionReq {
-  id: string[];
+  ids: string[];
 }
 
 export interface SessionDetailRes {

@@ -9,6 +9,10 @@ interface SessionState {
   setEditCompletePopup: (value: boolean) => void;
   addCompletePopup: boolean;
   setAddCompletePopup: (value: boolean) => void;
+  isDeletePopup: boolean;
+  setIsDeletePopup: (value: boolean) => void;
+  isDeleteCompletePopup: boolean;
+  setIsDeleteCompletePopup: (value: boolean) => void;
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
@@ -20,4 +24,9 @@ export const useSessionStore = create<SessionState>((set) => ({
   setEditCompletePopup: (value: boolean) => set({ editCompletePopup: value }),
   addCompletePopup: false,
   setAddCompletePopup: (value: boolean) => set({ addCompletePopup: value }),
+  isDeletePopup: false,
+  setIsDeletePopup: (value: boolean) => set({ isDeletePopup: value }),
+  isDeleteCompletePopup: false,
+  setIsDeleteCompletePopup: (value: boolean) =>
+    set({ isDeleteCompletePopup: value }),
 }));

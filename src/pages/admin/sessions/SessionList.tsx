@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
+import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import Pagination from '@compnents/table/Pagination';
 import StyledTable from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
@@ -19,6 +21,7 @@ import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { sessionHeader } from '@constants/tableHeader';
+import { useDeleteSessionMutation } from '@queries/session/useDeleteSessionMutation';
 import { useSessionQuery } from '@queries/session/useSessionQuery';
 import { useSessionStore } from '@stores/sessionStore';
 import { getSessionType } from '@utils/getSessionType';
@@ -34,9 +37,15 @@ const SessionList: FC = () => {
     setEditCompletePopup,
     addCompletePopup,
     setAddCompletePopup,
+    isDeletePopup,
+    setIsDeletePopup,
+    isDeleteCompletePopup,
+    setIsDeleteCompletePopup,
   } = useSessionStore();
   const { data } = useSessionQuery(page);
   const navigate = useNavigate();
+  const { mutateAsync } = useDeleteSessionMutation();
+  const queryClient = useQueryClient();
 
   const sessionIds = data?.data.map((session) => session.id) || [];
 
@@ -66,6 +75,16 @@ const SessionList: FC = () => {
 
   const onClickRow = (id: string) => {
     navigate(`/admin/sessions/detail/${id}`);
+  };
+
+  const onClickToDelete = async () => {
+    try {
+      await mutateAsync({ ids: selectedIndexes });
+      queryClient.invalidateQueries({ queryKey: ['session-list', page] });
+      setIsDeleteCompletePopup(true);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -104,6 +123,7 @@ const SessionList: FC = () => {
                   leftIcon={
                     <Trash color={theme.colors.status.nagative} size="16" />
                   }
+                  onClick={() => setIsDeletePopup(true)}
                 >
                   삭제
                 </OutlinedButton>
@@ -212,6 +232,22 @@ const SessionList: FC = () => {
             comment="세션이 정상적으로 추가 되었습니다."
             title="세션 추가 완료"
             onClose={() => setAddCompletePopup(false)}
+          />
+        )}
+        {isDeletePopup && (
+          <ConfirmPopup
+            comment={`선택하신 ${selectedIndexes.length}개의 세션을 삭제하시겠습니까?`}
+            confirmActionLabel="삭제"
+            title="세션 삭제"
+            onCancelAction={() => setIsDeletePopup(false)}
+            onConfirmAction={onClickToDelete}
+          />
+        )}
+        {isDeleteCompletePopup && (
+          <CompletePopup
+            comment="삭제되었습니다."
+            title="삭제 완료"
+            onClose={() => setIsDeleteCompletePopup(false)}
           />
         )}
       </Container>

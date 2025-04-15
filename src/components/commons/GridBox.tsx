@@ -18,6 +18,22 @@ interface GridBoxProps {
   justify?: string; // justify-items
 }
 
+interface StyledGridBoxProps {
+  columns?: number | string;
+  rows?: number | string;
+  gap?: number | string;
+  $columnGap?: number | string;
+  $rowGap?: number | string;
+  width?: string | number;
+  height?: string | number;
+  $fullWidth?: boolean;
+  $fullHeight?: boolean;
+  padding?: string;
+  margin?: string;
+  align?: string;
+  justify?: string;
+}
+
 const GridBox: FC<GridBoxProps> = ({
   children,
   columns,
@@ -36,17 +52,17 @@ const GridBox: FC<GridBoxProps> = ({
 }) => {
   return (
     <StyledGridBox
+      $columnGap={columnGap}
+      $fullHeight={fullHeight}
+      $fullWidth={fullWidth}
+      $rowGap={rowGap}
       align={align}
-      columnGap={columnGap}
       columns={columns}
-      fullHeight={fullHeight}
-      fullWidth={fullWidth}
       gap={gap}
       height={height}
       justify={justify}
       margin={margin}
       padding={padding}
-      rowGap={rowGap}
       rows={rows}
       width={width}
     >
@@ -57,7 +73,7 @@ const GridBox: FC<GridBoxProps> = ({
 
 export default GridBox;
 
-const StyledGridBox = styled.div<GridBoxProps>`
+const StyledGridBox = styled.div<StyledGridBoxProps>`
   display: grid;
 
   ${({ columns }) =>
@@ -74,25 +90,25 @@ const StyledGridBox = styled.div<GridBoxProps>`
 
   ${({ gap }) =>
     gap !== undefined && `gap: ${typeof gap === 'number' ? `${gap}px` : gap};`}
-  ${({ rowGap }) =>
-    rowGap !== undefined &&
-    `row-gap: ${typeof rowGap === 'number' ? `${rowGap}px` : rowGap};`}
-  ${({ columnGap }) =>
-    columnGap !== undefined &&
-    `column-gap: ${typeof columnGap === 'number' ? `${columnGap}px` : columnGap};`}
+  ${({ $rowGap }) =>
+    $rowGap !== undefined &&
+    `row-gap: ${typeof $rowGap === 'number' ? `${$rowGap}px` : $rowGap};`}
+  ${({ $columnGap }) =>
+    $columnGap !== undefined &&
+    `column-gap: ${typeof $columnGap === 'number' ? `${$columnGap}px` : $columnGap};`}
 
   ${({ align }) => align && `align-items: ${align};`}
   ${({ justify }) => justify && `justify-items: ${justify};`}
 
-  ${({ width, fullWidth }) =>
-    fullWidth
+  ${({ width, $fullWidth }) =>
+    $fullWidth
       ? 'width: 100%;'
       : width
         ? `width: ${typeof width === 'number' ? `${width}px` : width};`
         : ''}
 
-  ${({ height, fullHeight }) =>
-    fullHeight
+  ${({ height, $fullHeight }) =>
+    $fullHeight
       ? 'height: 100%;'
       : height
         ? `height: ${typeof height === 'number' ? `${height}px` : height};`

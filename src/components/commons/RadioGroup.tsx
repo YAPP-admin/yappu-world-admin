@@ -1,10 +1,11 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Radio from './Radio';
+import { OptionType } from './Select';
 
 interface RadioGroupProps {
   name: string;
-  options: string[];
+  options: OptionType[];
 }
 
 const RadioGroup = ({ name, options }: RadioGroupProps) => {
@@ -19,9 +20,9 @@ const RadioGroup = ({ name, options }: RadioGroupProps) => {
           <>
             {options.map((option) => (
               <Radio
-                key={option}
-                checked={field.value === option}
-                value={option}
+                key={option.value}
+                checked={field.value === option.value}
+                value={option.label}
                 onChange={() => field.onChange(option)}
               />
             ))}

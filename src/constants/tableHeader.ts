@@ -25,3 +25,5 @@ export const memberListHeader = [
   '가입일',
   '탈퇴여부',
 ];
+
+export const sessionHeader = ['기수', '타입', '제목', '장소', '날짜', '시간'];

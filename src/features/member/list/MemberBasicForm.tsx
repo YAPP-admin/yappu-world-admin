@@ -51,7 +51,13 @@ const MemberBasicForm: FC = () => {
           >
             성별
           </Typography>
-          <RadioGroup name="gender" options={['남', '여']} />
+          <RadioGroup
+            name="gender"
+            options={[
+              { label: '남', value: '남' },
+              { label: '여', value: '여' },
+            ]}
+          />
         </Wrapper>
         <Wrapper>
           <Typography

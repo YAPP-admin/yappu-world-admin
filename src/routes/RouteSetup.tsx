@@ -9,7 +9,9 @@ import MemberList from '@pages/admin/members/MemberList';
 import Notice from '@pages/admin/notices/Notice.tsx';
 import NoticeList from '@pages/admin/notices/NoticeList';
 import NoticeWrite from '@pages/admin/notices/NoticeWrite';
-import Session from '@pages/admin/sessions/Session.tsx';
+import Session from '@pages/admin/sessions/Session';
+import SessionList from '@pages/admin/sessions/SessionList';
+import SessionWrite from '@pages/admin/sessions/SessionWrite';
 import SettingLink from '@pages/admin/settings/SettingLink';
 import SettingUpdate from '@pages/admin/settings/SettingUpdate';
 import AuthGuard from '@pages/auth/AuthGuard';
@@ -52,7 +54,11 @@ export const RouteSetup = () => {
             <Route element={<Notice />} path="detail/:id" />
           </Route>
 
-          <Route element={<Session />} path="sessions" />
+          <Route path="sessions">
+            <Route index element={<SessionList />} />
+            <Route element={<SessionWrite />} path="write" />
+            <Route element={<Session />} path="detail/:id" />
+          </Route>
 
           <Route path="settings">
             <Route index element={<Navigate replace to="update" />} />

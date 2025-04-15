@@ -7,6 +7,8 @@ interface SessionState {
   setPage: (value: number) => void;
   editCompletePopup: boolean;
   setEditCompletePopup: (value: boolean) => void;
+  addCompletePopup: boolean;
+  setAddCompletePopup: (value: boolean) => void;
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
@@ -16,4 +18,6 @@ export const useSessionStore = create<SessionState>((set) => ({
   setPage: (value: number) => set({ page: value }),
   editCompletePopup: false,
   setEditCompletePopup: (value: boolean) => set({ editCompletePopup: value }),
+  addCompletePopup: false,
+  setAddCompletePopup: (value: boolean) => set({ addCompletePopup: value }),
 }));

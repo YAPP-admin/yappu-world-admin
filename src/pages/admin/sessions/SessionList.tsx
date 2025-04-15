@@ -32,6 +32,8 @@ const SessionList: FC = () => {
     setSelectedIndexes,
     editCompletePopup,
     setEditCompletePopup,
+    addCompletePopup,
+    setAddCompletePopup,
   } = useSessionStore();
   const { data } = useSessionQuery(page);
   const navigate = useNavigate();
@@ -203,6 +205,13 @@ const SessionList: FC = () => {
             comment="세션이 정상적으로 수정 되었습니다."
             title="세션 수정 완료"
             onClose={() => setEditCompletePopup(false)}
+          />
+        )}
+        {addCompletePopup && (
+          <CompletePopup
+            comment="세션이 정상적으로 추가 되었습니다."
+            title="세션 추가 완료"
+            onClose={() => setAddCompletePopup(false)}
           />
         )}
       </Container>

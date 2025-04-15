@@ -10,6 +10,7 @@ interface Props {
   color?: SemanticColorKey;
   children: ReactNode;
   style?: React.CSSProperties;
+  align?: 'left' | 'center' | 'right';
 }
 
 const Typography: FC<Props> = ({
@@ -18,9 +19,16 @@ const Typography: FC<Props> = ({
   children,
   style,
   color = 'static-black',
+  align = 'left',
 }) => {
   return (
-    <Styled $color={color} $variant={variant} as={as} style={style}>
+    <Styled
+      $align={align}
+      $color={color}
+      $variant={variant}
+      as={as}
+      style={style}
+    >
       {children}
     </Styled>
   );
@@ -31,8 +39,10 @@ export default Typography;
 const Styled = styled.span<{
   $variant: TypographyType;
   $color: SemanticColorKey;
-}>(({ $variant, $color }) => ({
+  $align?: 'left' | 'center' | 'right';
+}>(({ $variant, $color, $align }) => ({
   ...typography[$variant],
   color: semanticColor[$color],
   whiteSpace: 'pre-line',
+  textAlign: $align,
 }));

@@ -7,8 +7,5 @@ import { EditSessionReq } from 'apis/session/types';
 export const useEditSessionMutation = () => {
   return useMutation<void, ErrorResponse, EditSessionReq>({
     mutationFn: (data) => putSession(data),
-    onSuccess: (res) => {
-      console.log('res :', res);
-    },
   });
 };

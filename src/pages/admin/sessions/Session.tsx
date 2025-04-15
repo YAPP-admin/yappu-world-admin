@@ -25,7 +25,7 @@ const Session: FC = () => {
         <ArrowLeft size="20" />
       </IconButton>
       {isEdit ? (
-        <SessionEdit handleEdit={() => setIsEdit(false)} />
+        <SessionEdit data={data} handleEdit={() => setIsEdit(false)} />
       ) : (
         <SessionDetail data={data} handleEdit={() => setIsEdit(true)} />
       )}

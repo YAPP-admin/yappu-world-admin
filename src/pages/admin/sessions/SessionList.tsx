@@ -11,6 +11,7 @@ import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
+import CompletePopup from '@compnents/popup/CompletePopup';
 import Pagination from '@compnents/table/Pagination';
 import StyledTable from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
@@ -24,8 +25,14 @@ import { getSessionType } from '@utils/getSessionType';
 import theme from 'styles/theme';
 
 const SessionList: FC = () => {
-  const { page, setPage, selectedIndexes, setSelectedIndexes } =
-    useSessionStore();
+  const {
+    page,
+    setPage,
+    selectedIndexes,
+    setSelectedIndexes,
+    editCompletePopup,
+    setEditCompletePopup,
+  } = useSessionStore();
   const { data } = useSessionQuery(page);
   const navigate = useNavigate();
 
@@ -191,6 +198,13 @@ const SessionList: FC = () => {
             onPageChange={setPage}
           />
         </Wrapper>
+        {editCompletePopup && (
+          <CompletePopup
+            comment="세션이 정상적으로 수정 되었습니다."
+            title="세션 수정 완료"
+            onClose={() => setEditCompletePopup(false)}
+          />
+        )}
       </Container>
     </>
   );

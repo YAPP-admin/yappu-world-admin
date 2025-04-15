@@ -5,6 +5,8 @@ interface SessionState {
   setSelectedIndexes: (value: string[]) => void;
   page: number;
   setPage: (value: number) => void;
+  editCompletePopup: boolean;
+  setEditCompletePopup: (value: boolean) => void;
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
@@ -12,4 +14,6 @@ export const useSessionStore = create<SessionState>((set) => ({
   setSelectedIndexes: (value: string[]) => set({ selectedIndexes: value }),
   page: 1,
   setPage: (value: number) => set({ page: value }),
+  editCompletePopup: false,
+  setEditCompletePopup: (value: boolean) => set({ editCompletePopup: value }),
 }));

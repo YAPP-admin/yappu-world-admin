@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -17,15 +18,24 @@ import {
   sessionTypeList,
 } from '@constants/optionList';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
+import { useEditSessionMutation } from '@queries/session/useEditSessionMutaion';
+import { useSessionStore } from '@stores/sessionStore';
+import { SessionDetailRes } from 'apis/session/types';
 import { EditSessionType } from 'types/formTypes';
 
 interface Props {
   handleEdit: () => void;
+  data: SessionDetailRes | undefined;
 }
 
-const SessionEdit: FC<Props> = ({ handleEdit }) => {
-  const method = useForm<EditSessionType>();
+const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
+  const method = useForm<EditSessionType>({ defaultValues: data });
   const { data: generationList } = useGenerationListQuery(1);
+  const { mutateAsync } = useEditSessionMutation();
+  const navigate = useNavigate();
+  const setEditCompletePopup = useSessionStore(
+    (state) => state.setEditCompletePopup,
+  );
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -33,14 +43,28 @@ const SessionEdit: FC<Props> = ({ handleEdit }) => {
       value: el.generation?.toString(),
     })) ?? [];
 
+  const onSumbit = async (data: EditSessionType) => {
+    console.log('data :', data);
+    try {
+      await mutateAsync(data);
+      setEditCompletePopup(true);
+      navigate('/admin/sessions');
+    } catch (err) {
+      console.log('err :', err);
+    }
+  };
+
   return (
-    <FlexBox direction="column" gap={40}>
+    <Form
+      onClick={(e) => e.stopPropagation()}
+      onSubmit={method.handleSubmit(onSumbit)}
+    >
       <Typography variant="title3Bold">세션 수정</Typography>
       <FormProvider {...method}>
         <FlexBox direction="column" gap={24}>
           <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">제목</Typography>
-            <TextInput />
+            <TextInput {...method.register('name')} />
           </GridBox>
           <GridBox columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">시작 날짜</Typography>
@@ -161,8 +185,14 @@ const SessionEdit: FC<Props> = ({ handleEdit }) => {
           <GridBox fullWidth columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">장소</Typography>
             <PlaceWrapper>
-              <RadioGroup name="place" options={['오프라인', '온라인']} />
-              <TextInput />
+              <RadioGroup
+                name="sessionType"
+                options={[
+                  { label: '오프라인', value: 'OFFLINE' },
+                  { label: '온라인', value: 'ONLINE' },
+                ]}
+              />
+              <TextInput {...method.register('place')} />
             </PlaceWrapper>
           </GridBox>
         </FlexBox>
@@ -176,11 +206,17 @@ const SessionEdit: FC<Props> = ({ handleEdit }) => {
           </SolidButton>
         </FlexBox>
       </FormProvider>
-    </FlexBox>
+    </Form>
   );
 };
 
 export default SessionEdit;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+`;
 
 const PlaceWrapper = styled.div`
   display: flex;

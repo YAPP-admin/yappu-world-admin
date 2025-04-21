@@ -1,27 +1,28 @@
-import OutlinedButton from '@compnents/Button/OutlinedButton';
-import FlexBox from '@compnents/commons/FlexBox';
-import GridBox from '@compnents/commons/GridBox';
-import Typography from '@compnents/commons/Typography';
-import dayjs from 'dayjs';
 import { FC } from 'react';
 
+import OutlinedButton from '@compnents/Button/OutlinedButton';
+import GridBox from '@compnents/commons/GridBox';
+import Typography from '@compnents/commons/Typography';
+import { Version } from 'apis/operation/types';
+
 interface Props {
-  date: string;
-  version: string;
-  onClick: () => void;
+  versionInfo: Version;
+  onClick: (value: Version) => void;
 }
 
-const UpdateVersion: FC<Props> = ({ date, version, onClick }) => {
+const UpdateVersion: FC<Props> = ({ versionInfo, onClick }) => {
   return (
-    <GridBox columns="80px 80px 1fr" gap={16} align="center">
-      <Typography variant="label1Normal" color="label-alternative">
-        {dayjs(date).format('YYYY.MM.DD')}
+    <GridBox align="center" columns="80px 80px 1fr" gap={16}>
+      <Typography variant="heading2Bold">{versionInfo.platform}</Typography>
+      <Typography color="primary-normal" variant="heading2Bold">
+        {versionInfo.version}
       </Typography>
-      <Typography variant="heading2Bold" color="label-neutral">
-        {version}
-      </Typography>
-      <OutlinedButton variant="assistive" size="xsmall" onClick={onClick}>
-        강제 업데이트
+      <OutlinedButton
+        size="xsmall"
+        variant="assistive"
+        onClick={() => onClick(versionInfo)}
+      >
+        수정
       </OutlinedButton>
     </GridBox>
   );

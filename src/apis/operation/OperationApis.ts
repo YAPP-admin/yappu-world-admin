@@ -12,6 +12,8 @@ import {
   GenerationListRes,
   OperationEditReq,
   OperationListRes,
+  SupportVersionRes,
+  VersionReq,
 } from './types';
 
 export const getOperationsList = async () => {
@@ -42,6 +44,19 @@ export const postGeneration = async (data: AddGenerationReq): Promise<void> => {
 export const patchGenerationActive = async (data: EditGenerationReq) => {
   return axiosInstance.patch<ApiResponse<EditGenerationRes>>(
     '/admin/v1/operations/generations/active',
+    data,
+  );
+};
+
+export const getSupportVersion = () => {
+  return axiosInstance.get<ApiResponse<SupportVersionRes>>(
+    '/admin/v1/operations/minimum-support-versions',
+  );
+};
+
+export const putSupportVersion = (data: VersionReq): Promise<void> => {
+  return axiosInstance.put(
+    '/admin/v1/operations/minimum-support-versions',
     data,
   );
 };

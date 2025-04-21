@@ -23,6 +23,7 @@ import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
 import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
 import { useNoticeStore } from '@stores/noticeStore';
 import theme from 'styles/theme';
+import Pencil from '@assets/Pencil';
 
 const NoticeList: FC = () => {
   const {
@@ -80,7 +81,11 @@ const NoticeList: FC = () => {
       <Container>
         <FlexBox height="fit-content" justify="space-between">
           <Typography variant="title2Bold">공지사항</Typography>
-          <SolidButton size="medium" onClick={onClickMoveToWrite}>
+          <SolidButton
+            size="medium"
+            onClick={onClickMoveToWrite}
+            leftIcon={<Pencil size="18" color="#FFF" />}
+          >
             글쓰기
           </SolidButton>
         </FlexBox>
@@ -116,14 +121,14 @@ const NoticeList: FC = () => {
             <StyledTable>
               <TableHead>
                 <TableRow>
-                  <TableCell as="th" justifyContent="center">
+                  <TableCell as="th">
                     <Checkbox
                       state={isAllChecked ? 'checked' : 'unchecked'}
                       onClick={onClickAllCheck}
                     />
                   </TableCell>
                   {noticeHeader.map((el) => (
-                    <TableCell key={el} as="th" justifyContent="center">
+                    <TableCell key={el} as="th">
                       <Typography
                         color="label-normal"
                         variant="body1Normal"
@@ -146,26 +151,23 @@ const NoticeList: FC = () => {
                       key={notice.noticeId}
                       onClick={() => onClickRow(notice.noticeId)}
                     >
-                      <TableCell
-                        justifyContent="center"
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                      <TableCell onClick={(e) => e.stopPropagation()}>
                         <Checkbox
                           state={isChecked ? 'checked' : 'unchecked'}
                           onClick={() => onClickRowCheck(id)}
                         />
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
                           {index + 1}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell justifyContent="flex-start">
                         <Typography color="label-normal" variant="body1Normal">
                           {notice.title}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Chip
                           size="large"
                           text={notice.noticeType}
@@ -177,12 +179,12 @@ const NoticeList: FC = () => {
                           }
                         />
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
                           {notice.writer.name}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
                           {dayjs(notice.createdAt).format('YYYY.MM.DD hh:mm')}
                         </Typography>

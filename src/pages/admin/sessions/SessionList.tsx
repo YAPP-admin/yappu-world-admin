@@ -103,7 +103,11 @@ const SessionList: FC = () => {
         <Wrapper>
           <FlexBox direction="column" gap={8}>
             <FlexBox height="fit-content" justify="space-between">
-              <FlexBox height="fit-content" justify="space-between">
+              <FlexBox
+                height="fit-content"
+                justify="space-between"
+                align="center"
+              >
                 <FlexBox gap={8} height="fit-content" width="fit-content">
                   <Typography variant="headline1Bold">세션 리스트</Typography>
                   <Typography
@@ -132,14 +136,14 @@ const SessionList: FC = () => {
             <StyledTable>
               <TableHead>
                 <TableRow>
-                  <TableCell as="th" justifyContent="center">
+                  <TableCell as="th">
                     <Checkbox
                       state={isAllChecked ? 'checked' : 'unchecked'}
                       onClick={onClickAllCheck}
                     />
                   </TableCell>
                   {sessionHeader.map((el) => (
-                    <TableCell key={el} as="th" justifyContent="center">
+                    <TableCell key={el} as="th">
                       <Typography
                         color="label-normal"
                         variant="body1Normal"
@@ -163,21 +167,18 @@ const SessionList: FC = () => {
                       key={session.id}
                       onClick={() => onClickRow(session.id)}
                     >
-                      <TableCell
-                        justifyContent="center"
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                      <TableCell onClick={(e) => e.stopPropagation()}>
                         <Checkbox
                           state={isChecked ? 'checked' : 'unchecked'}
                           onClick={() => onClickRowCheck(id)}
                         />
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
                           {session.generation}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Chip
                           color={getSessionType(session.type).color}
                           size="large"
@@ -185,7 +186,7 @@ const SessionList: FC = () => {
                           variant={getSessionType(session.type).style}
                         />
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell justifyContent="flex-start">
                         <Typography
                           color="primary-normal"
                           variant="body1Normal"
@@ -193,17 +194,17 @@ const SessionList: FC = () => {
                           {session.title}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell justifyContent="flex-start">
                         <Typography color="label-normal" variant="body1Normal">
                           {session.place ?? '-'}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
                           {dayjs(session.date).format('YYYY.MM.DD')}
                         </Typography>
                       </TableCell>
-                      <TableCell justifyContent="center">
+                      <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
                           {session.time} - {session.endTime}
                         </Typography>

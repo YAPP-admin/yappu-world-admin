@@ -50,4 +50,5 @@ const Wrapper = styled.div<{
   display: flex;
   align-items: ${({ $alignItems }) => $alignItems};
   justify-content: ${({ $justifyContent }) => $justifyContent};
+  width: 100%;
 `;

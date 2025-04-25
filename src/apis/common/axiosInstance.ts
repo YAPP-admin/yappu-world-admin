@@ -33,7 +33,10 @@ axiosInstance.interceptors.response.use(
     }
     const { response } = error;
 
-    if ([500].includes(response.status)) {
+    if (
+      [500, 400].includes(response.status) &&
+      ['COM_0001', 'COM_0002'].includes(response.data.errorCode)
+    ) {
       showErrorToast(response.data.message);
       return Promise.reject(error);
     } else if (

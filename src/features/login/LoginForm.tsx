@@ -15,22 +15,6 @@ import { ErrorResponse } from 'apis/common/types';
 import { LoginType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
-// enum LoginErrorCode {
-//   Unknown1 = 'USR_1101',
-//   Unknown2 = 'USR_1102',
-//   Unknown3 = 'USR_1103',
-//   Unknown4 = 'USR_1104',
-//   Unknown5 = 'USR_1105',
-// }
-
-// const ERROR_MSG: Record<LoginErrorCode, string> = {
-//   [LoginErrorCode.Unknown1]: '',
-//   [LoginErrorCode.Unknown2]: '',
-//   [LoginErrorCode.Unknown3]: '',
-//   [LoginErrorCode.Unknown4]: '',
-//   [LoginErrorCode.Unknown5]: '',
-// };
-
 const LoginForm: FC = () => {
   const {
     register,
@@ -58,7 +42,6 @@ const LoginForm: FC = () => {
         navigate('/admin/members/list');
       }
     } catch (error) {
-      console.log('error :', error);
       if (isAxiosError<ErrorResponse>(error)) {
         const { errorCode, message } = error.response?.data || {};
         switch (errorCode) {

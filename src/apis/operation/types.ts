@@ -37,3 +37,21 @@ export interface EditGenerationRes {
   activatedGeneration: number;
   deactivatedGeneration: number | null;
 }
+
+export interface SupportVersionRes {
+  platforms: Version[];
+}
+
+export type PlatformType = 'iOS' | 'Android';
+
+export interface Version {
+  platform: PlatformType;
+  version: string;
+}
+
+export type PlatformReqType = 'IOS' | 'ANDROID';
+
+export interface VersionReq {
+  platform: PlatformReqType;
+  version: string;
+}

@@ -71,12 +71,12 @@ const SettingLink: FC = () => {
             <TableBody>
               {data?.links.map((link) => (
                 <TableRow key={link.id}>
-                  <TableCell>
+                  <TableCell justifyContent="flex-start">
                     <Typography color="label-normal" variant="body1Normal">
                       {link.label}
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell justifyContent="flex-start">
                     <Typography color="label-normal" variant="body1Normal">
                       {link.value}
                     </Typography>

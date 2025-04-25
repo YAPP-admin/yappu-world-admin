@@ -1,4 +1,5 @@
 import { NoticeCategory } from 'apis/notice/types';
+import { PlatformReqType } from 'apis/operation/types';
 import { ScheduleType, SessionType } from 'apis/session/types';
 import { ActivityUnit } from 'apis/user/types';
 
@@ -70,4 +71,9 @@ export interface AddSessionType {
   generation: number;
   type: ScheduleType; // 항상 SESSION
   sessionType: SessionType;
+}
+
+export interface SupportVersionType {
+  platform: PlatformReqType;
+  version: string;
 }

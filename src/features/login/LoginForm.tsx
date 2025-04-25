@@ -13,6 +13,7 @@ import { useUserProfileQuery } from '@queries/user/useUserProfileQuery';
 import { useAuthStore } from '@stores/authStore';
 import { ErrorResponse } from 'apis/common/types';
 import { LoginType } from 'types/formTypes';
+import { showErrorToast } from 'types/showErrorToast';
 
 // enum LoginErrorCode {
 //   Unknown1 = 'USR_1101',
@@ -73,13 +74,8 @@ const LoginForm: FC = () => {
               message: message || '비밀번호가 올바르지 않습니다.',
             });
             break;
-          case 'USR_1102':
-          case 'USR_1103':
-          case 'USR_1104':
-            window.alert(message || '로그인이 불가능한 회원입니다.');
-            break;
           default:
-            window.alert(message || '알 수 없는 오류가 발생했습니다.');
+            showErrorToast(message ?? '알 수 없는 오류가 발생했습니다.');
         }
       }
     }

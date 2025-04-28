@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { RouteSetup } from './routes/RouteSetup.tsx';
 import { GlobalStyle } from './styles/global.ts';
@@ -16,6 +17,7 @@ function App() {
       <BrowserRouter>
         <RouteSetup />
         <ToastContainer />
+        <ReactQueryDevtools initialIsOpen={false} />
       </BrowserRouter>
     </QueryClientProvider>
   );

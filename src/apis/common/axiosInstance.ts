@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import { commonToastOption } from '@constants/toastOption';
 import { useAuthStore } from '@stores/authStore';
-import { toast } from 'react-toastify';
 import { showErrorToast } from 'types/showErrorToast';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
       ['COM_0001', 'COM_0002'].includes(response.data.errorCode)
     ) {
       showErrorToast(response.data.message);
-      return Promise.reject(error);
+      return;
     } else if (
       response.status === 401 &&
       ['TKN_0001', 'TKN_0002'].includes(response.data.errorCode)

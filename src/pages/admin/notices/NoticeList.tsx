@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Pencil from '@assets/Pencil';
 import Trash from '@assets/Trash';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
@@ -23,7 +24,6 @@ import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
 import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
 import { useNoticeStore } from '@stores/noticeStore';
 import theme from 'styles/theme';
-import Pencil from '@assets/Pencil';
 
 const NoticeList: FC = () => {
   const {
@@ -82,9 +82,9 @@ const NoticeList: FC = () => {
         <FlexBox height="fit-content" justify="space-between">
           <Typography variant="title2Bold">공지사항</Typography>
           <SolidButton
+            leftIcon={<Pencil color="#FFF" size="18" />}
             size="medium"
             onClick={onClickMoveToWrite}
-            leftIcon={<Pencil size="18" color="#FFF" />}
           >
             글쓰기
           </SolidButton>

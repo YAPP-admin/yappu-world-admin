@@ -13,22 +13,7 @@ import { useUserProfileQuery } from '@queries/user/useUserProfileQuery';
 import { useAuthStore } from '@stores/authStore';
 import { ErrorResponse } from 'apis/common/types';
 import { LoginType } from 'types/formTypes';
-
-// enum LoginErrorCode {
-//   Unknown1 = 'USR_1101',
-//   Unknown2 = 'USR_1102',
-//   Unknown3 = 'USR_1103',
-//   Unknown4 = 'USR_1104',
-//   Unknown5 = 'USR_1105',
-// }
-
-// const ERROR_MSG: Record<LoginErrorCode, string> = {
-//   [LoginErrorCode.Unknown1]: '',
-//   [LoginErrorCode.Unknown2]: '',
-//   [LoginErrorCode.Unknown3]: '',
-//   [LoginErrorCode.Unknown4]: '',
-//   [LoginErrorCode.Unknown5]: '',
-// };
+import { showErrorToast } from 'types/showErrorToast';
 
 const LoginForm: FC = () => {
   const {
@@ -57,7 +42,6 @@ const LoginForm: FC = () => {
         navigate('/admin/members/list');
       }
     } catch (error) {
-      console.log('error :', error);
       if (isAxiosError<ErrorResponse>(error)) {
         const { errorCode, message } = error.response?.data || {};
         switch (errorCode) {
@@ -73,13 +57,8 @@ const LoginForm: FC = () => {
               message: message || '비밀번호가 올바르지 않습니다.',
             });
             break;
-          case 'USR_1102':
-          case 'USR_1103':
-          case 'USR_1104':
-            window.alert(message || '로그인이 불가능한 회원입니다.');
-            break;
           default:
-            window.alert(message || '알 수 없는 오류가 발생했습니다.');
+            showErrorToast(message ?? '알 수 없는 오류가 발생했습니다.');
         }
       }
     }

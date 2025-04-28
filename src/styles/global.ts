@@ -34,4 +34,9 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-family: 'Pretendard', sans-serif;
   }
+  .Toastify__toast {
+    padding: 20px;
+    width: fit-content;
+    white-space: pre-line;
+  }
 `;

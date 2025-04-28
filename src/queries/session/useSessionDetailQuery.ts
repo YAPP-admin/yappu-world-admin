@@ -9,5 +9,6 @@ export const useSessionDetailQuery = (sessionId: string) => {
     select: (res) => {
       return res.data.data;
     },
+    retry: false,
   });
 };

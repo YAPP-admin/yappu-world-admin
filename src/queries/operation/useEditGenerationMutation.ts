@@ -5,6 +5,7 @@ import { useGenerationStore } from '@stores/generationStore';
 import { ApiResponse, ErrorResponse } from 'apis/common/types';
 import { patchGenerationActive } from 'apis/operation/OperationApis';
 import { EditGenerationReq, EditGenerationRes } from 'apis/operation/types';
+import { showErrorToast } from 'types/showErrorToast';
 
 export const useEditGenerationMutation = () => {
   const page = useGenerationStore((state) => state.page);
@@ -21,16 +22,7 @@ export const useEditGenerationMutation = () => {
     onError: (err) => {
       if (err.response) {
         const errorData = err.response.data;
-        if (err.response.status === 404) {
-          if (errorData.errorCode === 'OPR_1000') {
-            window.alert(`${errorData.errorCode}\n${errorData.message}`);
-          }
-        } else if (err.response.status === 409) {
-          if (errorData.errorCode === 'OPR_1001') {
-            window.alert(`${errorData.errorCode}\n${errorData.message}`);
-          }
-        }
-        console.error('login error ', errorData.message);
+        showErrorToast(errorData.message);
       }
     },
   });

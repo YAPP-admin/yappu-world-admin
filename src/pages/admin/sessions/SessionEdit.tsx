@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -19,8 +20,10 @@ import {
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useEditSessionMutation } from '@queries/session/useEditSessionMutaion';
 import { useSessionStore } from '@stores/sessionStore';
+import { ErrorResponse } from 'apis/common/types';
 import { SessionDetailRes } from 'apis/session/types';
 import { EditSessionType } from 'types/formTypes';
+import { showErrorToast } from 'types/showErrorToast';
 
 interface Props {
   handleEdit: () => void;
@@ -43,13 +46,16 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     })) ?? [];
 
   const onSumbit = async (data: EditSessionType) => {
-    console.log('data :', data);
     try {
       await mutateAsync(data);
       setEditCompletePopup(true);
       navigate('/admin/sessions');
     } catch (err) {
-      console.log('err :', err);
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
+      }
     }
   };
 

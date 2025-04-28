@@ -1,6 +1,9 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
+import { commonToastOption } from '@constants/toastOption';
 import { useAuthStore } from '@stores/authStore';
+import { showErrorToast } from 'types/showErrorToast';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -30,16 +33,22 @@ axiosInstance.interceptors.response.use(
     }
     const { response } = error;
 
-    if ([500].includes(response.status)) {
-      console.error(`[공통 에러] ${response.status} 에러 발생`);
-      return Promise.reject(error);
+    if (
+      [500, 400].includes(response.status) &&
+      ['COM_0001', 'COM_0002'].includes(response.data.errorCode)
+    ) {
+      showErrorToast(response.data.message);
+      return;
     } else if (
       response.status === 401 &&
-      response.data.errorCode === 'TKN_0001'
+      ['TKN_0001', 'TKN_0002'].includes(response.data.errorCode)
     ) {
       await useAuthStore.persist.clearStorage();
       useAuthStore.getState().resetUser();
-      window.alert('토큰이 만료됐습니다. 다시 로그인 해주세요.');
+      toast.error(
+        `${response.data.message}\n다시 로그인 해주세요.`,
+        commonToastOption,
+      );
     }
 
     return Promise.reject(error);

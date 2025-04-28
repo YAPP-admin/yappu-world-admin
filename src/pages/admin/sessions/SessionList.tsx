@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +26,9 @@ import { useDeleteSessionMutation } from '@queries/session/useDeleteSessionMutat
 import { useSessionQuery } from '@queries/session/useSessionQuery';
 import { useSessionStore } from '@stores/sessionStore';
 import { getSessionType } from '@utils/getSessionType';
+import { ErrorResponse } from 'apis/common/types';
 import theme from 'styles/theme';
+import { showErrorToast } from 'types/showErrorToast';
 
 const SessionList: FC = () => {
   const {
@@ -83,6 +86,12 @@ const SessionList: FC = () => {
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
       setIsDeleteCompletePopup(true);
     } catch (err) {
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ??
+            '알 수 없는 오류가 발생했습니다.\n관리자에게 문의해주세요.',
+        );
+      }
       console.log(err);
     }
   };
@@ -104,9 +113,9 @@ const SessionList: FC = () => {
           <FlexBox direction="column" gap={8}>
             <FlexBox height="fit-content" justify="space-between">
               <FlexBox
+                align="center"
                 height="fit-content"
                 justify="space-between"
-                align="center"
               >
                 <FlexBox gap={8} height="fit-content" width="fit-content">
                   <Typography variant="headline1Bold">세션 리스트</Typography>

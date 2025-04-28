@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { AssetProps } from 'types/AssetType';
 
 const Pencil: FC<AssetProps> = ({ size = '24', color = '#171719' }) => {

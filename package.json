@@ -15,7 +15,7 @@
   "type": "module",
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
-    "@tanstack/react-query": "^5.66.9",
+    "@tanstack/react-query": "^5.74.9",
     "axios": "^1.8.4",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",

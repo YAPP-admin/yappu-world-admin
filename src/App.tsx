@@ -14,6 +14,10 @@ const isDevtoolsEnabled =
   import.meta.env.MODE === 'development' ||
   import.meta.env.VITE_VERCEL_ENV === 'preview';
 
+console.log('VITE_VERCEL_ENV:', import.meta.env.VITE_VERCEL_ENV);
+console.log('MODE:', import.meta.env.MODE);
+console.log('isDevtoolsEnabled:', isDevtoolsEnabled);
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

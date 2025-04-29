@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { RouteSetup } from './routes/RouteSetup.tsx';
 import { GlobalStyle } from './styles/global.ts';

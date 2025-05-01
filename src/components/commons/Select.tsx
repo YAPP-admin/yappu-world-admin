@@ -75,6 +75,7 @@ export default Select;
 
 const Container = styled.div<{ width?: string }>`
   width: ${({ width }) => (width ? width : '100%')};
+  min-width: ${({ width }) => (width ? width : '')};
   position: relative;
 `;
 

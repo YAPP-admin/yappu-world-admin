@@ -59,6 +59,9 @@ const RejectPopup: FC<Props> = ({
   const setIsDetailPopup = useApplicationStore(
     (state) => state.setIsDetailPopup,
   );
+  const setSelectedIndexes = useApplicationStore(
+    (state) => state.setSelectedIndexes,
+  );
   const page = useApplicationStore((state) => state.page);
 
   const [approveData, setApproveData] = useState<ApplicationRefuseType | null>(
@@ -84,6 +87,7 @@ const RejectPopup: FC<Props> = ({
       onClose?.();
       setIsDetailPopup(false);
       setIsRejectCompletePopup(true);
+      setSelectedIndexes([]);
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
         console.error('Approve error:', error.response?.data);

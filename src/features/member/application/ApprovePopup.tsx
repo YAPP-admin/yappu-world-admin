@@ -57,6 +57,9 @@ const ApprovePopup: FC<Props> = ({
   const setIsDetailPopup = useApplicationStore(
     (state) => state.setIsDetailPopup,
   );
+  const setSelectedIndexes = useApplicationStore(
+    (state) => state.setSelectedIndexes,
+  );
   const page = useApplicationStore((state) => state.page);
   const [approveData, setApproveData] = useState<ApplicationApproveType | null>(
     null,
@@ -82,6 +85,7 @@ const ApprovePopup: FC<Props> = ({
       onClose();
       setIsApproveCompletePopup(true);
       setIsDetailPopup(false);
+      setSelectedIndexes([]);
     } catch (error) {
       console.log(error);
       if (isAxiosError<ErrorResponse>(error)) {

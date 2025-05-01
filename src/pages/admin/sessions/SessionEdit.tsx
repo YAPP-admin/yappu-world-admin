@@ -1,4 +1,6 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +24,7 @@ import { useEditSessionMutation } from '@queries/session/useEditSessionMutaion';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
 import { SessionDetailRes } from 'apis/session/types';
+import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { EditSessionType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
@@ -31,7 +34,17 @@ interface Props {
 }
 
 const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
-  const method = useForm<EditSessionType>({ defaultValues: data });
+  const method = useForm<SessionFormType>({
+    resolver: zodResolver(SessionFormSchema),
+    defaultValues: data
+      ? {
+          ...data,
+          date: new Date(data.date),
+          endDate: new Date(data.endDate),
+          generation: data.generation.toString(),
+        }
+      : undefined,
+  });
   const { data: generationList } = useGenerationListQuery(1);
   const { mutateAsync } = useEditSessionMutation();
   const navigate = useNavigate();
@@ -45,9 +58,17 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       value: el.generation?.toString(),
     })) ?? [];
 
-  const onSumbit = async (data: EditSessionType) => {
+  const onSumbit = async (formData: SessionFormType) => {
+    if (!data) return;
     try {
-      await mutateAsync(data);
+      const req: EditSessionType = {
+        ...formData,
+        id: data.id,
+        generation: Number(formData.generation),
+        date: dayjs(formData.date).format('YYYY-MM-DD'),
+        endDate: dayjs(formData.endDate).format('YYYY-MM-DD'),
+      };
+      await mutateAsync(req);
       setEditCompletePopup(true);
       navigate('/admin/sessions');
     } catch (err) {
@@ -69,13 +90,19 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         <FlexBox direction="column" gap={24}>
           <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">제목</Typography>
-            <TextInput {...method.register('name')} />
+            <FlexBox direction="column">
+              <TextInput {...method.register('name')} />
+              {method.formState.errors.name && (
+                <Typography color="status-negative" variant="caption1Regular">
+                  {method.formState.errors.name.message}
+                </Typography>
+              )}
+            </FlexBox>
           </GridBox>
           <GridBox columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">시작 날짜</Typography>
             <FlexBox gap={20}>
               <Calendar name="date" />
-
               <Controller
                 control={method.control}
                 name="time"
@@ -111,39 +138,46 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           </GridBox>
           <GridBox columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">종료 날짜</Typography>
-            <FlexBox gap={20}>
-              <Calendar name="endDate" />
-              <Controller
-                control={method.control}
-                name="endTime"
-                render={({ field }) => {
-                  const [hour, minute] = field.value?.split(':') ?? [
-                    '00',
-                    '00',
-                  ];
+            <FlexBox direction="column">
+              <FlexBox gap={20}>
+                <Calendar name="endDate" />
+                <Controller
+                  control={method.control}
+                  name="endTime"
+                  render={({ field }) => {
+                    const [hour, minute] = field.value?.split(':') ?? [
+                      '00',
+                      '00',
+                    ];
 
-                  return (
-                    <FlexBox gap={8}>
-                      <Select
-                        optionList={hourOptions}
-                        selectedValue={hour}
-                        onChange={(selectedHour) => {
-                          const newTime = `${selectedHour}:${minute}:00`;
-                          field.onChange(newTime);
-                        }}
-                      />
-                      <Select
-                        optionList={minuteOptions}
-                        selectedValue={minute}
-                        onChange={(selectedMinute) => {
-                          const newTime = `${hour}:${selectedMinute}:00`;
-                          field.onChange(newTime);
-                        }}
-                      />
-                    </FlexBox>
-                  );
-                }}
-              />
+                    return (
+                      <FlexBox gap={8}>
+                        <Select
+                          optionList={hourOptions}
+                          selectedValue={hour}
+                          onChange={(selectedHour) => {
+                            const newTime = `${selectedHour}:${minute}:00`;
+                            field.onChange(newTime);
+                          }}
+                        />
+                        <Select
+                          optionList={minuteOptions}
+                          selectedValue={minute}
+                          onChange={(selectedMinute) => {
+                            const newTime = `${hour}:${selectedMinute}:00`;
+                            field.onChange(newTime);
+                          }}
+                        />
+                      </FlexBox>
+                    );
+                  }}
+                />
+              </FlexBox>
+              {method.formState.errors.endTime?.message && (
+                <Typography color="status-negative" variant="caption1Regular">
+                  {method.formState.errors.endTime?.message}
+                </Typography>
+              )}
             </FlexBox>
           </GridBox>
           <FlexBox gap={90}>
@@ -189,7 +223,14 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           </FlexBox>
           <GridBox fullWidth columns="79px 1fr" gap={16}>
             <Typography variant="body1Normal">장소</Typography>
-            <TextInput {...method.register('place')} />
+            <FlexBox direction="column">
+              <TextInput {...method.register('place')} />
+              {method.formState.errors.place && (
+                <Typography color="status-negative" variant="caption1Regular">
+                  {method.formState.errors.place.message}
+                </Typography>
+              )}
+            </FlexBox>
           </GridBox>
         </FlexBox>
 

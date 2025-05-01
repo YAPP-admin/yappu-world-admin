@@ -85,6 +85,7 @@ const SessionList: FC = () => {
       await mutateAsync({ ids: selectedIndexes });
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
       setIsDeleteCompletePopup(true);
+      setSelectedIndexes([]);
     } catch (err) {
       if (isAxiosError<ErrorResponse>(err)) {
         showErrorToast(

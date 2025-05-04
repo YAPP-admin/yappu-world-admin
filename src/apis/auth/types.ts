@@ -79,3 +79,8 @@ export interface ApplicationDetailRes {
   rejectReason: string | null;
   assignedRole: string | null;
 }
+
+export interface ReissueTokenReq {
+  accessToken: string;
+  refreshToken: string;
+}

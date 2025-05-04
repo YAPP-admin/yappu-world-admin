@@ -15,6 +15,7 @@ import {
   LoginRes,
   MemberCodeReq,
   MemberCodeRes,
+  ReissueTokenReq,
 } from './types';
 
 export const postLogin = (data: LoginReq) => {
@@ -64,5 +65,12 @@ export const getApplicationList = ({ page, size }: PaginatedReq) => {
 export const getApplicationDetail = (applicationId: string) => {
   return axiosInstance.get<ApiResponse<ApplicationDetailRes>>(
     `/admin/v1/auth/applications/${applicationId}`,
+  );
+};
+
+export const postReissueToken = (data: ReissueTokenReq) => {
+  return axiosInstance.post<ApiResponse<LoginRes>>(
+    '/admin/v1/auth/reissue-token',
+    data,
   );
 };

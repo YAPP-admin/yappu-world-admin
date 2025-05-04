@@ -77,6 +77,7 @@ const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
           <ButtonContainer>
             <OutlinedButton
               color="status-positive"
+              disabled={selectedList?.status !== '대기'}
               size="medium"
               variant="assistive"
               leftIcon={
@@ -88,6 +89,7 @@ const DetailPopup: FC<Props> = ({ selectedList, onClose }) => {
             </OutlinedButton>
             <OutlinedButton
               color="status-negative"
+              disabled={selectedList?.status !== '대기'}
               size="medium"
               variant="assistive"
               leftIcon={

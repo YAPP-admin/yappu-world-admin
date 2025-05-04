@@ -2,16 +2,24 @@ import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
+import FlexBox from '@compnents/commons/FlexBox';
 import RadioGroup from '@compnents/commons/RadioGroup';
 import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { userRoleOptionList } from '@constants/optionList';
-import { RoleLabel, UserDetailRes } from 'apis/user/types';
+import { formatPhoneNumber } from '@utils/formatPhoneNumber';
+import { RoleLabel } from 'apis/user/types';
+import { MemberFormType } from 'schema/MemberFormSchema';
 import theme from 'styles/theme';
 
 const MemberBasicForm: FC = () => {
-  const { register, watch, setValue } = useFormContext<UserDetailRes>();
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<MemberFormType>();
 
   return (
     <Container>
@@ -24,7 +32,12 @@ const MemberBasicForm: FC = () => {
           >
             이름
           </Typography>
-          <TextInput inputSize="medium" {...register('name')} />
+          <FlexBox direction="column">
+            <TextInput inputSize="medium" {...register('name')} />
+            <Typography color="status-negative" variant="caption1Regular">
+              {errors.name?.message}
+            </Typography>
+          </FlexBox>
         </Wrapper>
         <Wrapper>
           <Typography
@@ -33,7 +46,12 @@ const MemberBasicForm: FC = () => {
           >
             이메일
           </Typography>
-          <TextInput inputSize="medium" {...register('email')} />
+          <FlexBox direction="column">
+            <TextInput inputSize="medium" {...register('email')} />
+            <Typography color="status-negative" variant="caption1Regular">
+              {errors.email?.message}
+            </Typography>
+          </FlexBox>
         </Wrapper>
         <Wrapper>
           <Typography
@@ -42,7 +60,19 @@ const MemberBasicForm: FC = () => {
           >
             전화번호
           </Typography>
-          <TextInput inputSize="medium" {...register('phoneNumber')} />
+          <FlexBox direction="column">
+            <TextInput
+              inputSize="medium"
+              {...register('phoneNumber')}
+              onChange={(e) => {
+                const formatted = formatPhoneNumber(e.target.value);
+                setValue('phoneNumber', formatted);
+              }}
+            />
+            <Typography color="status-negative" variant="caption1Regular">
+              {errors.phoneNumber?.message}
+            </Typography>
+          </FlexBox>
         </Wrapper>
         <Wrapper>
           <Typography
@@ -66,15 +96,26 @@ const MemberBasicForm: FC = () => {
           >
             권한
           </Typography>
-          <Select
-            optionList={userRoleOptionList}
-            width="120px"
-            selectedValue={
-              userRoleOptionList.find((item) => item.label === watch('role'))
-                ?.value ?? ''
-            }
-            onChange={(value: string) => setValue('role', value as RoleLabel)}
-          />
+          <FlexBox direction="column" width="100%">
+            <Select
+              optionList={userRoleOptionList}
+              width="120px"
+              selectedValue={
+                userRoleOptionList.find((item) => item.value === watch('role'))
+                  ?.value ?? ''
+              }
+              onChange={(value: string) =>
+                setValue(
+                  'role',
+                  userRoleOptionList?.find((li) => li.value === value)
+                    ?.value as RoleLabel,
+                )
+              }
+            />
+            <Typography color="status-negative" variant="caption1Regular">
+              {errors.role?.message}
+            </Typography>
+          </FlexBox>
         </Wrapper>
         <Wrapper>
           <Typography

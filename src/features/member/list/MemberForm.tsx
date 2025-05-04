@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
@@ -7,11 +8,13 @@ import styled from 'styled-components';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
+import { userRoleOptionList } from '@constants/optionList';
 import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
 import { ErrorResponse } from 'apis/common/types';
-import { UserDetailRes } from 'apis/user/types';
+import { RoleLabel, UserDetailReq, UserDetailRes } from 'apis/user/types';
+import { MemberFormSchema, MemberFormType } from 'schema/MemberFormSchema';
 import theme from 'styles/theme';
-import { UserDetailType } from 'types/formTypes';
+import { showErrorToast } from 'types/showErrorToast';
 
 import MemberActivityForm from './MemberActivityForm';
 import MemberBasicForm from './MemberBasicForm';
@@ -24,22 +27,42 @@ interface Props {
 const MemberForm: FC<Props> = (props) => {
   const { cancelToEdit, userInfo } = props;
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [formData, setFormData] = useState<UserDetailType | null>(null);
+  const [formData, setFormData] = useState<MemberFormType | null>(null);
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useUserDetailMutation();
 
-  const method = useForm<UserDetailType>({
-    defaultValues: userInfo ?? {},
+  const method = useForm<MemberFormType>({
+    resolver: zodResolver(MemberFormSchema),
+    defaultValues: userInfo
+      ? {
+          id: userInfo.id,
+          name: userInfo.name,
+          email: userInfo.email,
+          phoneNumber: userInfo.phoneNumber,
+          gender: userInfo.gender,
+          activityUnits: userInfo.activityUnits,
+          role: userRoleOptionList?.find((li) => li.label === userInfo.role)
+            ?.value,
+          registrationDate: userInfo.registrationDate,
+        }
+      : undefined,
   });
 
-  const onSubmit = (data: UserDetailType) => {
+  const onSubmit = (data: MemberFormType) => {
     setOpenConfirm(true);
     setFormData({
       id: data.id,
       name: data.name,
       email: data.email,
-      activityUnits: data.activityUnits,
+      activityUnits: data.activityUnits.map((el) => ({
+        ...el,
+        position: el.position.toUpperCase(),
+      })),
+      phoneNumber: data.phoneNumber,
+      gender: data.gender,
+      role: data.role,
+      registrationDate: data.registrationDate,
     });
   };
 
@@ -51,14 +74,28 @@ const MemberForm: FC<Props> = (props) => {
   const putUserDetail = async () => {
     if (!formData) return;
 
+    const req: UserDetailReq = {
+      userId: formData.id,
+      name: formData.name,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber ?? null,
+      gender: formData.gender ?? null,
+      role: formData.role as RoleLabel,
+      activityUnits: formData.activityUnits,
+    };
+
     try {
-      await mutateAsync(formData);
+      await mutateAsync(req);
       setOpenConfirm(false);
       cancelToEdit();
-      queryClient.invalidateQueries({ queryKey: ['user-list'] });
+      queryClient.invalidateQueries({
+        queryKey: ['user-detail', userInfo?.id],
+      });
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
-        console.error(error.response?.data);
+        showErrorToast(
+          error.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
       }
     }
   };
@@ -130,4 +167,6 @@ const ButtonWrapper = styled.div`
   gap: 8px;
   border-top: 1px solid ${theme.colors.lineNormal.alternative};
   background: ${theme.colors.backgroundElevated.normal};
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 `;

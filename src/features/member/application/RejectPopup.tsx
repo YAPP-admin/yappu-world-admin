@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ErrorResponse } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -16,7 +15,9 @@ import PopupContainer from '@compnents/popup/PopupContainer';
 import { rejectOptionList } from '@constants/optionList';
 import { useApplicationStore } from '@stores/applicationStore';
 import { ApplicationListRes } from 'apis/auth/types';
+import { ErrorResponse } from 'apis/common/types';
 import theme from 'styles/theme';
+import { showErrorToast } from 'types/showErrorToast';
 
 import { useApplicationRejectMutaion } from '../../../queries/auth/useApplicationRejectMutation';
 
@@ -90,7 +91,9 @@ const RejectPopup: FC<Props> = ({
       setSelectedIndexes([]);
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
-        console.error('Approve error:', error.response?.data);
+        showErrorToast(
+          error.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
       }
     }
   };
@@ -106,13 +109,15 @@ const RejectPopup: FC<Props> = ({
     try {
       await mutateAsync(req);
       queryClient.invalidateQueries({ queryKey: ['application-list', page] });
-
       setIsRejectConfirmPopup(false);
       onClose?.();
       setIsRejectCompletePopup(true);
+      setSelectedIndexes([]);
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
-        console.error('Bulk Approve error:', error.response?.data);
+        showErrorToast(
+          error.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
       }
     }
   };

@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -6,55 +8,89 @@ import SolidButton from '@compnents/Button/SolidButton';
 import Chip from '@compnents/commons/Chip';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
+import { useDeleteMemberCodeMutation } from '@queries/auth/useDeleteMemberCodeMutation';
 import { useMemberCodeMutation } from '@queries/auth/useMemberCodeMutation';
-import { MemberCodeInfo, MemberCodeReq } from 'apis/auth/types';
+import { useMemberCodeStore } from '@stores/memberCodeStore';
+import {
+  DeleteMemberCodeReq,
+  MemberCodeInfo,
+  MemberCodeReq,
+} from 'apis/auth/types';
+import { ErrorResponse } from 'apis/common/types';
 import { RoleName } from 'apis/user/types';
 import { UserRoleType } from 'types/formTypes';
+import { showErrorToast } from 'types/showErrorToast';
 
 import CodeEditConfirmPopup from './CodeEditConfirmPopup';
 import PopupContainer from '../../../components/popup/PopupContainer';
 
 interface Props {
-  handleEditPopup: () => void;
-  handleConfirmPopup: () => void;
   confirmPopupOpen: boolean;
   selectedCode: MemberCodeInfo | null;
 }
 
 const CodeEditPopup: FC<Props> = (props) => {
-  const {
-    handleEditPopup,
-    selectedCode,
-    handleConfirmPopup,
-    confirmPopupOpen,
-  } = props;
-  const { mutate } = useMemberCodeMutation();
-  const { handleSubmit, register, setValue } = useForm<UserRoleType>({
+  const { selectedCode, confirmPopupOpen } = props;
+  const { mutateAsync: codeEdit } = useMemberCodeMutation();
+  const { mutateAsync: codeDelete } = useDeleteMemberCodeMutation();
+  const { handleSubmit, register } = useForm<UserRoleType>({
     defaultValues: {
       name: selectedCode?.role?.name,
       code: selectedCode?.code,
     },
   });
-
+  const queryClient = useQueryClient();
+  const handleEditPopup = useMemberCodeStore((state) => state.handleEditPopup);
+  const handleConfirmPopup = useMemberCodeStore(
+    (state) => state.handleConfirmPopup,
+  );
   const [formData, setFormData] = useState<UserRoleType | null>(null);
 
   const onSubmit = (data: UserRoleType) => {
     setFormData(data);
-    handleConfirmPopup();
+    handleConfirmPopup(true);
   };
 
-  const onSave = () => {
+  const onDelete = async () => {
+    const req: DeleteMemberCodeReq = {
+      role: selectedCode?.role?.name as RoleName,
+    };
+    try {
+      await codeDelete(req);
+      queryClient.invalidateQueries({ queryKey: ['member-code-list'] });
+      handleEditPopup(false);
+    } catch (err) {
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
+      }
+    }
+  };
+
+  const onSave = async () => {
     if (!formData) return;
     const req: MemberCodeReq = {
       role: formData.name as RoleName,
       code: formData?.code.toString(),
     };
-    mutate(req);
+    try {
+      await codeEdit(req);
+      handleConfirmPopup(false);
+      handleEditPopup(false);
+      queryClient.invalidateQueries({ queryKey: ['member-code-list'] });
+    } catch (err) {
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
+      }
+    }
   };
 
   return (
     <>
-      <PopupContainer onClose={handleEditPopup}>
+      <PopupContainer onClose={() => handleEditPopup(false)}>
         <Container
           onClick={(e) => e.stopPropagation()}
           onSubmit={handleSubmit(onSubmit)}
@@ -81,7 +117,7 @@ const CodeEditPopup: FC<Props> = (props) => {
               size="xlarge"
               type="button"
               variant="secondary"
-              onClick={() => setValue('code', '')}
+              onClick={onDelete}
             >
               초기화
             </SolidButton>
@@ -92,7 +128,10 @@ const CodeEditPopup: FC<Props> = (props) => {
         </Container>
       </PopupContainer>
       {confirmPopupOpen && (
-        <CodeEditConfirmPopup onClose={handleConfirmPopup} onSave={onSave} />
+        <CodeEditConfirmPopup
+          onClose={() => handleConfirmPopup(false)}
+          onSave={onSave}
+        />
       )}
     </>
   );

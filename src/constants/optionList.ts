@@ -15,12 +15,12 @@ export const noticeOptionList = [
 
 export const positionOptionList = [
   { label: 'PM', value: 'PM' },
-  { label: 'Design', value: 'Design' },
-  { label: 'Web', value: 'Web' },
-  { label: 'Android', value: 'Android' },
-  { label: 'iOS', value: 'iOS' },
-  { label: 'Flutter', value: 'Flutter' },
-  { label: 'Server', value: 'Server' },
+  { label: 'Design', value: 'DESIGN' },
+  { label: 'Web', value: 'WEB' },
+  { label: 'Android', value: 'ANDROID' },
+  { label: 'iOS', value: 'IOS' },
+  { label: 'Flutter', value: 'FLUTTER' },
+  { label: 'Server', value: 'SERVER' },
 ];
 
 export const rejectOptionList = [{ label: '직접입력', value: '직접입력' }];

@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { ErrorResponse } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -16,8 +15,10 @@ import { userRoleOptionList } from '@constants/optionList';
 import { useApplicationApproveMutation } from '@queries/auth/useApplicationApproveMutation';
 import { useApplicationStore } from '@stores/applicationStore';
 import { ApplicationApproveReq, ApplicationListRes } from 'apis/auth/types';
+import { ErrorResponse } from 'apis/common/types';
 import { RoleLabel, RoleName } from 'apis/user/types';
 import theme from 'styles/theme';
+import { showErrorToast } from 'types/showErrorToast';
 
 interface Props {
   onClose: () => void;
@@ -87,9 +88,10 @@ const ApprovePopup: FC<Props> = ({
       setIsDetailPopup(false);
       setSelectedIndexes([]);
     } catch (error) {
-      console.log(error);
       if (isAxiosError<ErrorResponse>(error)) {
-        console.error('Approve error:', error.response?.data);
+        showErrorToast(
+          error.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
       }
     }
   };
@@ -110,9 +112,12 @@ const ApprovePopup: FC<Props> = ({
       onClose();
       setIsApproveCompletePopup(true);
       setIsApproveConfirmPopup(false);
+      setSelectedIndexes([]);
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
-        console.error('Bulk Approve error:', error.response?.data);
+        showErrorToast(
+          error.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
       }
     }
   };

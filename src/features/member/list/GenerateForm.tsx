@@ -18,6 +18,7 @@ interface Props {
 const GenerateForm: FC<Props> = (props) => {
   const { index, onRemove } = props;
   const { register, watch, setValue } = useFormContext<UserDetailRes>();
+
   return (
     <Container>
       <TextInput
@@ -31,7 +32,9 @@ const GenerateForm: FC<Props> = (props) => {
         width="120px"
         selectedValue={
           positionOptionList.find(
-            (item) => item.value === watch(`activityUnits.${index}.position`),
+            (item) =>
+              item.value ===
+              watch(`activityUnits.${index}.position`).toUpperCase(),
           )?.value ?? ''
         }
         onChange={(value: string) =>

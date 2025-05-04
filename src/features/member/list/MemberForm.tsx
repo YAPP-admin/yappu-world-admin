@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
+import { userRoleOptionList } from '@constants/optionList';
 import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
 import { ErrorResponse } from 'apis/common/types';
 import { RoleLabel, UserDetailReq, UserDetailRes } from 'apis/user/types';
@@ -41,7 +42,8 @@ const MemberForm: FC<Props> = (props) => {
           phoneNumber: userInfo.phoneNumber,
           gender: userInfo.gender,
           activityUnits: userInfo.activityUnits,
-          role: userInfo.role,
+          role: userRoleOptionList?.find((li) => li.label === userInfo.role)
+            ?.value,
           registrationDate: userInfo.registrationDate,
         }
       : undefined,
@@ -53,7 +55,10 @@ const MemberForm: FC<Props> = (props) => {
       id: data.id,
       name: data.name,
       email: data.email,
-      activityUnits: data.activityUnits,
+      activityUnits: data.activityUnits.map((el) => ({
+        ...el,
+        position: el.position.toUpperCase(),
+      })),
       phoneNumber: data.phoneNumber,
       gender: data.gender,
       role: data.role,
@@ -70,7 +75,7 @@ const MemberForm: FC<Props> = (props) => {
     if (!formData) return;
 
     const req: UserDetailReq = {
-      id: formData.id,
+      userId: formData.id,
       name: formData.name,
       email: formData.email,
       phoneNumber: formData.phoneNumber ?? null,
@@ -83,7 +88,9 @@ const MemberForm: FC<Props> = (props) => {
       await mutateAsync(req);
       setOpenConfirm(false);
       cancelToEdit();
-      queryClient.invalidateQueries({ queryKey: ['user-list'] });
+      queryClient.invalidateQueries({
+        queryKey: ['user-detail', userInfo?.id],
+      });
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
         showErrorToast(

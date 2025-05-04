@@ -60,7 +60,7 @@ export interface UserDetailRes {
 }
 
 export interface UserDetailReq {
-  id: string;
+  userId: string;
   name: string;
   email: string;
   activityUnits: ActivityUnit[];

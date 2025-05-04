@@ -101,10 +101,16 @@ const MemberBasicForm: FC = () => {
               optionList={userRoleOptionList}
               width="120px"
               selectedValue={
-                userRoleOptionList.find((item) => item.label === watch('role'))
+                userRoleOptionList.find((item) => item.value === watch('role'))
                   ?.value ?? ''
               }
-              onChange={(value: string) => setValue('role', value as RoleLabel)}
+              onChange={(value: string) =>
+                setValue(
+                  'role',
+                  userRoleOptionList?.find((li) => li.value === value)
+                    ?.value as RoleLabel,
+                )
+              }
             />
             <Typography color="status-negative" variant="caption1Regular">
               {errors.role?.message}

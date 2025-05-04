@@ -23,7 +23,7 @@ const RadioGroup = ({ name, options }: RadioGroupProps) => {
                 key={option.value}
                 checked={field.value === option.value}
                 value={option.label}
-                onChange={() => field.onChange(option)}
+                onChange={() => field.onChange(option.value)}
               />
             ))}
           </>

@@ -40,6 +40,8 @@ const MemberForm: FC<Props> = (props) => {
       name: data.name,
       email: data.email,
       activityUnits: data.activityUnits,
+      phoneNumber: data.phoneNumber,
+      gender: data.gender,
     });
   };
 
@@ -130,4 +132,6 @@ const ButtonWrapper = styled.div`
   gap: 8px;
   border-top: 1px solid ${theme.colors.lineNormal.alternative};
   background: ${theme.colors.backgroundElevated.normal};
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 `;

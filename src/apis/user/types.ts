@@ -64,6 +64,8 @@ export interface UserDetailReq {
   name: string;
   email: string;
   activityUnits: ActivityUnit[];
+  phoneNumber: string;
+  gender: string;
 }
 
 export interface UserProfileRes {

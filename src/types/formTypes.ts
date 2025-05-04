@@ -47,6 +47,8 @@ export interface UserDetailType {
   name: string;
   email: string;
   activityUnits: ActivityUnit[];
+  phoneNumber: string;
+  gender: string;
 }
 
 export interface EditSessionType {

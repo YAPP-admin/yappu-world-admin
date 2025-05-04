@@ -25,12 +25,11 @@ const MemberCode: FC = () => {
     editPopupOpen,
     handleEditPopup,
     confirmPopupOpen,
-    handleConfirmPopup,
   } = useMemberCodeStore();
 
   const onClickToEdit = (value: MemberCodeInfo) => {
     setSelectedCode(value);
-    handleEditPopup();
+    handleEditPopup(true);
   };
 
   return (
@@ -97,8 +96,6 @@ const MemberCode: FC = () => {
       {editPopupOpen && (
         <CodeEditPopup
           confirmPopupOpen={confirmPopupOpen}
-          handleConfirmPopup={handleConfirmPopup}
-          handleEditPopup={handleEditPopup}
           selectedCode={selectedCode}
         />
       )}

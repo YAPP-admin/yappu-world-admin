@@ -10,6 +10,7 @@ import {
   ApplicationDetailRes,
   ApplicationListRes,
   ApplicationRejectReq,
+  DeleteMemberCodeReq,
   EidtUserRoleReq,
   LoginReq,
   LoginRes,
@@ -36,6 +37,10 @@ export const patchMemberCode = (data: MemberCodeReq) => {
     '/admin/v1/auth/authentication-codes',
     data,
   );
+};
+
+export const deleteMemberCode = (data: DeleteMemberCodeReq): Promise<void> => {
+  return axiosInstance.delete('/admin/v1/auth/authentication-codes', { data });
 };
 
 export const postApplicationReject = (data: ApplicationRejectReq) => {

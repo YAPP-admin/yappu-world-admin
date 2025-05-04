@@ -24,6 +24,10 @@ export interface MemberCodeReq {
   code: string;
 }
 
+export interface DeleteMemberCodeReq {
+  role: RoleName;
+}
+
 // 가입신청 거절
 export interface ApplicationRejectReq {
   applicationIds: string[];

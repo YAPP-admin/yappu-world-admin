@@ -4,14 +4,18 @@ import styled from 'styled-components';
 
 import Plus from '@assets/Plus';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
+import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
-import { UserDetailRes } from 'apis/user/types';
+import { MemberFormType } from 'schema/MemberFormSchema';
 import theme from 'styles/theme';
 
 import GenerateForm from './GenerateForm';
 
 const MemberActivityForm: FC = () => {
-  const { control } = useFormContext<UserDetailRes>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<MemberFormType>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'activityUnits',
@@ -27,9 +31,9 @@ const MemberActivityForm: FC = () => {
           variant="assistive"
           onClick={() =>
             append({
+              id: null,
               generation: 0,
               position: '',
-              isActive: true,
             })
           }
         >
@@ -60,13 +64,28 @@ const MemberActivityForm: FC = () => {
           </Typography>
         </Title>
         <Wrapper className="wrapper">
-          {fields.map((unit, index) => (
-            <GenerateForm
-              key={unit.id}
-              index={index}
-              onRemove={() => remove(index)}
-            />
-          ))}
+          {fields.map((unit, index) => {
+            const unitError = errors.activityUnits?.[index];
+
+            const errorMessage =
+              unitError?.generation?.message ??
+              unitError?.position?.message ??
+              '';
+
+            return (
+              <FlexBox key={unit.id} direction="column">
+                <GenerateForm index={index} onRemove={() => remove(index)} />
+                {errorMessage && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {errorMessage}
+                  </Typography>
+                )}
+              </FlexBox>
+            );
+          })}
+          <Typography color="status-negative" variant="caption1Regular">
+            {errors.activityUnits?.root?.message}
+          </Typography>
         </Wrapper>
       </Content>
     </Container>

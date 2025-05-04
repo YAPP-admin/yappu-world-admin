@@ -29,7 +29,7 @@ export type RoleLabel =
   | '';
 
 export interface ActivityUnit {
-  id?: string;
+  id: string | null;
   generation: number;
   position: string;
   isActive?: boolean;
@@ -64,8 +64,9 @@ export interface UserDetailReq {
   name: string;
   email: string;
   activityUnits: ActivityUnit[];
-  phoneNumber: string;
-  gender: string;
+  role: RoleLabel;
+  phoneNumber: string | null;
+  gender: string | null;
 }
 
 export interface UserProfileRes {

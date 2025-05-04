@@ -6,18 +6,16 @@ interface MemberCodeState {
   selectedCode: MemberCodeInfo | null;
   setSelectedCode: (value: MemberCodeInfo | null) => void;
   editPopupOpen: boolean;
-  handleEditPopup: () => void;
+  handleEditPopup: (value: boolean) => void;
   confirmPopupOpen: boolean;
-  handleConfirmPopup: () => void;
+  handleConfirmPopup: (value: boolean) => void;
 }
 
 export const useMemberCodeStore = create<MemberCodeState>((set) => ({
   selectedCode: null,
   setSelectedCode: (value) => set({ selectedCode: value }),
   editPopupOpen: false,
-  handleEditPopup: () =>
-    set((state) => ({ editPopupOpen: !state.editPopupOpen })),
+  handleEditPopup: (value) => set({ editPopupOpen: value }),
   confirmPopupOpen: false,
-  handleConfirmPopup: () =>
-    set((state) => ({ confirmPopupOpen: !state.confirmPopupOpen })),
+  handleConfirmPopup: (value) => set({ confirmPopupOpen: value }),
 }));

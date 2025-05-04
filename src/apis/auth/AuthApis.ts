@@ -10,11 +10,13 @@ import {
   ApplicationDetailRes,
   ApplicationListRes,
   ApplicationRejectReq,
+  DeleteMemberCodeReq,
   EidtUserRoleReq,
   LoginReq,
   LoginRes,
   MemberCodeReq,
   MemberCodeRes,
+  ReissueTokenReq,
 } from './types';
 
 export const postLogin = (data: LoginReq) => {
@@ -35,6 +37,10 @@ export const patchMemberCode = (data: MemberCodeReq) => {
     '/admin/v1/auth/authentication-codes',
     data,
   );
+};
+
+export const deleteMemberCode = (data: DeleteMemberCodeReq): Promise<void> => {
+  return axiosInstance.delete('/admin/v1/auth/authentication-codes', { data });
 };
 
 export const postApplicationReject = (data: ApplicationRejectReq) => {
@@ -64,5 +70,12 @@ export const getApplicationList = ({ page, size }: PaginatedReq) => {
 export const getApplicationDetail = (applicationId: string) => {
   return axiosInstance.get<ApiResponse<ApplicationDetailRes>>(
     `/admin/v1/auth/applications/${applicationId}`,
+  );
+};
+
+export const postReissueToken = (data: ReissueTokenReq) => {
+  return axiosInstance.post<ApiResponse<LoginRes>>(
+    '/admin/v1/auth/reissue-token',
+    data,
   );
 };

@@ -21,16 +21,8 @@ export const useMemberCodeMutation = () => {
     mutationFn: (data) => patchMemberCode(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['member-code-list'] });
-      handleConfirmPopup();
-      handleEditPopup();
-    },
-    onError: (err) => {
-      if (err.response) {
-        const errorData = err.response.data;
-        console.error('서버 에러 메세지', errorData.message);
-      } else {
-        console.error('error :', err.message);
-      }
+      handleConfirmPopup(false);
+      handleEditPopup(false);
     },
   });
 };

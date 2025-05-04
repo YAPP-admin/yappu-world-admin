@@ -29,7 +29,7 @@ const ConfirmPopup: FC<Props> = (props) => {
 
   return (
     <PopupContainer onClose={onCancelAction}>
-      <Container>
+      <Container onClick={(e) => e.stopPropagation()}>
         <Contents>
           <Typography
             style={{ color: theme.colors.label.normal }}

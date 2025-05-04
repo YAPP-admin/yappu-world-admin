@@ -24,6 +24,10 @@ export interface MemberCodeReq {
   code: string;
 }
 
+export interface DeleteMemberCodeReq {
+  role: RoleName;
+}
+
 // 가입신청 거절
 export interface ApplicationRejectReq {
   applicationIds: string[];
@@ -78,4 +82,9 @@ export interface ApplicationDetailRes {
   status: string;
   rejectReason: string | null;
   assignedRole: string | null;
+}
+
+export interface ReissueTokenReq {
+  accessToken: string;
+  refreshToken: string;
 }

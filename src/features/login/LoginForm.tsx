@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,17 +13,18 @@ import { useLoginMutation } from '@queries/auth/useLoginMutation';
 import { useUserProfileQuery } from '@queries/user/useUserProfileQuery';
 import { useAuthStore } from '@stores/authStore';
 import { ErrorResponse } from 'apis/common/types';
-import { LoginType } from 'types/formTypes';
+import { LoginFormSchema, LoginFormType } from 'schema/LoginFormSchema';
 import { showErrorToast } from 'types/showErrorToast';
 
 const LoginForm: FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { isValid, isSubmitting, errors },
+    formState: { isSubmitting, errors },
     setError,
     watch,
-  } = useForm<LoginType>({
+  } = useForm<LoginFormType>({
+    resolver: zodResolver(LoginFormSchema),
     mode: 'onChange',
   });
 
@@ -32,7 +34,7 @@ const LoginForm: FC = () => {
   const navigate = useNavigate();
   const { refetch } = useUserProfileQuery();
 
-  const onSubmit = async (data: LoginType) => {
+  const onSubmit = async (data: LoginFormType) => {
     try {
       const loginRes = await mutateAsync(data);
       setToken(loginRes.data.data);
@@ -69,19 +71,10 @@ const LoginForm: FC = () => {
       <InputArea>
         <FlexBox direction="column" gap={5}>
           <TextInput
-            {...register('email', {
-              required: true,
-            })}
+            {...register('email')}
             autoComplete="on"
             placeholder="이메일을 입력해주세요."
             title="이메일"
-            state={
-              errors.email && !!watch('email')
-                ? 'error'
-                : watch('email')
-                  ? 'success'
-                  : 'default'
-            }
           />
           {errors.email && !!watch('email') && (
             <Typography color="status-negative" variant="caption1Regular">
@@ -91,21 +84,12 @@ const LoginForm: FC = () => {
         </FlexBox>
         <FlexBox direction="column" gap={5}>
           <TextInput
-            {...register('password', {
-              required: true,
-            })}
+            {...register('password')}
             isShow
             autoComplete="on"
             placeholder="비밀번호를 입력해주세요."
             title="비밀번호"
             type="password"
-            state={
-              errors.email && !!watch('password')
-                ? 'error'
-                : watch('password')
-                  ? 'success'
-                  : 'default'
-            }
           />
           {errors.password && (
             <Typography color="status-negative" variant="caption1Regular">
@@ -115,11 +99,7 @@ const LoginForm: FC = () => {
         </FlexBox>
       </InputArea>
 
-      <SolidButton
-        disabled={!isValid || isSubmitting}
-        size="xlarge"
-        type="submit"
-      >
+      <SolidButton disabled={isSubmitting} size="xlarge" type="submit">
         로그인
       </SolidButton>
     </Wrapper>

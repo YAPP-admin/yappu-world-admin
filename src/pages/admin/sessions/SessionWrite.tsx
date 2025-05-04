@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FC } from 'react';
@@ -24,11 +25,13 @@ import { useGenerationListQuery } from '@queries/operation/useGenerationListQuer
 import { useSessionMutation } from '@queries/session/useSessionMutation';
 import { useSessionStore } from '@stores/sessionStore';
 import { SesseionReq } from 'apis/session/types';
-import { AddSessionType } from 'types/formTypes';
+import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 
 const SessionWrite: FC = () => {
   const { data: generationList } = useGenerationListQuery(1);
-  const method = useForm<AddSessionType>();
+  const method = useForm<SessionFormType>({
+    resolver: zodResolver(SessionFormSchema),
+  });
   const { mutateAsync } = useSessionMutation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -43,7 +46,7 @@ const SessionWrite: FC = () => {
       value: el.generation?.toString(),
     })) ?? [];
 
-  const onSumbit = async (data: AddSessionType) => {
+  const onSumbit = async (data: SessionFormType) => {
     try {
       const req: SesseionReq = {
         ...data,
@@ -79,128 +82,183 @@ const SessionWrite: FC = () => {
           <FlexBox direction="column" gap={24}>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
               <Typography variant="body1Normal">제목</Typography>
-              <TextInput {...method.register('name')} />
+              <FlexBox direction="column">
+                <TextInput {...method.register('name')} />
+                {method.formState.errors.name && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.name.message}
+                  </Typography>
+                )}
+              </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
               <Typography variant="body1Normal">시작 날짜</Typography>
-              <FlexBox gap={20}>
-                <Calendar name="date" />
+              <FlexBox direction="column">
+                <FlexBox gap={20}>
+                  <Calendar name="date" />
+                  <Controller
+                    control={method.control}
+                    name="time"
+                    render={({ field }) => {
+                      const [hour, minute] = field.value?.split(':') ?? [
+                        '',
+                        '',
+                      ];
 
-                <Controller
-                  control={method.control}
-                  name="time"
-                  render={({ field }) => {
-                    const [hour, minute] = field.value?.split(':') ?? [
-                      '00',
-                      '00',
-                    ];
-
-                    return (
-                      <FlexBox gap={8}>
-                        <Select
-                          optionList={hourOptions}
-                          selectedValue={hour}
-                          onChange={(selectedHour) => {
-                            const newTime = `${selectedHour}:${minute}:00`;
-                            field.onChange(newTime);
-                          }}
-                        />
-                        <Select
-                          optionList={minuteOptions}
-                          selectedValue={minute}
-                          onChange={(selectedMinute) => {
-                            const newTime = `${hour}:${selectedMinute}:00`;
-                            field.onChange(newTime);
-                          }}
-                        />
-                      </FlexBox>
-                    );
-                  }}
-                />
+                      return (
+                        <FlexBox gap={8}>
+                          <Select
+                            optionList={hourOptions}
+                            selectedValue={hour ?? '-'}
+                            width="130px"
+                            onChange={(selectedHour) => {
+                              const newTime = `${selectedHour}:${minute}:00`;
+                              field.onChange(newTime);
+                            }}
+                          />
+                          <Select
+                            optionList={minuteOptions}
+                            selectedValue={minute}
+                            width="130px"
+                            onChange={(selectedMinute) => {
+                              const newTime = `${hour}:${selectedMinute}:00`;
+                              field.onChange(newTime);
+                            }}
+                          />
+                        </FlexBox>
+                      );
+                    }}
+                  />
+                </FlexBox>
+                {(method.formState.errors.date?.message ||
+                  method.formState.errors.time?.message) && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.date?.message ??
+                      method.formState.errors.time?.message}
+                  </Typography>
+                )}
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
               <Typography variant="body1Normal">종료 날짜</Typography>
-              <FlexBox gap={20}>
-                <Calendar name="endDate" />
-                <Controller
-                  control={method.control}
-                  name="endTime"
-                  render={({ field }) => {
-                    const [hour, minute] = field.value?.split(':') ?? [
-                      '00',
-                      '00',
-                    ];
+              <FlexBox direction="column">
+                <FlexBox gap={20}>
+                  <Calendar name="endDate" />
+                  <Controller
+                    control={method.control}
+                    name="endTime"
+                    render={({ field }) => {
+                      const [hour, minute] = field.value?.split(':') ?? [
+                        '',
+                        '',
+                      ];
 
-                    return (
-                      <FlexBox gap={8}>
-                        <Select
-                          optionList={hourOptions}
-                          selectedValue={hour}
-                          onChange={(selectedHour) => {
-                            const newTime = `${selectedHour}:${minute}:00`;
-                            field.onChange(newTime);
-                          }}
-                        />
-                        <Select
-                          optionList={minuteOptions}
-                          selectedValue={minute}
-                          onChange={(selectedMinute) => {
-                            const newTime = `${hour}:${selectedMinute}:00`;
-                            field.onChange(newTime);
-                          }}
-                        />
-                      </FlexBox>
-                    );
-                  }}
-                />
+                      return (
+                        <FlexBox gap={8}>
+                          <Select
+                            optionList={hourOptions}
+                            selectedValue={hour}
+                            width="130px"
+                            onChange={(selectedHour) => {
+                              const newTime = `${selectedHour}:${minute}:00`;
+                              field.onChange(newTime);
+                            }}
+                          />
+                          <Select
+                            optionList={minuteOptions}
+                            selectedValue={minute}
+                            width="130px"
+                            onChange={(selectedMinute) => {
+                              const newTime = `${hour}:${selectedMinute}:00`;
+                              field.onChange(newTime);
+                            }}
+                          />
+                        </FlexBox>
+                      );
+                    }}
+                  />
+                </FlexBox>
+                {(method.formState.errors.endDate?.message ||
+                  method.formState.errors.endTime?.message) && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.endDate?.message ??
+                      method.formState.errors.endTime?.message}
+                  </Typography>
+                )}
               </FlexBox>
             </GridBox>
             <FlexBox gap={90}>
               <GridBox align="center" columns="79px 1fr" gap={16}>
                 <Typography variant="body1Normal">기수</Typography>
-                <Controller
-                  control={method.control}
-                  name="generation"
-                  render={({ field }) => (
-                    <Select
-                      optionList={optionList}
-                      size="large"
-                      width="191px"
-                      selectedValue={
-                        optionList.find(
-                          (item) => item.value === field.value?.toString(),
-                        )?.value ?? ''
-                      }
-                      onChange={field.onChange}
-                    />
+                <FlexBox direction="column">
+                  <Controller
+                    control={method.control}
+                    name="generation"
+                    render={({ field }) => (
+                      <Select
+                        optionList={optionList}
+                        size="large"
+                        width="191px"
+                        selectedValue={
+                          optionList.find(
+                            (item) => item.value === field.value?.toString(),
+                          )?.value ?? ''
+                        }
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                  {method.formState.errors.generation && (
+                    <Typography
+                      color="status-negative"
+                      variant="caption1Regular"
+                    >
+                      {method.formState.errors.generation.message}
+                    </Typography>
                   )}
-                />
+                </FlexBox>
               </GridBox>
               <GridBox align="center" columns="79px 1fr" gap={16}>
                 <Typography variant="body1Normal">세션 타입</Typography>
-                <Controller
-                  control={method.control}
-                  name="sessionType"
-                  render={({ field }) => (
-                    <Select
-                      optionList={sessionTypeList}
-                      size="large"
-                      width="191px"
-                      selectedValue={
-                        sessionTypeList.find(
-                          (item) => item.value === field.value,
-                        )?.value ?? ''
-                      }
-                      onChange={field.onChange}
-                    />
+                <FlexBox direction="column">
+                  <Controller
+                    control={method.control}
+                    name="sessionType"
+                    render={({ field }) => (
+                      <Select
+                        optionList={sessionTypeList}
+                        size="large"
+                        width="191px"
+                        selectedValue={
+                          sessionTypeList.find(
+                            (item) => item.value === field.value,
+                          )?.value ?? ''
+                        }
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                  {method.formState.errors.sessionType && (
+                    <Typography
+                      color="status-negative"
+                      variant="caption1Regular"
+                    >
+                      {method.formState.errors.sessionType.message}
+                    </Typography>
                   )}
-                />
+                </FlexBox>
               </GridBox>
             </FlexBox>
             <GridBox fullWidth columns="79px 1fr" gap={16}>
               <Typography variant="body1Normal">장소</Typography>
-              <TextInput {...method.register('place')} />
+              <FlexBox direction="column">
+                <TextInput {...method.register('place')} />
+                {method.formState.errors.place && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.place.message}
+                  </Typography>
+                )}
+              </FlexBox>
             </GridBox>
           </FlexBox>
 

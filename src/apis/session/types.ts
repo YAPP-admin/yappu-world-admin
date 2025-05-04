@@ -46,6 +46,7 @@ export interface SessionDetailRes {
   generation: number;
   place: string;
   date: string;
+  endDate: string;
   time: string;
   endTime: string;
   sessionType: SessionType;

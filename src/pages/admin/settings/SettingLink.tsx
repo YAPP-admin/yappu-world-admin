@@ -77,9 +77,16 @@ const SettingLink: FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell justifyContent="flex-start">
-                    <Typography color="label-normal" variant="body1Normal">
-                      {link.value}
-                    </Typography>
+                    <a
+                      href={link.value}
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                      target="_blank"
+                    >
+                      <Typography color="label-normal" variant="body1Normal">
+                        {link.value}
+                      </Typography>
+                    </a>
                   </TableCell>
                   <TableCell justifyContent="center">
                     <TextButton onClick={() => onClickToEdit(link)}>

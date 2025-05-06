@@ -36,10 +36,6 @@ const SessionList: FC = () => {
     setPage,
     selectedIndexes,
     setSelectedIndexes,
-    editCompletePopup,
-    setEditCompletePopup,
-    addCompletePopup,
-    setAddCompletePopup,
     isDeletePopup,
     setIsDeletePopup,
     isDeleteCompletePopup,
@@ -84,6 +80,7 @@ const SessionList: FC = () => {
     try {
       await mutateAsync({ ids: selectedIndexes });
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
+      setIsDeletePopup(false);
       setIsDeleteCompletePopup(true);
       setSelectedIndexes([]);
     } catch (err) {
@@ -231,20 +228,6 @@ const SessionList: FC = () => {
             onPageChange={setPage}
           />
         </Wrapper>
-        {editCompletePopup && (
-          <CompletePopup
-            comment="세션이 정상적으로 수정 되었습니다."
-            title="세션 수정 완료"
-            onClose={() => setEditCompletePopup(false)}
-          />
-        )}
-        {addCompletePopup && (
-          <CompletePopup
-            comment="세션이 정상적으로 추가 되었습니다."
-            title="세션 추가 완료"
-            onClose={() => setAddCompletePopup(false)}
-          />
-        )}
         {isDeletePopup && (
           <ConfirmPopup
             comment={`선택하신 ${selectedIndexes.length}개의 세션을 삭제하시겠습니까?`}

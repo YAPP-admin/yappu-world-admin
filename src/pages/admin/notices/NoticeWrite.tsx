@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC } from 'react';
 import { Control, Controller, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -16,8 +18,11 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { noticeOptionList } from '@constants/optionList';
 import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
+import { useNoticeStore } from '@stores/noticeStore';
+import { ErrorResponse } from 'apis/common/types';
 import { BaseNoticeReq } from 'apis/notice/types';
 import { BaseNoticeType } from 'types/formTypes';
+import { showErrorToast } from 'types/showErrorToast';
 
 const NoticeWrite: FC = () => {
   const navigate = useNavigate();
@@ -29,21 +34,37 @@ const NoticeWrite: FC = () => {
       plainContent: '',
     },
   });
-  const { mutate } = useNewNoticeMutation();
-
+  const { mutateAsync } = useNewNoticeMutation();
+  const queryClient = useQueryClient();
   const onClickBack = () => {
     navigate('/admin/notices');
   };
+  const setIsAddNoticeComplete = useNoticeStore(
+    (state) => state.setIsAddNoticeComplete,
+  );
 
-  const onSumbit = (data: BaseNoticeType) => {
+  const onSumbit = async (data: BaseNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
       /[\x00-\x1F\x7F]/g,
       '',
     );
     const newData = { ...data, plainContent: plainText };
-    mutate(newData);
-    navigate('/admin/notices');
+    try {
+      const req: BaseNoticeReq = newData;
+      const res = await mutateAsync(req);
+      const location = res.headers['location'];
+      const id = location?.split('/').pop();
+      setIsAddNoticeComplete(true);
+      queryClient.invalidateQueries({ queryKey: ['notice-detail', id] });
+      navigate(`/admin/notices/detail/${id}`);
+    } catch (err) {
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
+      }
+    }
   };
 
   return (

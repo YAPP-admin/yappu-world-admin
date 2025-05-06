@@ -18,6 +18,7 @@ const StyledTable = styled.table`
   th,
   td {
     min-width: 100px;
+    max-width: 100px;
     width: 100px;
     box-sizing: border-box;
   }
@@ -27,6 +28,15 @@ const StyledTable = styled.table`
     border-top: 1px solid #aeb0b6;
     z-index: 2;
     position: sticky;
+  }
+
+  td {
+    padding: 4px 12px;
+    border-bottom: 1px solid #e1e2e4;
+  }
+
+  td:not(:last-child) {
+    border-right: 1px solid #e1e2e4;
   }
 
   th.sticky-col-1 {

@@ -1,0 +1,66 @@
+import { FC } from 'react';
+
+import Typography from '@compnents/commons/Typography';
+import Table from '@compnents/table/Table';
+import TableCell from '@compnents/table/TableCell';
+import TableHead from '@compnents/table/TableHead';
+import TableRow from '@compnents/table/TableRow';
+import { AttendanceSession, AttendanceUser } from 'apis/attendance/types';
+
+interface Props {
+  sessions: AttendanceSession[] | undefined;
+  users: AttendanceUser[] | undefined;
+}
+
+const SummaryTable: FC<Props> = ({ sessions, users }) => {
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell as="th" className="sticky-col-1">
+            <Typography variant="body1Normal">총 인원</Typography>
+          </TableCell>
+          <TableCell className="sticky-col-2">
+            <Typography variant="body1Normal">출석</Typography>
+          </TableCell>
+          {sessions?.map((s) => (
+            <TableCell key={s.sessionId}>
+              <Typography variant="body1Normal">
+                {s.totalOnTimeCount}
+              </Typography>
+            </TableCell>
+          ))}
+        </TableRow>
+        <TableRow>
+          <TableCell as="th" className="sticky-col-1">
+            <Typography variant="body1Normal">{users?.length}</Typography>
+          </TableCell>
+          <TableCell className="sticky-col-2">
+            <Typography variant="body1Normal">지각</Typography>
+          </TableCell>
+          {sessions?.map((s) => (
+            <TableCell key={s.sessionId}>
+              <Typography variant="body1Normal">{s.totalLateCount}</Typography>
+            </TableCell>
+          ))}
+        </TableRow>
+        <TableRow>
+          <TableCell as="th" className="sticky-col-1" />
+          <TableCell className="sticky-col-2">
+            <Typography variant="body1Normal">결석</Typography>
+          </TableCell>
+          {sessions?.map((s) => (
+            <TableCell key={s.sessionId}>
+              <Typography variant="body1Normal">
+                {s.totalAbsentCount}
+              </Typography>
+            </TableCell>
+          ))}
+        </TableRow>
+        {/* 기타 등등 */}
+      </TableHead>
+    </Table>
+  );
+};
+
+export default SummaryTable;

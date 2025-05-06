@@ -5,13 +5,13 @@ interface Props {
   children: React.ReactNode;
 }
 
-const StyledTable: FC<Props> = ({ children }) => {
-  return <Table>{children}</Table>;
+const Table: FC<Props> = ({ children }) => {
+  return <StyledTable>{children}</StyledTable>;
 };
 
-export default StyledTable;
+export default Table;
 
-const Table = styled.table`
+const StyledTable = styled.table`
   width: 100%;
   border-spacing: 0;
 

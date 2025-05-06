@@ -14,7 +14,7 @@ import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import Pagination from '@compnents/table/Pagination';
-import StyledTable from '@compnents/table/Table';
+import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
@@ -118,7 +118,7 @@ const NoticeList: FC = () => {
                 </OutlinedButton>
               </FlexBox>
             </FlexBox>
-            <StyledTable>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell as="th">
@@ -193,7 +193,7 @@ const NoticeList: FC = () => {
                   );
                 })}
               </TableBody>
-            </StyledTable>
+            </Table>
           </FlexBox>
           <Pagination
             currentPage={page}

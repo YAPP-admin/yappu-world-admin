@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
-import StyledTable from '@compnents/table/Table';
+import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
@@ -49,7 +49,7 @@ const MemberCode: FC = () => {
               {data?.codes.length}개
             </Typography>
           </TitleWrapper>
-          <StyledTable>
+          <Table>
             <TableHead>
               <TableRow>
                 {tableHeaders.map((el) => (
@@ -90,7 +90,7 @@ const MemberCode: FC = () => {
                 </TableRow>
               ))}
             </TableBody>
-          </StyledTable>
+          </Table>
         </Wrapper>
       </Container>
       {editPopupOpen && (

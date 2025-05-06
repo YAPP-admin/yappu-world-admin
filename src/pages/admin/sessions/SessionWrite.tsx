@@ -55,10 +55,12 @@ const SessionWrite: FC = () => {
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
       };
-      await mutateAsync(req);
+      const res = await mutateAsync(req);
+      const location = res.headers['location'];
+      const id = location?.split('/').pop();
       setAddCompletePopup(true);
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
-      navigate('/admin/sessions');
+      navigate(`/admin/sessions/detail/${id}`);
     } catch (err) {
       console.log('err :', err);
     }

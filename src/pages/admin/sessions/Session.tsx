@@ -22,6 +22,10 @@ const Session: FC = () => {
   const setEditCompletePopup = useSessionStore(
     (state) => state.setEditCompletePopup,
   );
+  const addCompletePopup = useSessionStore((state) => state.addCompletePopup);
+  const setAddCompletePopup = useSessionStore(
+    (state) => state.setAddCompletePopup,
+  );
   const editCompletePopup = useSessionStore((state) => state.editCompletePopup);
   useEffect(() => {
     if (isError) {
@@ -56,6 +60,13 @@ const Session: FC = () => {
           comment="세션이 정상적으로 수정 되었습니다."
           title="세션 수정 완료"
           onClose={() => setEditCompletePopup(false)}
+        />
+      )}
+      {addCompletePopup && (
+        <CompletePopup
+          comment="세션이 정상적으로 추가 되었습니다."
+          title="세션 추가 완료"
+          onClose={() => setAddCompletePopup(false)}
         />
       )}
     </Container>

@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 import axiosInstance from 'apis/common/axiosInstance';
 import {
   ApiResponse,
@@ -23,7 +25,7 @@ export const putSession = (data: EditSessionReq): Promise<void> => {
   return axiosInstance.put('/admin/v1/sessions', data);
 };
 
-export const postSession = (data: SesseionReq): Promise<void> => {
+export const postSession = (data: SesseionReq): Promise<AxiosResponse> => {
   return axiosInstance.post('/admin/v1/sessions', data);
 };
 

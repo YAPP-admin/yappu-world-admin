@@ -10,6 +10,8 @@ import SolidButton from '@compnents/Button/SolidButton';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { userRoleOptionList } from '@constants/optionList';
 import { useUserDetailMutation } from '@queries/user/useUserDetailMutation';
+import { useUserProfileQuery } from '@queries/user/useUserProfileQuery';
+import { useAuthStore } from '@stores/authStore';
 import { ErrorResponse } from 'apis/common/types';
 import { RoleLabel, UserDetailReq, UserDetailRes } from 'apis/user/types';
 import { MemberFormSchema, MemberFormType } from 'schema/MemberFormSchema';
@@ -31,6 +33,8 @@ const MemberForm: FC<Props> = (props) => {
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useUserDetailMutation();
+  const { refetch } = useUserProfileQuery();
+  const setUserProfile = useAuthStore((state) => state.setUserProfile);
 
   const method = useForm<MemberFormType>({
     resolver: zodResolver(MemberFormSchema),
@@ -91,6 +95,10 @@ const MemberForm: FC<Props> = (props) => {
       queryClient.invalidateQueries({
         queryKey: ['user-detail', userInfo?.id],
       });
+      const { data: profileData } = await refetch();
+      if (profileData) {
+        setUserProfile(profileData);
+      }
     } catch (error) {
       if (isAxiosError<ErrorResponse>(error)) {
         showErrorToast(

@@ -1,3 +1,5 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { FC } from 'react';
 import { Control, Controller, useForm, useWatch } from 'react-hook-form';
 import removeMarkdown from 'remove-markdown';
@@ -13,8 +15,11 @@ import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
 import { noticeOptionList } from '@constants/optionList';
 import { useEditNoticeMutation } from '@queries/notice/useEditNoticeMutation';
+import { useNoticeStore } from '@stores/noticeStore';
+import { ErrorResponse } from 'apis/common/types';
 import { EditNoticeReq, NoticeDetailRes } from 'apis/notice/types';
 import { EditNoticeType } from 'types/formTypes';
+import { showErrorToast } from 'types/showErrorToast';
 
 interface Props {
   handleEdit: () => void;
@@ -31,16 +36,31 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
       plainContent: '',
     },
   });
-  const { mutate } = useEditNoticeMutation();
+  const { mutateAsync } = useEditNoticeMutation();
+  const setIsEditPopup = useNoticeStore((state) => state.setIsEditPopup);
+  const queryClient = useQueryClient();
 
-  const onSumbit = (data: EditNoticeType) => {
+  const onSumbit = async (data: EditNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
       /[\x00-\x1F\x7F]/g,
       '',
     );
     const newData = { ...data, plainContent: plainText };
-    mutate(newData);
+
+    try {
+      const req: EditNoticeReq = newData;
+      await mutateAsync(req);
+      setIsEditPopup(true);
+      queryClient.invalidateQueries({ queryKey: ['notice-detail', data.id] });
+      handleEdit();
+    } catch (err) {
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
+      }
+    }
   };
 
   return (

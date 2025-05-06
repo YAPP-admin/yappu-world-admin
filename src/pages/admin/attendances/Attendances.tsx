@@ -1,6 +1,3 @@
-import { FC, useMemo } from 'react';
-import styled from 'styled-components';
-
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
@@ -8,6 +5,8 @@ import { useAttendancesQuery } from '@queries/attendance/useAttendancesQuery';
 import { AttendanceStatusType } from 'apis/attendance/types';
 import AttandanceTable from 'features/attendance/AttendanceTable';
 import SummaryTable from 'features/attendance/SummaryTable';
+import { FC, useMemo } from 'react';
+import styled from 'styled-components';
 
 const Attendances: FC = () => {
   const { data } = useAttendancesQuery();
@@ -31,7 +30,7 @@ const Attendances: FC = () => {
   return (
     <Container>
       <FlexBox justify="space-between" width="100%">
-        <Typography variant="title2Bold">출석관리</Typography>
+        <Typography variant="title2Bold">출석관리 (26기)</Typography>
         <SolidButton size="medium" variant="primary">
           일괄변경
         </SolidButton>

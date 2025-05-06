@@ -46,3 +46,11 @@ export const minuteOptions: OptionType[] = Array.from({ length: 6 }, (_, i) => {
     value: minute,
   };
 });
+
+export const attendanceOptions = [
+  { label: '출석', value: 'ON_TIME' },
+  { label: '지각', value: 'LATE' },
+  { label: '결석', value: 'ABSENT' },
+  { label: '조퇴', value: 'EARLY_CHECK_OUT' },
+  { label: '공결', value: 'EXCUSED_ABSENCE' },
+] as const;

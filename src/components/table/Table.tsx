@@ -18,15 +18,13 @@ const StyledTable = styled.table`
   th,
   td {
     min-width: 100px;
-    max-width: 100px;
-    width: 100px;
+    max-width: 130px;
     box-sizing: border-box;
   }
 
   th {
     background-color: rgba(112, 115, 124, 0.08);
     border-top: 1px solid #aeb0b6;
-    z-index: 2;
     position: sticky;
   }
 
@@ -42,14 +40,14 @@ const StyledTable = styled.table`
   th.sticky-col-1 {
     position: sticky;
     left: 0;
-    z-index: 3;
+    z-index: 1;
     background: #f3f4f6 !important;
   }
 
   th.sticky-col-2 {
     position: sticky;
     left: 100px;
-    z-index: 3;
+    z-index: 1;
     background: #f3f4f6 !important;
   }
 

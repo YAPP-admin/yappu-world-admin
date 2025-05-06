@@ -1,12 +1,14 @@
 import dayjs from 'dayjs';
 import { FC } from 'react';
 
+import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { getChipColor } from '@utils/getChipColor';
 import {
   AttendanceSession,
   AttendanceStatusType,
@@ -86,7 +88,16 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
             {sessions?.map((session) => {
               if (!sessionMap) return <td key={session.sessionId}>-</td>;
               const status = sessionMap[session.sessionId]?.[user.userId] ?? '';
-              return <td key={session.sessionId}>{status}</td>;
+              return (
+                <TableCell key={session.sessionId}>
+                  <Chip
+                    color={getChipColor(status).color}
+                    size="large"
+                    text={status}
+                    variant={getChipColor(status).variant}
+                  />
+                </TableCell>
+              );
             })}
             <TableCell>
               <Typography variant="body1Normal">{user.lateCount}</Typography>

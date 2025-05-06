@@ -26,14 +26,14 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
             <Typography variant="body1Normal">출석</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId} style={commonStyle}>
+            <TableCell key={s.sessionId} max style={commonStyle}>
               <Typography variant="body1Normal">
                 {s.totalOnTimeCount}
               </Typography>
             </TableCell>
           ))}
           {[...Array(6)].map((_, i) => (
-            <TableCell key={`empty-ontime-${i}`} style={commonStyle} />
+            <TableCell key={`empty-ontime-${i}`} max style={commonStyle} />
           ))}
         </TableRow>
         <TableRow>
@@ -44,12 +44,12 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
             <Typography variant="body1Normal">지각</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId}>
+            <TableCell key={s.sessionId} max>
               <Typography variant="body1Normal">{s.totalLateCount}</Typography>
             </TableCell>
           ))}
           {[...Array(6)].map((_, i) => (
-            <TableCell key={`empty-ontime-${i}`} />
+            <TableCell key={`empty-ontime-${i}`} max />
           ))}
         </TableRow>
         <TableRow>
@@ -58,14 +58,14 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
             <Typography variant="body1Normal">결석</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId}>
+            <TableCell key={s.sessionId} max>
               <Typography variant="body1Normal">
                 {s.totalAbsentCount}
               </Typography>
             </TableCell>
           ))}
           {[...Array(6)].map((_, i) => (
-            <TableCell key={`empty-ontime-${i}`} />
+            <TableCell key={`empty-ontime-${i}`} max />
           ))}
         </TableRow>
       </TableHead>

@@ -15,13 +15,6 @@ const StyledTable = styled.table`
   width: 100%;
   border-spacing: 0;
 
-  th,
-  td {
-    min-width: 100px;
-    max-width: 130px;
-    box-sizing: border-box;
-  }
-
   th {
     background-color: rgba(112, 115, 124, 0.08);
     border-top: 1px solid #aeb0b6;

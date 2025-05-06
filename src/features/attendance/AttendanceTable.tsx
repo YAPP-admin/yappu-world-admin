@@ -31,18 +31,18 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
           <TableCell as="th" className="sticky-col-1" />
           <TableCell as="th" className="sticky-col-2" />
           {sessions?.map((el) => (
-            <TableCell key={el.sessionId} as="th">
+            <TableCell key={el.sessionId} max as="th">
               <Typography variant="body1Normal">
                 {dayjs(el.startDate).format('YYYY.MM.DD')}
               </Typography>
             </TableCell>
           ))}
-          <TableCell as="th" />
-          <TableCell as="th" />
-          <TableCell as="th" />
-          <TableCell as="th" />
-          <TableCell as="th" />
-          <TableCell as="th" />
+          <TableCell max as="th" />
+          <TableCell max as="th" />
+          <TableCell max as="th" />
+          <TableCell max as="th" />
+          <TableCell max as="th" />
+          <TableCell max as="th" />
         </TableRow>
         <TableRow>
           <TableCell as="th" className="sticky-col-1">
@@ -52,26 +52,28 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
             <Typography variant="body1Normal">총점</Typography>
           </TableCell>
           {sessions?.map((el) => (
-            <TableCell key={el.sessionId} as="th">
-              <Typography variant="body1Normal">{el.name}</Typography>
+            <TableCell key={el.sessionId} max as="th">
+              <Typography ellipsis variant="body1Normal">
+                {el.name}
+              </Typography>
             </TableCell>
           ))}
-          <TableCell as="th">
+          <TableCell max as="th">
             <Typography variant="body1Normal">지각</Typography>
           </TableCell>
-          <TableCell as="th">
+          <TableCell max as="th">
             <Typography variant="body1Normal">조퇴</Typography>
           </TableCell>
-          <TableCell as="th">
+          <TableCell max as="th">
             <Typography variant="body1Normal">지각면제권</Typography>
           </TableCell>
-          <TableCell as="th">
+          <TableCell max as="th">
             <Typography variant="body1Normal">결석</Typography>
           </TableCell>
-          <TableCell as="th">
+          <TableCell max as="th">
             <Typography variant="body1Normal">감점</Typography>
           </TableCell>
-          <TableCell as="th">
+          <TableCell max as="th">
             <Typography variant="body1Normal">가점</Typography>
           </TableCell>
         </TableRow>
@@ -89,7 +91,7 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
               if (!sessionMap) return <td key={session.sessionId}>-</td>;
               const status = sessionMap[session.sessionId]?.[user.userId] ?? '';
               return (
-                <TableCell key={session.sessionId}>
+                <TableCell key={session.sessionId} max>
                   <Chip
                     color={getChipColor(status).color}
                     size="large"
@@ -99,26 +101,26 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
                 </TableCell>
               );
             })}
-            <TableCell>
+            <TableCell max>
               <Typography variant="body1Normal">{user.lateCount}</Typography>
             </TableCell>
-            <TableCell>
+            <TableCell max>
               <Typography variant="body1Normal">
                 {user.earlyCheckOutCount}
               </Typography>
             </TableCell>
-            <TableCell>
+            <TableCell max>
               <Typography variant="body1Normal">
                 {user.latePassCount}
               </Typography>
             </TableCell>
-            <TableCell>
+            <TableCell max>
               <Typography variant="body1Normal">{user.absentCount}</Typography>
             </TableCell>
-            <TableCell>
+            <TableCell max>
               <Typography variant="body1Normal">{user.penaltyPoint}</Typography>
             </TableCell>
-            <TableCell>
+            <TableCell max>
               <Typography variant="body1Normal">{user.bonusPoint}</Typography>
             </TableCell>
           </TableRow>

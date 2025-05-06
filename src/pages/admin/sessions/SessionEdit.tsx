@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -47,10 +47,10 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   });
   const { data: generationList } = useGenerationListQuery(1);
   const { mutateAsync } = useEditSessionMutation();
-  const navigate = useNavigate();
   const setEditCompletePopup = useSessionStore(
     (state) => state.setEditCompletePopup,
   );
+  const queryClient = useQueryClient();
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -70,7 +70,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       };
       await mutateAsync(req);
       setEditCompletePopup(true);
-      navigate('/admin/sessions');
+      queryClient.invalidateQueries({ queryKey: ['session-detail', data.id] });
+      handleEdit();
     } catch (err) {
       if (isAxiosError<ErrorResponse>(err)) {
         showErrorToast(

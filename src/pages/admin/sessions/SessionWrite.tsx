@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -24,8 +25,10 @@ import {
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useSessionMutation } from '@queries/session/useSessionMutation';
 import { useSessionStore } from '@stores/sessionStore';
+import { ErrorResponse } from 'apis/common/types';
 import { SesseionReq } from 'apis/session/types';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
+import { showErrorToast } from 'types/showErrorToast';
 
 const SessionWrite: FC = () => {
   const { data: generationList } = useGenerationListQuery(1);
@@ -62,7 +65,11 @@ const SessionWrite: FC = () => {
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
       navigate(`/admin/sessions/detail/${id}`);
     } catch (err) {
-      console.log('err :', err);
+      if (isAxiosError<ErrorResponse>(err)) {
+        showErrorToast(
+          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+        );
+      }
     }
   };
 

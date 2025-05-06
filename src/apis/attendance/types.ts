@@ -6,13 +6,19 @@ export interface AttendancesRes {
 
 export interface AttendanceSession {
   sessionId: string;
-  name: string;
+  name: string; // 세명
   startDate: string;
   startDayOfWeek: string;
   endDate: string;
   endDayOfWeek: string;
   startTime: string;
   endTime: string;
+  totalPersonCount: number; // 총인원
+  totalOnTimeCount: number; // 출석 인원
+  totalLateCount: number; // 지각 인원
+  totalAbsentCount: number; // 결석 인원
+  totalEarlyCheckOutCount: number; // 조퇴 인원
+  totalExcusedAbsenceCount: number; // 공결 인원
 }
 
 export type UserPositionType =
@@ -27,8 +33,17 @@ export type UserPositionType =
 
 export interface AttendanceUser {
   userId: string;
-  name: string;
+  name: string; // 유저명
   position: UserPositionType;
+  onTimeCount: number; // 출석 횟수
+  lateCount: number; // 지각 횟수
+  absentCount: number; // 결석 횟수
+  earlyCheckOutCount: number; // 조회 횟수
+  excusedAbsenceCount: number; // 공결 횟수
+  latePassCount: number; // 지각 면제권 개수
+  totalPoint: number; // 총점
+  penaltyPoint: number; // 감점
+  bonusPoint: number; // 가점
 }
 
 export interface AttendanceGroup {
@@ -40,5 +55,5 @@ export type AttendanceStatusType = '출석' | '지각' | '결석' | '조퇴' | '
 
 export interface AttendanceStatus {
   userId: string;
-  status: string;
+  status: AttendanceStatusType | null;
 }

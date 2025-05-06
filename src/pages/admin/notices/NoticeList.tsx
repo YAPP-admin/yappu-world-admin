@@ -33,8 +33,6 @@ const NoticeList: FC = () => {
     setIsDeletePopup,
     isDeleteCompletePopup,
     setIsDeleteCompletePopup,
-    isAddNoticeComplete,
-    setIsAddNoticeComplete,
     page,
     setPage,
   } = useNoticeStore();
@@ -216,13 +214,6 @@ const NoticeList: FC = () => {
           comment="삭제되었습니다."
           title="삭제 완료"
           onClose={() => setIsDeleteCompletePopup(false)}
-        />
-      )}
-      {isAddNoticeComplete && (
-        <CompletePopup
-          comment="작성하신 공지사항이 등록되었습니다."
-          title="등록 완료"
-          onClose={() => setIsAddNoticeComplete(false)}
         />
       )}
     </>

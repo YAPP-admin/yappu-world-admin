@@ -17,6 +17,12 @@ const Notice: FC = () => {
   const { data } = useNoticeDetailQuery(params?.id ?? '');
   const isEditPopup = useNoticeStore((state) => state.isEditPopup);
   const setIsEditPopup = useNoticeStore((state) => state.setIsEditPopup);
+  const isAddNoticeComplete = useNoticeStore(
+    (state) => state.isAddNoticeComplete,
+  );
+  const setIsAddNoticeComplete = useNoticeStore(
+    (state) => state.setIsAddNoticeComplete,
+  );
   const [isEdit, setIsEdit] = useState(false);
 
   const onClickBack = () => {
@@ -38,6 +44,13 @@ const Notice: FC = () => {
           comment="공지사항이 정상적으로 수정 되었습니다."
           title="공지사항 수정 완료"
           onClose={() => setIsEditPopup(false)}
+        />
+      )}
+      {isAddNoticeComplete && (
+        <CompletePopup
+          comment="공지사항이 정상적으로 추가 되었습니다."
+          title="공지사항 추가 완료"
+          onClose={() => setIsAddNoticeComplete(false)}
         />
       )}
     </Container>

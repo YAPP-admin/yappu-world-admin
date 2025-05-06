@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 import axiosInstance from 'apis/common/axiosInstance';
 import { ApiResponse, PaginatedApiResponse } from 'apis/common/types';
 
@@ -20,7 +22,7 @@ export const getAllNotice = (
   );
 };
 
-export const postNewNotice = (data: BaseNoticeReq): Promise<void> => {
+export const postNewNotice = (data: BaseNoticeReq): Promise<AxiosResponse> => {
   return axiosInstance.post('/admin/v1/notices', data);
 };
 

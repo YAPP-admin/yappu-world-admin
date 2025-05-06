@@ -4,7 +4,9 @@ import styled from 'styled-components';
 
 import ArrowLeft from '@assets/ArrowLeft';
 import IconButton from '@compnents/Button/IconButton';
+import CompletePopup from '@compnents/popup/CompletePopup';
 import { useNoticeDetailQuery } from '@queries/notice/useNoticeDetailQuery';
+import { useNoticeStore } from '@stores/noticeStore';
 
 import NoticeDetail from './NoticeDetail';
 import NoticeEdit from './NoticeEdit';
@@ -13,8 +15,10 @@ const Notice: FC = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { data } = useNoticeDetailQuery(params?.id ?? '');
-
+  const isEditPopup = useNoticeStore((state) => state.isEditPopup);
+  const setIsEditPopup = useNoticeStore((state) => state.setIsEditPopup);
   const [isEdit, setIsEdit] = useState(false);
+
   const onClickBack = () => {
     navigate('/admin/notices');
   };
@@ -28,6 +32,13 @@ const Notice: FC = () => {
         <NoticeEdit data={data} handleEdit={() => setIsEdit(false)} />
       ) : (
         <NoticeDetail data={data} handleEdit={() => setIsEdit(true)} />
+      )}
+      {isEditPopup && (
+        <CompletePopup
+          comment="공지사항이 정상적으로 수정 되었습니다."
+          title="공지사항 수정 완료"
+          onClose={() => setIsEditPopup(false)}
+        />
       )}
     </Container>
   );

@@ -5,6 +5,8 @@ interface NoticeState {
   setIsAddNoticeComplete: (value: boolean) => void;
   selectedIndexes: string[];
   setSelectedIndexes: (value: string[]) => void;
+  isEditPopup: boolean;
+  setIsEditPopup: (value: boolean) => void;
   isDeletePopup: boolean;
   setIsDeletePopup: (value: boolean) => void;
   isDeleteCompletePopup: boolean;
@@ -19,6 +21,8 @@ export const useNoticeStore = create<NoticeState>((set) => ({
     set({ isAddNoticeComplete: value }),
   selectedIndexes: [],
   setSelectedIndexes: (value: string[]) => set({ selectedIndexes: value }),
+  isEditPopup: false,
+  setIsEditPopup: (value: boolean) => set({ isEditPopup: value }),
   isDeletePopup: false,
   setIsDeletePopup: (value: boolean) => set({ isDeletePopup: value }),
   isDeleteCompletePopup: false,

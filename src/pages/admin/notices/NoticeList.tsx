@@ -204,9 +204,9 @@ const NoticeList: FC = () => {
       </Container>
       {isDeletePopup && (
         <ConfirmPopup
-          comment={`선택하신 ${selectedIndexes.length}개의 링크를 삭제하시겠습니까?`}
+          comment={`선택하신 ${selectedIndexes.length}개의 공지사항을 삭제하시겠습니까?`}
           confirmActionLabel="삭제"
-          title="링크 삭제"
+          title="공지사항 삭제"
           onCancelAction={() => setIsDeletePopup(false)}
           onConfirmAction={onClickToDelete}
         />

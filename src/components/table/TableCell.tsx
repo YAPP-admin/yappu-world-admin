@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 type AlignItems = 'flex-start' | 'flex-end' | 'center';
@@ -16,6 +16,7 @@ interface Props extends React.HTMLAttributes<HTMLTableCellElement> {
   alignItems?: AlignItems;
   justifyContent?: JustifyContent;
   children?: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const TableCell: FC<Props> = (props) => {
@@ -25,11 +26,12 @@ const TableCell: FC<Props> = (props) => {
     align = 'center',
     alignItems = 'center',
     justifyContent = 'center',
+    style,
     ...rest
   } = props;
 
   return (
-    <StyledTableCell {...rest} align={align} as={as}>
+    <StyledTableCell {...rest} align={align} as={as} style={style}>
       <Wrapper $alignItems={alignItems} $justifyContent={justifyContent}>
         {children}
       </Wrapper>

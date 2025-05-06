@@ -13,6 +13,8 @@ interface Props {
 }
 
 const SummaryTable: FC<Props> = ({ sessions, users }) => {
+  const commonStyle = { borderTop: '1px solid #e1e2e4' };
+
   return (
     <Table>
       <TableHead>
@@ -20,15 +22,18 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
           <TableCell as="th" className="sticky-col-1">
             <Typography variant="body1Normal">총 인원</Typography>
           </TableCell>
-          <TableCell className="sticky-col-2">
+          <TableCell className="sticky-col-2" style={commonStyle}>
             <Typography variant="body1Normal">출석</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId}>
+            <TableCell key={s.sessionId} style={commonStyle}>
               <Typography variant="body1Normal">
                 {s.totalOnTimeCount}
               </Typography>
             </TableCell>
+          ))}
+          {[...Array(6)].map((_, i) => (
+            <TableCell key={`empty-ontime-${i}`} style={commonStyle} />
           ))}
         </TableRow>
         <TableRow>
@@ -43,6 +48,9 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
               <Typography variant="body1Normal">{s.totalLateCount}</Typography>
             </TableCell>
           ))}
+          {[...Array(6)].map((_, i) => (
+            <TableCell key={`empty-ontime-${i}`} />
+          ))}
         </TableRow>
         <TableRow>
           <TableCell as="th" className="sticky-col-1" />
@@ -56,8 +64,10 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
               </Typography>
             </TableCell>
           ))}
+          {[...Array(6)].map((_, i) => (
+            <TableCell key={`empty-ontime-${i}`} />
+          ))}
         </TableRow>
-        {/* 기타 등등 */}
       </TableHead>
     </Table>
   );

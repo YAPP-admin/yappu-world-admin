@@ -11,7 +11,6 @@ import SummaryTable from 'features/attendance/SummaryTable';
 
 const Attendances: FC = () => {
   const { data } = useAttendancesQuery();
-  console.log('data :', data);
 
   const sessionMap = useMemo(() => {
     return data?.attendancesGroupedBySession.reduce(

@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -7,10 +7,12 @@ import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import { useAttendancesQuery } from '@queries/attendance/useAttendancesQuery';
 import { AttendanceStatusType } from 'apis/attendance/types';
-import AttandanceTable from 'features/attendance/AttendanceTable';
-import SummaryTable from 'features/attendance/SummaryTable';
+
+import AttendanceDetail from './AttendanceDetail';
+import AttendaceEdit from './AttendanceEdit';
 
 const Attendances: FC = () => {
+  const [isEdit, setIsEdit] = useState(false);
   const { data } = useAttendancesQuery();
 
   const sessionMap = useMemo(() => {
@@ -39,17 +41,41 @@ const Attendances: FC = () => {
             {data?.users.length}명
           </Typography>
         </FlexBox>
-        <OutlinedButton size="xsmall" variant="assistive">
-          수정
-        </OutlinedButton>
+        {isEdit ? (
+          <FlexBox gap={8} width="fit-content">
+            <OutlinedButton
+              size="xsmall"
+              variant="assistive"
+              onClick={() => setIsEdit(true)}
+            >
+              일괄수정
+            </OutlinedButton>
+            <SolidButton size="xsmall">저장</SolidButton>
+          </FlexBox>
+        ) : (
+          <OutlinedButton
+            size="xsmall"
+            variant="assistive"
+            onClick={() => setIsEdit(true)}
+          >
+            수정
+          </OutlinedButton>
+        )}
       </FlexBox>
       <Wrapper>
-        <AttandanceTable
-          sessionMap={sessionMap}
-          sessions={data?.sessions}
-          users={data?.users}
-        />
-        <SummaryTable sessions={data?.sessions} users={data?.users} />
+        {isEdit ? (
+          <AttendaceEdit
+            sessionMap={sessionMap}
+            sessions={data?.sessions}
+            users={data?.users}
+          />
+        ) : (
+          <AttendanceDetail
+            sessionMap={sessionMap}
+            sessions={data?.sessions}
+            users={data?.users}
+          />
+        )}
       </Wrapper>
     </Container>
   );

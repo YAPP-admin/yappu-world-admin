@@ -53,4 +53,4 @@ export const attendanceOptions = [
   { label: '결석', value: 'ABSENT' },
   { label: '조퇴', value: 'EARLY_CHECK_OUT' },
   { label: '공결', value: 'EXCUSED_ABSENCE' },
-] as const;
+];

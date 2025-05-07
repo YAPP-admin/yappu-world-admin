@@ -1,14 +1,12 @@
-import dayjs from 'dayjs';
 import { FC } from 'react';
 
-import Chip from '@compnents/commons/Chip';
+import Select from '@compnents/commons/Select';
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
-import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
-import { getChipColor } from '@utils/getChipColor';
+import { attendanceOptions } from '@constants/optionList';
 import {
   AttendanceSession,
   AttendanceStatusType,
@@ -25,7 +23,7 @@ interface Props {
     | undefined;
 }
 
-const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
+const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
   return (
     <Table>
       <AttendanceHeader sessions={sessions} />
@@ -39,15 +37,14 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
               <Typography variant="body1Normal">{user.totalPoint}</Typography>
             </TableCell>
             {sessions?.map((session) => {
-              if (!sessionMap) return <td key={session.sessionId}>-</td>;
+              if (!sessionMap)
+                return <TableCell key={session.sessionId}>-</TableCell>;
               const status = sessionMap[session.sessionId]?.[user.userId] ?? '';
               return (
                 <TableCell key={session.sessionId} max>
-                  <Chip
-                    color={getChipColor(status).color}
-                    size="large"
-                    text={status}
-                    variant={getChipColor(status).variant}
+                  <Select
+                    optionList={attendanceOptions}
+                    selectedValue={status}
                   />
                 </TableCell>
               );
@@ -81,4 +78,4 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
   );
 };
 
-export default AttandanceTable;
+export default AttendanceEditTable;

@@ -12,7 +12,7 @@ import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import Pagination from '@compnents/table/Pagination';
-import StyledTable from '@compnents/table/Table';
+import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
@@ -135,7 +135,7 @@ const MemberApplication: FC = () => {
                 </OutlinedButton>
               </FlexBox>
             </FlexBox>
-            <StyledTable>
+            <Table>
               <TableHead>
                 <TableRow>
                   <TableCell as="th">
@@ -225,7 +225,7 @@ const MemberApplication: FC = () => {
                   );
                 })}
               </TableBody>
-            </StyledTable>
+            </Table>
           </FlexBox>
           <Pagination
             currentPage={page}

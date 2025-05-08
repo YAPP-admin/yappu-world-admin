@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import TextButton from '@compnents/Button/TextButton';
 import Typography from '@compnents/commons/Typography';
 import CompletePopup from '@compnents/popup/CompletePopup';
-import StyledTable from '@compnents/table/Table';
+import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
@@ -50,7 +50,7 @@ const SettingLink: FC = () => {
               </Typography>
             </TitleWrapper>
           </TableHeader>
-          <StyledTable>
+          <Table>
             <TableHead>
               <TableRow>
                 {linkHeader.map((el) => (
@@ -96,7 +96,7 @@ const SettingLink: FC = () => {
                 </TableRow>
               ))}
             </TableBody>
-          </StyledTable>
+          </Table>
         </Wrapper>
       </Container>
       {isEditCompletePopupOpen && (

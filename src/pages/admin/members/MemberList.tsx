@@ -5,7 +5,7 @@ import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import Pagination from '@compnents/table/Pagination';
-import StyledTable from '@compnents/table/Table';
+import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
@@ -60,7 +60,7 @@ const MemberList: FC = () => {
                 </Typography>
               </FlexBox>
             </FlexBox>
-            <StyledTable>
+            <Table>
               <TableHead>
                 <TableRow>
                   {memberListHeader.map((col) => (
@@ -119,7 +119,7 @@ const MemberList: FC = () => {
                   </TableRow>
                 ))}
               </TableBody>
-            </StyledTable>
+            </Table>
           </FlexBox>
           <Pagination
             currentPage={page}

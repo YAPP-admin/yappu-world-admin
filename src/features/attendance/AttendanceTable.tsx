@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { FC } from 'react';
 
 import Chip from '@compnents/commons/Chip';
@@ -6,7 +5,6 @@ import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
-import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { getChipColor } from '@utils/getChipColor';
 import {

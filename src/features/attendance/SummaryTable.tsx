@@ -19,21 +19,29 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell as="th" className="sticky-col-1">
+          <TableCell as="th" className="sticky-col-1" widthType="fixed">
             <Typography variant="body1Normal">총 인원</Typography>
           </TableCell>
-          <TableCell className="sticky-col-2" style={commonStyle}>
+          <TableCell
+            className="sticky-col-2"
+            style={commonStyle}
+            widthType="fixed"
+          >
             <Typography variant="body1Normal">출석</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId} max style={commonStyle}>
+            <TableCell key={s.sessionId} style={commonStyle} widthType="max">
               <Typography variant="body1Normal">
                 {s.totalOnTimeCount}
               </Typography>
             </TableCell>
           ))}
           {[...Array(6)].map((_, i) => (
-            <TableCell key={`empty-ontime-${i}`} max style={commonStyle} />
+            <TableCell
+              key={`empty-ontime-${i}`}
+              style={commonStyle}
+              widthType="max"
+            />
           ))}
         </TableRow>
         <TableRow>
@@ -44,12 +52,12 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
             <Typography variant="body1Normal">지각</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId} max>
+            <TableCell key={s.sessionId} widthType="max">
               <Typography variant="body1Normal">{s.totalLateCount}</Typography>
             </TableCell>
           ))}
           {[...Array(6)].map((_, i) => (
-            <TableCell key={`empty-ontime-${i}`} max />
+            <TableCell key={`empty-ontime-${i}`} widthType="max" />
           ))}
         </TableRow>
         <TableRow>
@@ -58,14 +66,14 @@ const SummaryTable: FC<Props> = ({ sessions, users }) => {
             <Typography variant="body1Normal">결석</Typography>
           </TableCell>
           {sessions?.map((s) => (
-            <TableCell key={s.sessionId} max>
+            <TableCell key={s.sessionId} widthType="max">
               <Typography variant="body1Normal">
                 {s.totalAbsentCount}
               </Typography>
             </TableCell>
           ))}
           {[...Array(6)].map((_, i) => (
-            <TableCell key={`empty-ontime-${i}`} max />
+            <TableCell key={`empty-ontime-${i}`} widthType="max" />
           ))}
         </TableRow>
       </TableHead>

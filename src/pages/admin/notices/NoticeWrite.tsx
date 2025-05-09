@@ -112,10 +112,10 @@ const NoticeWrite: FC = () => {
             <TextInputBox
               {...register('content')}
               height={400}
-              maxLength={1000}
+              maxLength={2000}
               placeholder="내용을 입력해주세요"
             />
-            <Counter control={control} maxCount={1000} />
+            <Counter control={control} maxCount={2000} />
           </InputWrapper>
         </GridBox>
       </FlexBox>

@@ -1,9 +1,10 @@
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import axios, { isAxiosError } from 'axios';
 
-import { commonToastOption } from '@constants/toastOption';
 import { useAuthStore } from '@stores/authStore';
+import { logoutAndReset, reissueToken } from 'apis/auth/reissueToken';
 import { showErrorToast } from 'types/showErrorToast';
+
+import { ErrorResponse } from './types';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -14,8 +15,9 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
+  const excludeUrls = ['/admin/v1/auth/login', '/admin/v1/auth/reissue-token'];
 
-  if (accessToken && config.url !== '/admin/v1/auth/login') {
+  if (accessToken && !excludeUrls.includes(config.url ?? '')) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
@@ -31,24 +33,45 @@ axiosInstance.interceptors.response.use(
     if (!error.response) {
       return Promise.reject(error);
     }
-    const { response } = error;
+    const { response, config: originalRequest } = error;
+    const errorCode = response.data?.errorCode;
+    const status = response.status;
+    const message = response.data?.message;
 
     if (
-      [500, 400].includes(response.status) &&
-      ['COM_0001', 'COM_0002'].includes(response.data.errorCode)
+      originalRequest.url?.includes('/auth/reissue') ||
+      originalRequest._retry
+    ) {
+      console.warn('⛔️ 재발급 요청 또는 이미 재시도한 요청입니다.');
+      return Promise.reject(error);
+    }
+
+    // ✅ 비정상 토큰 → 즉시 로그아웃
+    if (status === 401 && errorCode === 'TKN_0002') {
+      logoutAndReset(message ?? '비정상 토큰입니다.');
+      return Promise.reject(error);
+    }
+
+    if (status === 401 && errorCode === 'TKN_0001') {
+      originalRequest._retry = true;
+
+      try {
+        const newAccessToken = await reissueToken();
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosInstance(originalRequest); // 재요청
+      } catch (error) {
+        if (isAxiosError<ErrorResponse>(error)) {
+          return Promise.reject(error);
+        }
+      }
+    }
+
+    if (
+      [500, 400].includes(status) &&
+      ['COM_0001', 'COM_0002'].includes(errorCode)
     ) {
       showErrorToast(response.data.message);
       return;
-    } else if (
-      response.status === 401 &&
-      ['TKN_0001', 'TKN_0002'].includes(response.data.errorCode)
-    ) {
-      await useAuthStore.persist.clearStorage();
-      useAuthStore.getState().resetUser();
-      toast.error(
-        `${response.data.message}\n다시 로그인 해주세요.`,
-        commonToastOption,
-      );
     }
 
     return Promise.reject(error);

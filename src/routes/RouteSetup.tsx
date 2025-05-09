@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import Layout from '@compnents/commons/Layout';
 import AdminLayer from '@pages/admin/AdminLayer.tsx';
+import Attendances from '@pages/admin/attendances/Attendances';
 import MemberApplication from '@pages/admin/members/MemberApplication';
 import MemberCode from '@pages/admin/members/MemberCode';
 import MemberGeneration from '@pages/admin/members/MemberGeneration';
@@ -58,6 +59,10 @@ export const RouteSetup = () => {
             <Route index element={<SessionList />} />
             <Route element={<SessionWrite />} path="write" />
             <Route element={<Session />} path="detail/:id" />
+          </Route>
+
+          <Route path="attendances">
+            <Route index element={<Attendances />} />
           </Route>
 
           <Route path="settings">

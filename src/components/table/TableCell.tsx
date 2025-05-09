@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 type AlignItems = 'flex-start' | 'flex-end' | 'center';
@@ -16,6 +16,8 @@ interface Props extends React.HTMLAttributes<HTMLTableCellElement> {
   alignItems?: AlignItems;
   justifyContent?: JustifyContent;
   children?: React.ReactNode;
+  style?: React.CSSProperties;
+  max?: boolean;
 }
 
 const TableCell: FC<Props> = (props) => {
@@ -25,11 +27,13 @@ const TableCell: FC<Props> = (props) => {
     align = 'center',
     alignItems = 'center',
     justifyContent = 'center',
+    max = false,
+    style,
     ...rest
   } = props;
 
   return (
-    <StyledTableCell {...rest} align={align} as={as}>
+    <StyledTableCell {...rest} $max={max} align={align} as={as} style={style}>
       <Wrapper $alignItems={alignItems} $justifyContent={justifyContent}>
         {children}
       </Wrapper>
@@ -39,8 +43,12 @@ const TableCell: FC<Props> = (props) => {
 
 export default TableCell;
 
-const StyledTableCell = styled.td<{ align: string }>`
+const StyledTableCell = styled.td<{ align: string; $max?: boolean }>`
   text-align: ${({ align }) => align};
+  width: ${({ $max }) => ($max ? '140px' : '100px')};
+  min-width: ${({ $max }) => ($max ? '140px' : '100px')};
+  max-width: ${({ $max }) => ($max ? '140px' : '100px')};
+  box-sizing: border-box;
 `;
 
 const Wrapper = styled.div<{

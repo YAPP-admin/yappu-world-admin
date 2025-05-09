@@ -32,6 +32,10 @@ export const sideNavList: NavList[] = [
     path: '/admin/sessions',
   },
   {
+    title: '출석 관리',
+    path: '/admin/attendances',
+  },
+  {
     title: '설정',
     path: '/admin/settings',
     childs: [

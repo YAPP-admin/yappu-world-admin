@@ -9,5 +9,6 @@ export const useApplicationListQuery = (page: number, size: number) => {
     select: (data) => {
       return data.data.data;
     },
+    retry: false,
   });
 };

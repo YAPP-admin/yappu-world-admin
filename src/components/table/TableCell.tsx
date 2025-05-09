@@ -8,6 +8,7 @@ type JustifyContent =
   | 'center'
   | 'space-between'
   | 'space-around';
+type WidthType = 'default' | 'max' | 'fixed';
 
 interface Props extends React.HTMLAttributes<HTMLTableCellElement> {
   as?: 'th' | 'td';
@@ -17,7 +18,7 @@ interface Props extends React.HTMLAttributes<HTMLTableCellElement> {
   justifyContent?: JustifyContent;
   children?: React.ReactNode;
   style?: React.CSSProperties;
-  max?: boolean;
+  widthType?: WidthType;
 }
 
 const TableCell: FC<Props> = (props) => {
@@ -27,13 +28,19 @@ const TableCell: FC<Props> = (props) => {
     align = 'center',
     alignItems = 'center',
     justifyContent = 'center',
-    max = false,
     style,
+    widthType = 'default',
     ...rest
   } = props;
 
   return (
-    <StyledTableCell {...rest} $max={max} align={align} as={as} style={style}>
+    <StyledTableCell
+      {...rest}
+      $widthType={widthType}
+      align={align}
+      as={as}
+      style={style}
+    >
       <Wrapper $alignItems={alignItems} $justifyContent={justifyContent}>
         {children}
       </Wrapper>
@@ -43,11 +50,42 @@ const TableCell: FC<Props> = (props) => {
 
 export default TableCell;
 
-const StyledTableCell = styled.td<{ align: string; $max?: boolean }>`
+// const StyledTableCell = styled.td<{ align: string; $max?: boolean }>`
+//   text-align: ${({ align }) => align};
+//   width: ${({ $max }) => ($max ? '140px' : '100px')};
+//   min-width: ${({ $max }) => ($max ? '140px' : '100px')};
+//   max-width: ${({ $max }) => ($max ? '140px' : '100px')};
+//   box-sizing: border-box;
+// `;
+
+const StyledTableCell = styled.td<{ align: string; $widthType?: WidthType }>`
   text-align: ${({ align }) => align};
-  width: ${({ $max }) => ($max ? '140px' : '100px')};
-  min-width: ${({ $max }) => ($max ? '140px' : '100px')};
-  max-width: ${({ $max }) => ($max ? '140px' : '100px')};
+  ${({ $widthType }) => {
+    switch ($widthType) {
+      case 'max':
+        return `
+          width: 140px;
+          min-width: 140px;
+          max-width: 140px;
+          white-space: nowrap;
+        `;
+      case 'fixed':
+        return `
+          width: 100px;
+          min-width: 100px;
+          max-width: 100px;
+          white-space: nowrap;
+        `;
+      default:
+        return `
+          width: auto;
+          min-width: auto;
+          max-width: none;
+          word-break: break-all;
+          overflow-wrap: break-word;
+        `;
+    }
+  }}
   box-sizing: border-box;
 `;
 

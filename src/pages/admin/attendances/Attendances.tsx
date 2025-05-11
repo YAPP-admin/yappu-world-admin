@@ -153,7 +153,9 @@ const Container = styled.div`
   flex-direction: column;
   gap: 8px;
   padding: 32px 40px;
-  max-width: 1126px;
+  width: 90%;
+  min-width: 0;
+  overflow-x: auto;
 `;
 
 const Wrapper = styled.div`

@@ -33,14 +33,14 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
             <TableCell className="sticky-col-1 ">
               <Typography variant="body1Normal">{user.name}</Typography>
             </TableCell>
-            <TableCell className="sticky-col-2 ">
+            <TableCell className="sticky-col-2 " widthType="fixed">
               <Typography variant="body1Normal">{user.totalPoint}</Typography>
             </TableCell>
             {sessions?.map((session) => {
               if (!sessionMap) return <td key={session.sessionId}>-</td>;
               const status = sessionMap[session.sessionId]?.[user.userId] ?? '';
               return (
-                <TableCell key={session.sessionId} max>
+                <TableCell key={session.sessionId} widthType="max">
                   <Chip
                     color={getChipColor(status).color}
                     size="large"
@@ -50,26 +50,26 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
                 </TableCell>
               );
             })}
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.lateCount}</Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">
                 {user.earlyCheckOutCount}
               </Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">
                 {user.latePassCount}
               </Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.absentCount}</Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.penaltyPoint}</Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.bonusPoint}</Typography>
             </TableCell>
           </TableRow>

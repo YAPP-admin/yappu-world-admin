@@ -48,7 +48,7 @@ const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
                 sessionMap[session.sessionId]?.[user.userId] ??
                 '';
               return (
-                <TableCell key={session.sessionId} max>
+                <TableCell key={session.sessionId} widthType="max">
                   <Select
                     optionList={attendanceOptions}
                     selectedValue={getAttendanceStatus(status)}
@@ -59,26 +59,26 @@ const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
                 </TableCell>
               );
             })}
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.lateCount}</Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">
                 {user.earlyCheckOutCount}
               </Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">
                 {user.latePassCount}
               </Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.absentCount}</Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.penaltyPoint}</Typography>
             </TableCell>
-            <TableCell max>
+            <TableCell widthType="max">
               <Typography variant="body1Normal">{user.bonusPoint}</Typography>
             </TableCell>
           </TableRow>

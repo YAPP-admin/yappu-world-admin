@@ -1,10 +1,9 @@
 import { create } from 'zustand';
 
-type AttendanceTarget = {
-  userId: string;
-  sessionId: string;
-  attendanceStatus: string;
-};
+import {
+  AttendanceStatusValueType,
+  EditAttendanceTarget,
+} from 'apis/attendance/types';
 
 interface AttendanceStore {
   editedMap: Record<string, Record<string, string>>;
@@ -15,7 +14,11 @@ interface AttendanceStore {
     status: string,
   ) => void;
   resetEditedMap: () => void;
-  getTargets: () => AttendanceTarget[];
+  getTargets: () => EditAttendanceTarget[];
+  editPopupOpen: boolean;
+  setEditPopupOpen: (value: boolean) => void;
+  completeEditPopupOpen: boolean;
+  setCompleteEditPopupOpen: (value: boolean) => void;
 }
 
 export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
@@ -50,17 +53,22 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
   },
   resetEditedMap: () => set({ editedMap: {} }),
   getTargets: () => {
-    const result: AttendanceTarget[] = [];
+    const result: EditAttendanceTarget[] = [];
     const map = get().editedMap;
     for (const sessionId in map) {
       for (const userId in map[sessionId]) {
         result.push({
           sessionId,
           userId,
-          attendanceStatus: map[sessionId][userId],
+          attendanceStatus: map[sessionId][userId] as AttendanceStatusValueType,
         });
       }
     }
     return result;
   },
+  editPopupOpen: false,
+  setEditPopupOpen: (value: boolean) => set({ editPopupOpen: value }),
+  completeEditPopupOpen: false,
+  setCompleteEditPopupOpen: (value: boolean) =>
+    set({ completeEditPopupOpen: value }),
 }));

@@ -1,9 +1,8 @@
-import { create } from 'zustand';
-
 import {
   AttendanceStatusValueType,
   EditAttendanceTarget,
 } from 'apis/attendance/types';
+import { create } from 'zustand';
 
 interface AttendanceStore {
   editedMap: Record<string, Record<string, string>>;
@@ -15,10 +14,16 @@ interface AttendanceStore {
   ) => void;
   resetEditedMap: () => void;
   getTargets: () => EditAttendanceTarget[];
+  isEdit: boolean;
+  setIsEdit: (value: boolean) => void;
   editPopupOpen: boolean;
   setEditPopupOpen: (value: boolean) => void;
   completeEditPopupOpen: boolean;
   setCompleteEditPopupOpen: (value: boolean) => void;
+  bundleEditPopupOpen: boolean;
+  setBundleEditPopupOpen: (value: boolean) => void;
+  bundleEditCompletePopupOpen: boolean;
+  setBundleEditCompletePopupOpen: (value: boolean) => void;
 }
 
 export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
@@ -66,9 +71,17 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
     }
     return result;
   },
+  isEdit: false,
+  setIsEdit: (value: boolean) => set({ isEdit: value }),
   editPopupOpen: false,
   setEditPopupOpen: (value: boolean) => set({ editPopupOpen: value }),
   completeEditPopupOpen: false,
   setCompleteEditPopupOpen: (value: boolean) =>
     set({ completeEditPopupOpen: value }),
+  bundleEditPopupOpen: false,
+  setBundleEditPopupOpen: (value: boolean) =>
+    set({ bundleEditPopupOpen: value }),
+  bundleEditCompletePopupOpen: false,
+  setBundleEditCompletePopupOpen: (value: boolean) =>
+    set({ bundleEditCompletePopupOpen: value }),
 }));

@@ -61,7 +61,7 @@ export type AttendanceStatusValueType =
 
 export interface AttendanceStatus {
   userId: string;
-  status: AttendanceStatusType | null;
+  status: AttendanceStatusValueType | null;
 }
 
 export interface EditAttendanceReq {

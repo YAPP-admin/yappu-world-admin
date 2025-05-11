@@ -1,28 +1,41 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo } from 'react';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
+import CompletePopup from '@compnents/popup/CompletePopup';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useAttendancesQuery } from '@queries/attendance/useAttendancesQuery';
 import { useEditAttendanceMutation } from '@queries/attendance/useEditAttendanceMutation';
 import { useAttendanceStore } from '@stores/attendanceStore';
-import { AttendanceStatusType, EditAttendanceReq } from 'apis/attendance/types';
+import {
+  AttendanceStatusValueType,
+  EditAttendanceReq,
+} from 'apis/attendance/types';
 import { ErrorResponse } from 'apis/common/types';
+import BundleEditPopup from 'features/attendance/BundleEditPopup';
 import { showErrorToast } from 'types/showErrorToast';
 
 import AttendanceDetail from './AttendanceDetail';
 import AttendaceEdit from './AttendanceEdit';
 
 const Attendances: FC = () => {
-  const [isEdit, setIsEdit] = useState(false);
   const { data } = useAttendancesQuery();
   const getTargets = useAttendanceStore((state) => state.getTargets);
-  const { editPopupOpen, setEditPopupOpen } = useAttendanceStore();
+  const {
+    isEdit,
+    setIsEdit,
+    editPopupOpen,
+    setEditPopupOpen,
+    bundleEditPopupOpen,
+    setBundleEditPopupOpen,
+    bundleEditCompletePopupOpen,
+    setBundleEditCompletePopupOpen,
+  } = useAttendanceStore();
   const { mutateAsync } = useEditAttendanceMutation();
   const queryClient = useQueryClient();
 
@@ -34,11 +47,11 @@ const Attendances: FC = () => {
             userMap[status.userId] = status.status;
             return userMap;
           },
-          {} as Record<string, AttendanceStatusType | null>,
+          {} as Record<string, AttendanceStatusValueType | null>,
         );
         return acc;
       },
-      {} as Record<string, Record<string, AttendanceStatusType | null>>,
+      {} as Record<string, Record<string, AttendanceStatusValueType | null>>,
     );
   }, [data?.attendancesGroupedBySession]);
 
@@ -73,7 +86,7 @@ const Attendances: FC = () => {
             <OutlinedButton
               size="xsmall"
               variant="assistive"
-              onClick={() => setIsEdit(true)}
+              onClick={() => setBundleEditPopupOpen(true)}
             >
               일괄수정
             </OutlinedButton>
@@ -113,6 +126,20 @@ const Attendances: FC = () => {
           title="수정사항 저장"
           onCancelAction={() => setEditPopupOpen(false)}
           onConfirmAction={onClickToSave}
+        />
+      )}
+      {bundleEditPopupOpen && (
+        <BundleEditPopup
+          attendancesGroupedBySession={data?.attendancesGroupedBySession}
+          session={data?.sessions}
+          onClose={() => setBundleEditPopupOpen(false)}
+        />
+      )}
+      {bundleEditCompletePopupOpen && (
+        <CompletePopup
+          comment="선택한 세션의 출석상태가 일괄변경되었습니다."
+          title="일괄 수정 완료"
+          onClose={() => setBundleEditCompletePopupOpen(false)}
         />
       )}
     </Container>

@@ -9,7 +9,7 @@ import TableRow from '@compnents/table/TableRow';
 import { getChipColor } from '@utils/getChipColor';
 import {
   AttendanceSession,
-  AttendanceStatusType,
+  AttendanceStatusValueType,
   AttendanceUser,
 } from 'apis/attendance/types';
 
@@ -19,7 +19,7 @@ interface Props {
   sessions: AttendanceSession[] | undefined;
   users: AttendanceUser[] | undefined;
   sessionMap:
-    | Record<string, Record<string, AttendanceStatusType | null>>
+    | Record<string, Record<string, AttendanceStatusValueType | null>>
     | undefined;
 }
 
@@ -28,12 +28,12 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
     <Table>
       <AttendanceHeader sessions={sessions} />
       <TableBody>
-        {users?.map((user) => (
-          <TableRow key={user.userId}>
-            <TableCell className="sticky-col-1 " widthType="fixed">
+        {users?.map((user, index) => (
+          <TableRow key={index}>
+            <TableCell className="sticky-col-1" widthType="fixed">
               <Typography variant="body1Normal">{user.name}</Typography>
             </TableCell>
-            <TableCell className="sticky-col-2 " widthType="fixed">
+            <TableCell className="sticky-col-2" widthType="fixed">
               <Typography variant="body1Normal">{user.totalPoint}</Typography>
             </TableCell>
             {sessions?.map((session) => {

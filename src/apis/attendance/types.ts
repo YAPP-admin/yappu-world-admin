@@ -52,8 +52,24 @@ export interface AttendanceGroup {
 }
 
 export type AttendanceStatusType = '출석' | '지각' | '결석' | '조퇴' | '공결';
+export type AttendanceStatusValueType =
+  | 'ON_TIME'
+  | 'LATE'
+  | 'ABSENT'
+  | 'EARLY_CHECK_OUT'
+  | 'EXCUSED_ABSENCE';
 
 export interface AttendanceStatus {
   userId: string;
-  status: AttendanceStatusType | null;
+  status: AttendanceStatusValueType | null;
+}
+
+export interface EditAttendanceReq {
+  targets: EditAttendanceTarget[];
+}
+
+export interface EditAttendanceTarget {
+  userId: string;
+  sessionId: string;
+  attendanceStatus: AttendanceStatusValueType;
 }

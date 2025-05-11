@@ -30,10 +30,10 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
       <TableBody>
         {users?.map((user, index) => (
           <TableRow key={index}>
-            <TableCell className="sticky-col-1 ">
+            <TableCell className="sticky-col-1" widthType="fixed">
               <Typography variant="body1Normal">{user.name}</Typography>
             </TableCell>
-            <TableCell className="sticky-col-2 " widthType="fixed">
+            <TableCell className="sticky-col-2" widthType="fixed">
               <Typography variant="body1Normal">{user.totalPoint}</Typography>
             </TableCell>
             {sessions?.map((session) => {

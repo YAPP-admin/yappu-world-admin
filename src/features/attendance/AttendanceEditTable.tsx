@@ -1,19 +1,18 @@
 import Select from '@compnents/commons/Select';
-import { attendanceOptions } from '@constants/optionList';
-import { useAttendanceStore } from '@stores/attendanceStore';
-import { getAttendanceStatus } from '@utils/getAttendanceStatus';
-import { FC } from 'react';
-
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableRow from '@compnents/table/TableRow';
+import { attendanceOptions } from '@constants/optionList';
+import { useAttendanceStore } from '@stores/attendanceStore';
+import { getAttendanceStatus } from '@utils/getAttendanceStatus';
 import {
   AttendanceSession,
   AttendanceStatusValueType,
   AttendanceUser,
 } from 'apis/attendance/types';
+import { FC } from 'react';
 
 import AttendanceHeader from './AttendanceHeader';
 
@@ -34,10 +33,10 @@ const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
       <TableBody>
         {users?.map((user, index) => (
           <TableRow key={index}>
-            <TableCell className="sticky-col-1 ">
+            <TableCell className="sticky-col-1" widthType="fixed">
               <Typography variant="body1Normal">{user.name}</Typography>
             </TableCell>
-            <TableCell className="sticky-col-2 ">
+            <TableCell className="sticky-col-2" widthType="fixed">
               <Typography variant="body1Normal">{user.totalPoint}</Typography>
             </TableCell>
             {sessions?.map((session) => {

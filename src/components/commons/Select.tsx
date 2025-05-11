@@ -110,6 +110,8 @@ const OptionWrapper = styled.ul`
   background: #fff;
   padding: 8px;
   box-sizing: border-box;
+  max-height: 240px;
+  overflow-y: auto;
 
   li {
     list-style: none;

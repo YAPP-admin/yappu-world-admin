@@ -1,15 +1,18 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
+import OutlinedButton from '@compnents/Button/OutlinedButton';
+import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import { useAttendancesQuery } from '@queries/attendance/useAttendancesQuery';
 import { AttendanceStatusType } from 'apis/attendance/types';
 
 import AttendanceDetail from './AttendanceDetail';
+import AttendaceEdit from './AttendanceEdit';
 
 const Attendances: FC = () => {
-  // const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const { data } = useAttendancesQuery();
 
   const sessionMap = useMemo(() => {
@@ -38,7 +41,7 @@ const Attendances: FC = () => {
             {data?.users.length}명
           </Typography>
         </FlexBox>
-        {/* {isEdit ? (
+        {isEdit ? (
           <FlexBox gap={8} width="fit-content">
             <OutlinedButton
               size="xsmall"
@@ -57,22 +60,22 @@ const Attendances: FC = () => {
           >
             수정
           </OutlinedButton>
-        )} */}
+        )}
       </FlexBox>
       <Wrapper>
-        {/* {isEdit ? (
+        {isEdit ? (
           <AttendaceEdit
             sessionMap={sessionMap}
             sessions={data?.sessions}
             users={data?.users}
           />
-        ) : ( */}
-        <AttendanceDetail
-          sessionMap={sessionMap}
-          sessions={data?.sessions}
-          users={data?.users}
-        />
-        {/* )} */}
+        ) : (
+          <AttendanceDetail
+            sessionMap={sessionMap}
+            sessions={data?.sessions}
+            users={data?.users}
+          />
+        )}
       </Wrapper>
     </Container>
   );

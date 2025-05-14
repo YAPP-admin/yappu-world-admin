@@ -42,7 +42,7 @@ const MemberDetailHeader: FC<Props> = (props) => {
         </Typography>
         {!isEdit && (
           <OutlinedButton
-            leftIcon={<Pencil height="16" width="16" />}
+            leftIcon={<Pencil size="16" />}
             size="xsmall"
             variant="assistive"
             onClick={onClickToEdit}

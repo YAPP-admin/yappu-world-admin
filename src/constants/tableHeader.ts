@@ -17,8 +17,8 @@ export const applicationHeader = [
 ];
 
 export const memberListHeader = [
-  '번호',
   '이름',
+  '이메일',
   '최근활동기수',
   '직군',
   '권한',

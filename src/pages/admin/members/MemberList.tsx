@@ -77,16 +77,16 @@ const MemberList: FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.data.map((el, index) => (
+                {data?.data.map((el) => (
                   <TableRow key={el.userId} onClick={() => onClickRow(el)}>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {index + 1}
-                      </Typography>
-                    </TableCell>
                     <TableCell>
                       <Typography color="primary-normal" variant="body1Normal">
                         {el.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color="label-normal" variant="body1Normal">
+                        {el.email}
                       </Typography>
                     </TableCell>
                     <TableCell>

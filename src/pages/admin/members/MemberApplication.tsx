@@ -158,24 +158,22 @@ const MemberApplication: FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.data.map((el, index) => {
+                {data?.data.map((el) => {
                   const id = el.id;
                   const isChecked = selectedIndexes.includes(id);
                   return (
-                    <TableRow key={el.id}>
-                      <TableCell>
+                    <TableRow key={el.id} onClick={() => onClickToDetail(el)}>
+                      <TableCell onClick={(e) => e.stopPropagation()}>
                         <Checkbox
                           state={isChecked ? 'checked' : 'unchecked'}
                           onClick={() => onClickRowCheck(id)}
                         />
                       </TableCell>
                       <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {index + 1}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
+                        <Typography
+                          color="primary-normal"
+                          variant="body1Normal"
+                        >
                           {el.name}
                         </Typography>
                       </TableCell>
@@ -217,9 +215,7 @@ const MemberApplication: FC = () => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <TextButton onClick={() => onClickToDetail(el)}>
-                          상세보기
-                        </TextButton>
+                        <TextButton>상세보기</TextButton>
                       </TableCell>
                     </TableRow>
                   );

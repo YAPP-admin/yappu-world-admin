@@ -4,8 +4,11 @@ import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
+import Close from '@assets/Close';
+import IconButton from '@compnents/Button/IconButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import Chip from '@compnents/commons/Chip';
+import FlexBox from '@compnents/commons/FlexBox';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import { useDeleteMemberCodeMutation } from '@queries/auth/useDeleteMemberCodeMutation';
@@ -18,6 +21,7 @@ import {
 } from 'apis/auth/types';
 import { ErrorResponse } from 'apis/common/types';
 import { RoleName } from 'apis/user/types';
+import theme from 'styles/theme';
 import { UserRoleType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
@@ -95,9 +99,14 @@ const CodeEditPopup: FC<Props> = (props) => {
           onClick={(e) => e.stopPropagation()}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Typography color="label-normal" variant="headline1Bold">
-            코드값 수정
-          </Typography>
+          <FlexBox justify="space-between">
+            <Typography color="label-normal" variant="headline1Bold">
+              코드값 수정
+            </Typography>
+            <IconButton onClick={() => handleEditPopup(false)}>
+              <Close color={theme.colors.label.alternative} />
+            </IconButton>
+          </FlexBox>
           <Chip
             role={selectedCode?.role?.name}
             size="large"

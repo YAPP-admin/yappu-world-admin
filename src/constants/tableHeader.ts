@@ -5,7 +5,6 @@ export const linkHeader = ['링크 이름', 'URL', '수정'];
 export const generationHeader = ['기수', '활동기간', '상태'];
 
 export const applicationHeader = [
-  '번호',
   '이름',
   '이메일',
   '상태',

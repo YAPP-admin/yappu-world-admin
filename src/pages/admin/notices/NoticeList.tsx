@@ -141,7 +141,7 @@ const NoticeList: FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.data.map((notice, index) => {
+                {data?.data.map((notice) => {
                   const id = notice.noticeId;
                   const isChecked = selectedIndexes.includes(id);
                   return (
@@ -155,13 +155,12 @@ const NoticeList: FC = () => {
                           onClick={() => onClickRowCheck(id)}
                         />
                       </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {index + 1}
-                        </Typography>
-                      </TableCell>
+
                       <TableCell justifyContent="flex-start">
-                        <Typography color="label-normal" variant="body1Normal">
+                        <Typography
+                          color="primary-normal"
+                          variant="body1Normal"
+                        >
                           {notice.title}
                         </Typography>
                       </TableCell>

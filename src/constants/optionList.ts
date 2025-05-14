@@ -21,7 +21,7 @@ export const positionOptionList = [
   { label: 'iOS', value: 'IOS' },
   { label: 'Flutter', value: 'FLUTTER' },
   { label: 'Server', value: 'SERVER' },
-  { label: '운영진', value: 'STAFF' },
+  { label: '운영진', value: '운영진' },
 ];
 
 export const rejectOptionList = [{ label: '직접입력', value: '직접입력' }];

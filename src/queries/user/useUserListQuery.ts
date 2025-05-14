@@ -15,6 +15,7 @@ export const useUserListQuery = ({ page, size }: PaginatedReq) => {
       data: response.data.data.data.map((user) => ({
         userId: user.userId,
         name: user.name,
+        email: user.email,
         generation: user.lastActivityUnit.generation,
         position: user.lastActivityUnit.position,
         role: user.role,

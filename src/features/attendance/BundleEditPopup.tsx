@@ -2,24 +2,23 @@ import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import Select from '@compnents/commons/Select';
+import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import { attendanceOptions } from '@constants/optionList';
 import { useEditAttendanceBundleMutation } from '@queries/attendance/useEditAttendanceBundleMutation';
 import { useAttendanceStore } from '@stores/attendanceStore';
 import { useQueryClient } from '@tanstack/react-query';
-import { ErrorResponse } from 'apis/common/types';
-import { isAxiosError } from 'axios';
-import { FC, useState } from 'react';
-import styled from 'styled-components';
-import { showErrorToast } from 'types/showErrorToast';
-
-import Typography from '@compnents/commons/Typography';
 import {
   AttendanceGroup,
   AttendanceSession,
   AttendanceStatusValueType,
   EditAttendanceReq,
 } from 'apis/attendance/types';
+import { ErrorResponse } from 'apis/common/types';
+import { isAxiosError } from 'axios';
+import { FC, useState } from 'react';
+import styled from 'styled-components';
+import { showErrorToast } from 'types/showErrorToast';
 
 interface Props {
   onClose: VoidFunction;

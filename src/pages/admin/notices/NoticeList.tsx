@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -40,6 +40,10 @@ const NoticeList: FC = () => {
   const navigate = useNavigate();
   const { mutate } = useDeleteNoticeMutation();
 
+  useEffect(() => {
+    setSelectedIndexes([]);
+  }, []);
+
   const noticeIds = data?.data.map((notice) => notice.noticeId) || [];
 
   const isAllChecked =
@@ -72,6 +76,11 @@ const NoticeList: FC = () => {
 
   const onClickToDelete = async () => {
     mutate({ noticeIds: selectedIndexes });
+  };
+
+  const onChangePage = (page: number) => {
+    setPage(page);
+    setSelectedIndexes([]);
   };
 
   return (
@@ -195,7 +204,7 @@ const NoticeList: FC = () => {
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 0}
-            onPageChange={setPage}
+            onPageChange={onChangePage}
           />
         </Wrapper>
       </Container>

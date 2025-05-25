@@ -13,6 +13,12 @@ interface GenerationState {
   handleAddCompletePopupOpen: (value: boolean) => void;
   page: number;
   setPage: (value: number) => void;
+  selectedIndexes: number[];
+  setSelectedIndexes: (value: number[]) => void;
+  handleDeletePopup: boolean;
+  setHandleDeletePopup: (value: boolean) => void;
+  deleteCompletePopup: boolean;
+  setDeleteCompletePopup: (value: boolean) => void;
 }
 
 export const useGenerationStore = create<GenerationState>((set) => ({
@@ -28,4 +34,11 @@ export const useGenerationStore = create<GenerationState>((set) => ({
     set({ isAddCompletePopupOpen: value }),
   page: 1,
   setPage: (value: number) => set({ page: value }),
+  selectedIndexes: [],
+  setSelectedIndexes: (value: number[]) => set({ selectedIndexes: value }),
+  handleDeletePopup: false,
+  setHandleDeletePopup: (value: boolean) => set({ handleDeletePopup: value }),
+  deleteCompletePopup: false,
+  setDeleteCompletePopup: (value: boolean) =>
+    set({ deleteCompletePopup: value }),
 }));

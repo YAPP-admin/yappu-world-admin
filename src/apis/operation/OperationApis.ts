@@ -7,6 +7,7 @@ import {
 
 import {
   AddGenerationReq,
+  DeleteGenerationReq,
   EditGenerationReq,
   EditGenerationRes,
   GenerationListRes,
@@ -28,19 +29,16 @@ export const putOperationList = async (
   return axiosInstance.put('/admin/v1/operations/links', data);
 };
 
-// 기수 목록
 export const getGenerationList = async ({ page, size }: PaginatedReq) => {
   return axiosInstance.get<PaginatedApiResponse<GenerationListRes>>(
     `/admin/v1/operations/generations?page=${page}&size=${size}`,
   );
 };
 
-// 기수 신규 등록
 export const postGeneration = async (data: AddGenerationReq): Promise<void> => {
   return axiosInstance.post('/admin/v1/operations/generations', data);
 };
 
-// 기수 활성화 변경
 export const patchGenerationActive = async (data: EditGenerationReq) => {
   return axiosInstance.patch<ApiResponse<EditGenerationRes>>(
     '/admin/v1/operations/generations/active',
@@ -59,4 +57,8 @@ export const putSupportVersion = (data: VersionReq): Promise<void> => {
     '/admin/v1/operations/minimum-support-versions',
     data,
   );
+};
+
+export const deleteGeneration = (data: DeleteGenerationReq): Promise<void> => {
+  return axiosInstance.delete('/admin/v1/operations/generations', { data });
 };

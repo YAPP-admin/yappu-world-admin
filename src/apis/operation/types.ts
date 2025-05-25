@@ -55,3 +55,7 @@ export interface VersionReq {
   platform: PlatformReqType;
   version: string;
 }
+
+export interface DeleteGenerationReq {
+  generations: number[];
+}

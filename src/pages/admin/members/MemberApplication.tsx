@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
 
 import CircleCheck from '@assets/CircleCheck';
@@ -48,6 +48,10 @@ const MemberApplication: FC = () => {
   } = useApplicationStore();
   const { data } = useApplicationListQuery(page, 10);
 
+  useEffect(() => {
+    setSelectedIndexes([]);
+  }, []);
+
   const applicationIds = data?.data.map((application) => application.id) || [];
 
   const isAllChecked =
@@ -73,6 +77,11 @@ const MemberApplication: FC = () => {
   const onClickToDetail = (list: ApplicationListRes) => {
     setSelectedList(list);
     setIsDetailPopup(true);
+  };
+
+  const onChangePage = (page: number) => {
+    setPage(page);
+    setSelectedIndexes([]);
   };
 
   return (
@@ -226,7 +235,7 @@ const MemberApplication: FC = () => {
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 0}
-            onPageChange={setPage}
+            onPageChange={onChangePage}
           />
         </Wrapper>
       </Container>

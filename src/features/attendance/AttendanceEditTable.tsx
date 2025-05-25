@@ -1,3 +1,5 @@
+import { FC } from 'react';
+
 import Select from '@compnents/commons/Select';
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
@@ -12,7 +14,6 @@ import {
   AttendanceStatusValueType,
   AttendanceUser,
 } from 'apis/attendance/types';
-import { FC } from 'react';
 
 import AttendanceHeader from './AttendanceHeader';
 

@@ -1,3 +1,5 @@
+import { FC } from 'react';
+
 import {
   AttendanceSession,
   AttendanceStatusValueType,
@@ -5,7 +7,6 @@ import {
 } from 'apis/attendance/types';
 import AttandanceTable from 'features/attendance/AttendanceTable';
 import SummaryTable from 'features/attendance/SummaryTable';
-import { FC } from 'react';
 
 interface Props {
   sessions: AttendanceSession[] | undefined;

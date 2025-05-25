@@ -1,8 +1,9 @@
+import { create } from 'zustand';
+
 import {
   AttendanceStatusValueType,
   EditAttendanceTarget,
 } from 'apis/attendance/types';
-import { create } from 'zustand';
 
 interface AttendanceStore {
   editedMap: Record<string, Record<string, string>>;

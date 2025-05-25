@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -45,6 +45,10 @@ const SessionList: FC = () => {
   const navigate = useNavigate();
   const { mutateAsync } = useDeleteSessionMutation();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setSelectedIndexes([]);
+  }, []);
 
   const sessionIds = data?.data.map((session) => session.id) || [];
 
@@ -92,6 +96,11 @@ const SessionList: FC = () => {
       }
       console.log(err);
     }
+  };
+
+  const onChangePage = (page: number) => {
+    setPage(page);
+    setSelectedIndexes([]);
   };
 
   return (
@@ -225,7 +234,7 @@ const SessionList: FC = () => {
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 0}
-            onPageChange={setPage}
+            onPageChange={onChangePage}
           />
         </Wrapper>
         {isDeletePopup && (

@@ -116,6 +116,15 @@ const MemberGeneration: FC = () => {
 
   const onClickToDelete = async () => {
     try {
+      const isExistActiveGeneration = data?.data
+        .filter((el) => selectedIndexes.includes(el.generation))
+        .filter((el) => el.isActive).length;
+      if (isExistActiveGeneration) {
+        setHandleDeletePopup(false);
+        setDeleteCompletePopup(false);
+        showErrorToast('활성화 된 기수는 삭제할 수 없습니다.');
+        return;
+      }
       await mutateAsync({ generations: selectedIndexes });
       queryClient.invalidateQueries({ queryKey: ['generation-list', page] });
       setHandleDeletePopup(false);

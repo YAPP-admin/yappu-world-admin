@@ -34,6 +34,16 @@ export const sideNavList: NavList[] = [
   {
     title: '출석 관리',
     path: '/admin/attendances',
+    childs: [
+      {
+        title: '출석 리스트',
+        path: '/admin/attendances/list',
+      },
+      {
+        title: '출석 코드 관리',
+        path: '/admin/attendances/code',
+      },
+    ],
   },
   {
     title: '설정',

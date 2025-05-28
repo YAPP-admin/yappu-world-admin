@@ -73,3 +73,11 @@ export interface EditAttendanceTarget {
   sessionId: string;
   attendanceStatus: AttendanceStatusValueType;
 }
+
+export interface AttendanceCodeRes {
+  code: number;
+}
+
+export interface EditAttendanceCodeReq {
+  code: number;
+}

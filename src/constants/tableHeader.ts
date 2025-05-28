@@ -26,3 +26,5 @@ export const memberListHeader = [
 ];
 
 export const sessionHeader = ['기수', '타입', '제목', '장소', '날짜', '시간'];
+
+export const CodeHeader = ['코드이름', '코드값', ''];

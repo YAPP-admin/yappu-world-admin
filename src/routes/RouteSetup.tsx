@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import Layout from '@compnents/commons/Layout';
 import AdminLayer from '@pages/admin/AdminLayer.tsx';
+import AttendanceCode from '@pages/admin/attendances/AttendanceCode';
 import Attendances from '@pages/admin/attendances/Attendances';
 import MemberApplication from '@pages/admin/members/MemberApplication';
 import MemberCode from '@pages/admin/members/MemberCode';
@@ -62,7 +63,9 @@ export const RouteSetup = () => {
           </Route>
 
           <Route path="attendances">
-            <Route index element={<Attendances />} />
+            <Route index element={<Navigate replace to="list" />} />
+            <Route element={<Attendances />} path="list" />
+            <Route element={<AttendanceCode />} path="code" />
           </Route>
 
           <Route path="settings">

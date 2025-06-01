@@ -1,8 +1,4 @@
-import { FC } from 'react';
-import styled from 'styled-components';
-
 import TextButton from '@compnents/Button/TextButton';
-import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
@@ -10,34 +6,27 @@ import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { CodeHeader } from '@constants/tableHeader';
-import useMemberCodeQuery from '@queries/auth/useMemberCodeQuery';
-import { useMemberCodeStore } from '@stores/memberCodeStore';
-import { MemberCodeInfo } from 'apis/auth/types';
-import CodeEditPopup from 'features/member/code/CodeEditPopup';
+import { useAttendanceCodeQuery } from '@queries/attendance/useAttendanceCodeQuery';
+import { useAttendanceCodeStore } from '@stores/attendanceCodeStore';
+import CodeEditPopup from 'features/attendance/CodeEditPopup';
+import { FC } from 'react';
+import styled from 'styled-components';
 
-const MemberCode: FC = () => {
-  const { data } = useMemberCodeQuery();
+const AttendanceCode: FC = () => {
+  const { editPopupOpen, handleEditPopup } = useAttendanceCodeStore();
+  const { data } = useAttendanceCodeQuery();
 
-  const {
-    selectedCode,
-    setSelectedCode,
-    editPopupOpen,
-    handleEditPopup,
-    confirmPopupOpen,
-  } = useMemberCodeStore();
-
-  const onClickToEdit = (value: MemberCodeInfo) => {
-    setSelectedCode(value);
+  const onClickToEdit = () => {
     handleEditPopup(true);
   };
 
   return (
     <>
       <Container>
-        <Typography variant="title2Bold">가입코드 관리</Typography>
+        <Typography variant="title2Bold">출석코드 관리</Typography>
         <Wrapper>
           <TitleWrapper>
-            <Typography variant="headline1Bold">설정된 가입코드</Typography>
+            <Typography variant="headline1Bold">출석코드</Typography>
             <Typography
               color="label-alternative"
               variant="body1Normal"
@@ -45,7 +34,7 @@ const MemberCode: FC = () => {
                 fontWeight: 600,
               }}
             >
-              {data?.codes.length}개
+              {data?.code ? '1' : '0'}개
             </Typography>
           </TitleWrapper>
           <Table>
@@ -67,42 +56,32 @@ const MemberCode: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.codes.map((code) => (
-                <TableRow key={code.code}>
-                  <TableCell justifyContent="center">
-                    <Chip
-                      role={code.role.name}
-                      size="large"
-                      text={code.role.label}
-                    />
-                  </TableCell>
-                  <TableCell justifyContent="center">
-                    <Typography color="label-normal" variant="body1Normal">
-                      {code.code}
-                    </Typography>
-                  </TableCell>
-                  <TableCell justifyContent="center">
-                    <TextButton onClick={() => onClickToEdit(code)}>
-                      수정
-                    </TextButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell justifyContent="center">출석코드</TableCell>
+                <TableCell justifyContent="center">
+                  <Typography color="label-normal" variant="body1Normal">
+                    {data?.code}
+                  </Typography>
+                </TableCell>
+                <TableCell justifyContent="center">
+                  <TextButton onClick={() => onClickToEdit()}>수정</TextButton>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </Wrapper>
       </Container>
       {editPopupOpen && (
         <CodeEditPopup
-          confirmPopupOpen={confirmPopupOpen}
-          selectedCode={selectedCode}
+          code={data?.code}
+          onClose={() => handleEditPopup(false)}
         />
       )}
     </>
   );
 };
 
-export default MemberCode;
+export default AttendanceCode;
 
 const Container = styled.div`
   display: flex;

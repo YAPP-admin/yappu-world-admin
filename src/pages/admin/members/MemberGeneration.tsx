@@ -142,6 +142,11 @@ const MemberGeneration: FC = () => {
     }
   };
 
+  const onChangePage = (page: number) => {
+    setPage(page);
+    setSelectedIndexes([]);
+  };
+
   return (
     <>
       <Container>
@@ -259,7 +264,7 @@ const MemberGeneration: FC = () => {
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 0}
-            onPageChange={setPage}
+            onPageChange={onChangePage}
           />
         </Wrapper>
       </Container>

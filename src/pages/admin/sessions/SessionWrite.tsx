@@ -28,6 +28,7 @@ import { useSessionMutation } from '@queries/session/useSessionMutation';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
 import { SesseionReq } from 'apis/session/types';
+import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
 
@@ -43,6 +44,12 @@ const SessionWrite: FC = () => {
     (state) => state.setAddCompletePopup,
   );
   const page = useSessionStore((state) => state.page);
+  const sessionTargetPopup = useSessionStore(
+    (state) => state.sessionTargetPopup,
+  );
+  const setSessionTargetPopup = useSessionStore(
+    (state) => state.setSessionTargetPopup,
+  );
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -276,6 +283,7 @@ const SessionWrite: FC = () => {
               <Typography variant="body1Normal">세션 대상</Typography>
               <FlexBox align="center" gap={12}>
                 <RadioGroup
+                  disabled={!method.watch('generation')}
                   name="target"
                   options={[
                     { label: '전체', value: 'ALL' },
@@ -287,6 +295,7 @@ const SessionWrite: FC = () => {
                   size="small"
                   type="button"
                   variant="secondary"
+                  onClick={() => setSessionTargetPopup(true)}
                 >
                   대상 선택
                 </SolidButton>
@@ -308,6 +317,9 @@ const SessionWrite: FC = () => {
           </FlexBox>
         </FormProvider>
       </Form>
+      {sessionTargetPopup && (
+        <SessionTargetPopup onClose={() => setSessionTargetPopup(false)} />
+      )}
     </Container>
   );
 };

@@ -40,7 +40,7 @@ export const getSessionDetail = (sessionId: string) => {
   );
 };
 
-export const getEligibleUsers = (generation: number) => {
+export const getEligibleUsers = (generation: string) => {
   return axiosInstance.get<ApiResponse<EligibleUsersRes>>(
     `/admin/v1/session-eligible-users?generation=${generation}`,
   );

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getEligibleUsers } from 'apis/session/SessionApis';
 
-export const useSessionEligibleUserQuery = (generation: number) => {
+export const useSessionEligibleUserQuery = (generation: string) => {
   return useQuery({
     queryKey: ['eligible-user', generation],
     queryFn: () => getEligibleUsers(generation),

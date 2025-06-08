@@ -69,7 +69,7 @@ export interface SessionDetailRes {
 }
 
 export interface EligibleUsersRes {
-  users: [];
+  users: EligibleUser[];
 }
 export type UserPosition =
   | 'PM'

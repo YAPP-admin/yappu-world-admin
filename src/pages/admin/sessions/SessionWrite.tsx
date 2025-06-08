@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -24,10 +24,11 @@ import {
   sessionTypeList,
 } from '@constants/optionList';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
+import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligibleUserQuery';
 import { useSessionMutation } from '@queries/session/useSessionMutation';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
-import { SesseionReq } from 'apis/session/types';
+import { SesseionReq, UserPosition } from 'apis/session/types';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
@@ -37,7 +38,20 @@ const SessionWrite: FC = () => {
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
   });
+  const { data: eligibleUser } = useSessionEligibleUserQuery(
+    method.watch('generation'),
+  );
   const { mutateAsync } = useSessionMutation();
+  const [selectedUsers, setSelectedUsers] = useState<
+    Record<UserPosition, Set<string>>
+  >(() =>
+    eligibleUser?.users
+      ? (Object.fromEntries(
+          eligibleUser.users.map((p) => [p.position, new Set()]),
+        ) as Record<UserPosition, Set<string>>)
+      : ({} as Record<UserPosition, Set<string>>),
+  );
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const setAddCompletePopup = useSessionStore(
@@ -318,7 +332,15 @@ const SessionWrite: FC = () => {
         </FormProvider>
       </Form>
       {sessionTargetPopup && (
-        <SessionTargetPopup onClose={() => setSessionTargetPopup(false)} />
+        <SessionTargetPopup
+          defaultSelectedUsers={selectedUsers}
+          eligibleUsers={eligibleUser?.users ?? []}
+          onClose={() => setSessionTargetPopup(false)}
+          onConfirm={(updated) => {
+            setSelectedUsers(updated);
+            setSessionTargetPopup(false);
+          }}
+        />
       )}
     </Container>
   );

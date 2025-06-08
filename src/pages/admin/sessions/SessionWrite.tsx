@@ -14,6 +14,7 @@ import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
+import RadioGroup from '@compnents/commons/RadioGroup';
 import Select, { OptionType } from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
@@ -89,6 +90,33 @@ const SessionWrite: FC = () => {
         <Typography variant="title3Bold">신규 세션 추가</Typography>
         <FormProvider {...method}>
           <FlexBox direction="column" gap={24}>
+            <GridBox align="center" columns="79px 1fr" gap={16}>
+              <Typography variant="body1Normal">세션 타입</Typography>
+              <FlexBox direction="column">
+                <Controller
+                  control={method.control}
+                  name="sessionType"
+                  render={({ field }) => (
+                    <Select
+                      optionList={sessionTypeList}
+                      size="large"
+                      width="191px"
+                      selectedValue={
+                        sessionTypeList.find(
+                          (item) => item.value === field.value,
+                        )?.value ?? ''
+                      }
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                {method.formState.errors.sessionType && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.sessionType.message}
+                  </Typography>
+                )}
+              </FlexBox>
+            </GridBox>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
               <Typography variant="body1Normal">제목</Typography>
               <FlexBox direction="column">
@@ -101,7 +129,7 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">시작 날짜</Typography>
+              <Typography variant="body1Normal">시작일</Typography>
               <FlexBox direction="column">
                 <FlexBox gap={20}>
                   <Calendar name="date" />
@@ -149,7 +177,7 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">종료 날짜</Typography>
+              <Typography variant="body1Normal">종료일</Typography>
               <FlexBox direction="column">
                 <FlexBox gap={20}>
                   <Calendar name="endDate" />
@@ -196,68 +224,7 @@ const SessionWrite: FC = () => {
                 )}
               </FlexBox>
             </GridBox>
-            <FlexBox gap={90}>
-              <GridBox align="center" columns="79px 1fr" gap={16}>
-                <Typography variant="body1Normal">기수</Typography>
-                <FlexBox direction="column">
-                  <Controller
-                    control={method.control}
-                    name="generation"
-                    render={({ field }) => (
-                      <Select
-                        optionList={optionList}
-                        size="large"
-                        width="191px"
-                        selectedValue={
-                          optionList.find(
-                            (item) => item.value === field.value?.toString(),
-                          )?.value ?? ''
-                        }
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                  {method.formState.errors.generation && (
-                    <Typography
-                      color="status-negative"
-                      variant="caption1Regular"
-                    >
-                      {method.formState.errors.generation.message}
-                    </Typography>
-                  )}
-                </FlexBox>
-              </GridBox>
-              <GridBox align="center" columns="79px 1fr" gap={16}>
-                <Typography variant="body1Normal">세션 타입</Typography>
-                <FlexBox direction="column">
-                  <Controller
-                    control={method.control}
-                    name="sessionType"
-                    render={({ field }) => (
-                      <Select
-                        optionList={sessionTypeList}
-                        size="large"
-                        width="191px"
-                        selectedValue={
-                          sessionTypeList.find(
-                            (item) => item.value === field.value,
-                          )?.value ?? ''
-                        }
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                  {method.formState.errors.sessionType && (
-                    <Typography
-                      color="status-negative"
-                      variant="caption1Regular"
-                    >
-                      {method.formState.errors.sessionType.message}
-                    </Typography>
-                  )}
-                </FlexBox>
-              </GridBox>
-            </FlexBox>
+
             <GridBox fullWidth columns="79px 1fr" gap={16}>
               <Typography variant="body1Normal">장소</Typography>
               <FlexBox direction="column">
@@ -267,6 +234,62 @@ const SessionWrite: FC = () => {
                     {method.formState.errors.place.message}
                   </Typography>
                 )}
+              </FlexBox>
+            </GridBox>
+
+            <div
+              style={{
+                height: '1px',
+                background: 'rgba(112, 115, 124, 0.22)',
+                width: '100%',
+              }}
+            />
+
+            <GridBox align="center" columns="79px 1fr" gap={16}>
+              <Typography variant="body1Normal">기수</Typography>
+              <FlexBox direction="column">
+                <Controller
+                  control={method.control}
+                  name="generation"
+                  render={({ field }) => (
+                    <Select
+                      optionList={optionList}
+                      size="large"
+                      width="191px"
+                      selectedValue={
+                        optionList.find(
+                          (item) => item.value === field.value?.toString(),
+                        )?.value ?? ''
+                      }
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                {method.formState.errors.generation && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.generation.message}
+                  </Typography>
+                )}
+              </FlexBox>
+            </GridBox>
+            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+              <Typography variant="body1Normal">세션 대상</Typography>
+              <FlexBox align="center" gap={12}>
+                <RadioGroup
+                  name="target"
+                  options={[
+                    { label: '전체', value: 'ALL' },
+                    { label: '선택', value: 'SELECT' },
+                  ]}
+                />
+                <SolidButton
+                  disabled={method.watch('target') !== 'SELECT'}
+                  size="small"
+                  type="button"
+                  variant="secondary"
+                >
+                  대상 선택
+                </SolidButton>
               </FlexBox>
             </GridBox>
           </FlexBox>
@@ -301,4 +324,10 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 40px;
+
+  #radio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
 `;

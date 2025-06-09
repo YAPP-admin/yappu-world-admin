@@ -61,7 +61,8 @@ const MemberForm: FC<Props> = (props) => {
       email: data.email,
       activityUnits: data.activityUnits.map((el) => ({
         ...el,
-        position: el.position.toUpperCase(),
+        position:
+          el.position === '운영진' ? 'STAFF' : el.position.toUpperCase(),
       })),
       phoneNumber: data.phoneNumber,
       gender: data.gender,

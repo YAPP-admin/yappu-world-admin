@@ -1,3 +1,6 @@
+import { FC } from 'react';
+import styled from 'styled-components';
+
 import TextButton from '@compnents/Button/TextButton';
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
@@ -9,8 +12,6 @@ import { CodeHeader } from '@constants/tableHeader';
 import { useAttendanceCodeQuery } from '@queries/attendance/useAttendanceCodeQuery';
 import { useAttendanceCodeStore } from '@stores/attendanceCodeStore';
 import CodeEditPopup from 'features/attendance/CodeEditPopup';
-import { FC } from 'react';
-import styled from 'styled-components';
 
 const AttendanceCode: FC = () => {
   const { editPopupOpen, handleEditPopup } = useAttendanceCodeStore();

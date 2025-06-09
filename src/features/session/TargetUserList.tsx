@@ -9,41 +9,55 @@ import { UserInfo } from 'apis/notice/types';
 
 interface Props {
   users: UserInfo[];
-  selectedIds: Set<string>;
-  onToggleUser: (userId: string) => void;
+  selectedUsers: UserInfo[];
+  onToggleUser: (userId: UserInfo) => void;
   onToggleAll: () => void;
 }
 
 const TargetUserList: FC<Props> = ({
   users,
-  selectedIds,
+  selectedUsers,
   onToggleAll,
   onToggleUser,
 }) => {
-  const allSelected = users?.length > 0 && selectedIds?.size === users?.length;
+  const allSelected =
+    users?.length > 0 && selectedUsers?.length === users?.length;
 
   return (
     <Container>
-      <FlexBox align="center" gap={8}>
-        <Checkbox
-          state={allSelected ? 'checked' : 'unchecked'}
-          onChange={onToggleAll}
-        />
-        <Typography fontWeight={600} variant="body2Normal">
-          전체 선택
-        </Typography>
-      </FlexBox>
-      <GridBox columns={2} rowGap={16}>
-        {users?.map((user) => (
-          <FlexBox key={user.userId} align="center" gap={8}>
+      {users.length ? (
+        <>
+          <FlexBox align="center" gap={8}>
             <Checkbox
-              state={selectedIds?.has(user.userId) ? 'checked' : 'unchecked'}
-              onChange={() => onToggleUser(user.userId)}
+              state={allSelected ? 'checked' : 'unchecked'}
+              onChange={onToggleAll}
             />
-            <Typography variant="body2Normal">{user.name}</Typography>
+            <Typography fontWeight={600} variant="body2Normal">
+              전체 선택
+            </Typography>
           </FlexBox>
-        ))}
-      </GridBox>
+          <GridBox columns={2} rowGap={16}>
+            {users.map((user) => {
+              const isSelected = selectedUsers.some(
+                (u) => u.userId === user.userId,
+              );
+              return (
+                <FlexBox key={user.userId} align="center" gap={8}>
+                  <Checkbox
+                    state={isSelected ? 'checked' : 'unchecked'}
+                    onChange={() => onToggleUser(user)}
+                  />
+                  <Typography variant="body2Normal">{user.name}</Typography>
+                </FlexBox>
+              );
+            })}
+          </GridBox>
+        </>
+      ) : (
+        <Typography variant="body1Normal">
+          선택 가능한 대상이 없습니다.
+        </Typography>
+      )}
     </Container>
   );
 };

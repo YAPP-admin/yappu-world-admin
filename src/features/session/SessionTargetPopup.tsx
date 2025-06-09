@@ -7,6 +7,7 @@ import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
 import PopupContainer from '@compnents/popup/PopupContainer';
+import { SelectedUsersMap } from '@pages/admin/sessions/SessionWrite';
 import { UserInfo } from 'apis/notice/types';
 import { EligibleUser, UserPosition } from 'apis/session/types';
 
@@ -15,9 +16,9 @@ import TargetUserList from './TargetUserList';
 
 interface Props {
   onClose: () => void;
-  onConfirm: (updated: Record<UserPosition, Set<string>>) => void;
+  onConfirm: (updated: SelectedUsersMap) => void;
   eligibleUsers: EligibleUser[];
-  defaultSelectedUsers: Record<UserPosition, Set<string>>;
+  defaultSelectedUsers: SelectedUsersMap;
 }
 
 const SessionTargetPopup: FC<Props> = ({
@@ -27,7 +28,8 @@ const SessionTargetPopup: FC<Props> = ({
   defaultSelectedUsers,
 }) => {
   const [curTab, setCurTab] = useState<UserPosition>('PM');
-  const [selectedMap, setSelectedMap] = useState(defaultSelectedUsers);
+  const [selectedMap, setSelectedMap] =
+    useState<SelectedUsersMap>(defaultSelectedUsers);
 
   const handleConfirm = () => {
     onConfirm(selectedMap);
@@ -38,7 +40,7 @@ const SessionTargetPopup: FC<Props> = ({
   };
 
   const eligibleUserMap = useMemo(() => {
-    return {
+    const base: Record<UserPosition, UserInfo[]> = {
       PM: [],
       DESIGN: [],
       WEB: [],
@@ -46,36 +48,41 @@ const SessionTargetPopup: FC<Props> = ({
       IOS: [],
       FLUTTER: [],
       SERVER: [],
-      STAFF: [],
-      ...Object.fromEntries(eligibleUsers.map((el) => [el.position, el.users])),
-    } as Record<UserPosition, UserInfo[]>;
+    };
+
+    eligibleUsers.forEach(({ position, users }) => {
+      base[position] = users;
+    });
+
+    return base;
   }, [eligibleUsers]);
 
-  const handleToggleUser = (userId: string) => {
+  const handleToggleUser = (user: UserInfo) => {
     setSelectedMap((prev) => {
-      const newSet = new Set(prev[curTab]);
-      if (newSet.has(userId)) {
-        newSet.delete(userId);
-      } else {
-        newSet.add(userId);
-      }
-      return { ...prev, [curTab]: newSet };
+      const current = prev[curTab] ?? [];
+      const exists = current.some((u) => u.userId === user.userId);
+
+      const updated = exists
+        ? current.filter((u) => u.userId !== user.userId)
+        : [...current, user];
+
+      return { ...prev, [curTab]: updated };
     });
   };
 
   const handleToggleAll = () => {
     const users = eligibleUserMap[curTab] ?? [];
-    const selectedSet = selectedMap[curTab] ?? new Set();
-    const allSelected = selectedSet.size === users.length;
+    const current = selectedMap[curTab] ?? [];
+    const allSelected = current.length === users.length;
 
     setSelectedMap((prev) => ({
       ...prev,
-      [curTab]: new Set(allSelected ? [] : users.map((u) => u.userId)),
+      [curTab]: allSelected ? [] : users,
     }));
   };
 
   const totalSelectedCount = Object.values(selectedMap).reduce(
-    (acc, set) => acc + set.size,
+    (acc, list) => acc + list.length,
     0,
   );
 
@@ -96,7 +103,7 @@ const SessionTargetPopup: FC<Props> = ({
             onChangeCurTab={onChangeCurTab}
           />
           <TargetUserList
-            selectedIds={selectedMap[curTab]}
+            selectedUsers={selectedMap[curTab]}
             users={eligibleUserMap[curTab]}
             onToggleAll={handleToggleAll}
             onToggleUser={handleToggleUser}
@@ -112,7 +119,6 @@ const SessionTargetPopup: FC<Props> = ({
     </PopupContainer>
   );
 };
-
 export default SessionTargetPopup;
 
 const Container = styled.div`
@@ -125,6 +131,7 @@ const Container = styled.div`
     0px 4px 8px 0px rgba(0, 0, 0, 0.08),
     0px 0px 4px 0px rgba(0, 0, 0, 0.08);
   background: #fff;
+  min-height: 50%;
 
   div {
     box-sizing: border-box;
@@ -138,4 +145,6 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const Content = styled.div``;
+const Content = styled.div`
+  flex: 1;
+`;

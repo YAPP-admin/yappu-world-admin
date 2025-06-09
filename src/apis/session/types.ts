@@ -78,8 +78,7 @@ export type UserPosition =
   | 'ANDROID'
   | 'IOS'
   | 'FLUTTER'
-  | 'SERVER'
-  | 'STAFF';
+  | 'SERVER';
 
 export interface EligibleUser {
   position: UserPosition;

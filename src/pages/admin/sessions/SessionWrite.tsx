@@ -28,10 +28,14 @@ import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligible
 import { useSessionMutation } from '@queries/session/useSessionMutation';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
+import { UserInfo } from 'apis/notice/types';
 import { SesseionReq, UserPosition } from 'apis/session/types';
+import SelectedTargetUserTable from 'features/session/SelectedTargetUserTable';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
+
+export type SelectedUsersMap = Record<UserPosition, UserInfo[]>;
 
 const SessionWrite: FC = () => {
   const { data: generationList } = useGenerationListQuery(1);
@@ -42,15 +46,28 @@ const SessionWrite: FC = () => {
     method.watch('generation'),
   );
   const { mutateAsync } = useSessionMutation();
-  const [selectedUsers, setSelectedUsers] = useState<
-    Record<UserPosition, Set<string>>
-  >(() =>
-    eligibleUser?.users
-      ? (Object.fromEntries(
-          eligibleUser.users.map((p) => [p.position, new Set()]),
-        ) as Record<UserPosition, Set<string>>)
-      : ({} as Record<UserPosition, Set<string>>),
-  );
+  // const [selectedUsers, setSelectedUsers] = useState<
+  //   Record<UserPosition, Set<string>>
+  // >(() =>
+  //   eligibleUser?.users
+  //     ? (Object.fromEntries(
+  //         eligibleUser.users.map((p) => [p.position, new Set()]),
+  //       ) as Record<UserPosition, Set<string>>)
+  //     : ({} as Record<UserPosition, Set<string>>),
+  // );
+  const emptySelectedUsers: SelectedUsersMap = {
+    PM: [],
+    DESIGN: [],
+    WEB: [],
+    ANDROID: [],
+    IOS: [],
+    FLUTTER: [],
+    SERVER: [],
+  };
+  const [selectedUsers, setSelectedUsers] =
+    useState<SelectedUsersMap>(emptySelectedUsers);
+
+  console.log('select :', selectedUsers);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -315,6 +332,19 @@ const SessionWrite: FC = () => {
                 </SolidButton>
               </FlexBox>
             </GridBox>
+            {method.watch('target') === 'SELECT' && (
+              <SelectedTargetUserTable
+                selectedUsers={selectedUsers}
+                onRemove={(position, userId) => {
+                  setSelectedUsers((prev) => ({
+                    ...prev,
+                    [position]: prev[position].filter(
+                      (u) => u.userId !== userId,
+                    ),
+                  }));
+                }}
+              />
+            )}
           </FlexBox>
 
           <FlexBox gap={8} justify="flex-end">
@@ -352,6 +382,7 @@ const Container = styled.div`
   flex-direction: column;
   padding: 32px 40px;
   gap: 40px;
+  overflow-y: auto;
 `;
 
 const Form = styled.form`

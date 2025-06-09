@@ -41,20 +41,15 @@ const SessionWrite: FC = () => {
   const { data: generationList } = useGenerationListQuery(1);
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
+    defaultValues: {
+      target: 'ALL',
+      sessionAttendeeIds: [],
+    },
   });
   const { data: eligibleUser } = useSessionEligibleUserQuery(
     method.watch('generation'),
   );
   const { mutateAsync } = useSessionMutation();
-  // const [selectedUsers, setSelectedUsers] = useState<
-  //   Record<UserPosition, Set<string>>
-  // >(() =>
-  //   eligibleUser?.users
-  //     ? (Object.fromEntries(
-  //         eligibleUser.users.map((p) => [p.position, new Set()]),
-  //       ) as Record<UserPosition, Set<string>>)
-  //     : ({} as Record<UserPosition, Set<string>>),
-  // );
   const emptySelectedUsers: SelectedUsersMap = {
     PM: [],
     DESIGN: [],
@@ -66,8 +61,6 @@ const SessionWrite: FC = () => {
   };
   const [selectedUsers, setSelectedUsers] =
     useState<SelectedUsersMap>(emptySelectedUsers);
-
-  console.log('select :', selectedUsers);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -89,9 +82,31 @@ const SessionWrite: FC = () => {
     })) ?? [];
 
   const onSumbit = async (data: SessionFormType) => {
+    const hasSelectedUser = Object.values(selectedUsers).flat().length > 0;
+
+    if (data.target === 'SELECT' && !hasSelectedUser) {
+      window.alert('세션 대상을 선택해 주세요.');
+      return;
+    }
     try {
+      const allUserIds: string[] =
+        eligibleUser?.users.flatMap((group) =>
+          group.users.map((user) => user.userId),
+        ) ?? [];
+      if (data.target === 'ALL') {
+        data.sessionAttendeeIds = allUserIds;
+      } else {
+        const selectedIds: string[] = Object.values(selectedUsers)
+          .flat()
+          .map((user) => user.userId);
+
+        data.sessionAttendeeIds = selectedIds;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { target, ...rest } = data;
+
       const req: SesseionReq = {
-        ...data,
+        ...rest,
         generation: Number(data.generation),
         date: dayjs(data.date).format('YYYY-MM-DD'),
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),

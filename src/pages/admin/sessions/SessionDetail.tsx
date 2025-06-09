@@ -14,8 +14,8 @@ import { useDeleteSessionMutation } from '@queries/session/useDeleteSessionMutat
 import { useSessionStore } from '@stores/sessionStore';
 import { getSessionType } from '@utils/getSessionType';
 import { SessionDetailRes } from 'apis/session/types';
-
 import 'dayjs/locale/ko';
+import TargetTable from 'features/session/TargetTable';
 
 dayjs.locale('ko');
 
@@ -112,6 +112,12 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
             장소
           </Typography>
           <Typography variant="body1Normal">{data?.place}</Typography>
+        </GridBox>
+        <GridBox columnGap={16} columns="80px auto">
+          <Typography color="label-alternative" variant="body1Normal">
+            세션 대상
+          </Typography>
+          <TargetTable sessionAttendees={data?.attendees} />
         </GridBox>
       </Container>
       {isDeletePopup && (

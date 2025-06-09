@@ -13,7 +13,7 @@ interface Props {
   onRemove: (position: UserPosition, userId: string) => void;
 }
 
-const SelectedTargetUserTable: FC<Props> = ({ selectedUsers, onRemove }) => {
+const EditableTargetTable: FC<Props> = ({ selectedUsers, onRemove }) => {
   return (
     <Table style={{ width: '100%', borderCollapse: 'collapse' }}>
       <tbody>
@@ -66,7 +66,7 @@ const SelectedTargetUserTable: FC<Props> = ({ selectedUsers, onRemove }) => {
   );
 };
 
-export default SelectedTargetUserTable;
+export default EditableTargetTable;
 
 const Table = styled.table`
   border-top: 1px solid #aeb0b6;

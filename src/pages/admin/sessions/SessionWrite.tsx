@@ -30,7 +30,7 @@ import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
 import { UserInfo } from 'apis/notice/types';
 import { SesseionReq, UserPosition } from 'apis/session/types';
-import SelectedTargetUserTable from 'features/session/SelectedTargetUserTable';
+import EditableTargetTable from 'features/session/EditableTargetTable';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
@@ -348,7 +348,7 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             {method.watch('target') === 'SELECT' && (
-              <SelectedTargetUserTable
+              <EditableTargetTable
                 selectedUsers={selectedUsers}
                 onRemove={(position, userId) => {
                   setSelectedUsers((prev) => ({

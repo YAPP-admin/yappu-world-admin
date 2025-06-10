@@ -144,7 +144,9 @@ const SessionWrite: FC = () => {
         <FormProvider {...method}>
           <FlexBox direction="column" gap={24}>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">세션 타입</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                세션 타입
+              </Typography>
               <FlexBox direction="column">
                 <Controller
                   control={method.control}
@@ -171,7 +173,9 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">제목</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                제목
+              </Typography>
               <FlexBox direction="column">
                 <TextInput {...method.register('name')} />
                 {method.formState.errors.name && (
@@ -182,7 +186,9 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">시작일</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                시작일
+              </Typography>
               <FlexBox direction="column">
                 <FlexBox gap={20}>
                   <Calendar name="date" />
@@ -230,7 +236,9 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">종료일</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                종료일
+              </Typography>
               <FlexBox direction="column">
                 <FlexBox gap={20}>
                   <Calendar name="endDate" />
@@ -279,7 +287,9 @@ const SessionWrite: FC = () => {
             </GridBox>
 
             <GridBox fullWidth columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">장소</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                장소
+              </Typography>
               <FlexBox direction="column">
                 <TextInput {...method.register('place')} />
                 {method.formState.errors.place && (
@@ -299,7 +309,9 @@ const SessionWrite: FC = () => {
             />
 
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">기수</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                기수
+              </Typography>
               <FlexBox direction="column">
                 <Controller
                   control={method.control}
@@ -326,7 +338,9 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">세션 대상</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                세션 대상
+              </Typography>
               <FlexBox align="center" gap={12}>
                 <RadioGroup
                   disabled={!method.watch('generation')}

@@ -12,6 +12,7 @@ interface Props {
   style?: React.CSSProperties;
   align?: 'left' | 'center' | 'right';
   ellipsis?: boolean;
+  fontWeight?: number | string;
 }
 
 const Typography: FC<Props> = ({
@@ -22,12 +23,14 @@ const Typography: FC<Props> = ({
   color = 'static-black',
   align = 'left',
   ellipsis = false,
+  fontWeight,
 }) => {
   return (
     <Styled
       $align={align}
       $color={color}
       $ellipsis={ellipsis}
+      $fontWeight={fontWeight}
       $variant={variant}
       as={as}
       style={style}
@@ -44,11 +47,13 @@ const Styled = styled.span<{
   $color: SemanticColorKey;
   $align?: 'left' | 'center' | 'right';
   $ellipsis?: boolean;
-}>(({ $variant, $color, $align, $ellipsis }) => ({
+  $fontWeight?: number | string;
+}>(({ $variant, $color, $align, $ellipsis, $fontWeight }) => ({
   ...typography[$variant],
   color: semanticColor[$color],
   textAlign: $align,
   whiteSpace: $ellipsis ? 'nowrap' : 'pre-line',
   overflow: $ellipsis ? 'hidden' : undefined,
   textOverflow: $ellipsis ? 'ellipsis' : undefined,
+  fontWeight: $fontWeight ?? typography[$variant].fontWeight,
 }));

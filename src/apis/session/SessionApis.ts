@@ -10,6 +10,7 @@ import {
 import {
   DeleteSessionReq,
   EditSessionReq,
+  EligibleUsersRes,
   SesseionReq,
   SessionDetailRes,
   SessionRes,
@@ -36,5 +37,11 @@ export const deleteSession = (data: DeleteSessionReq): Promise<void> => {
 export const getSessionDetail = (sessionId: string) => {
   return axiosInstance.get<ApiResponse<SessionDetailRes>>(
     `/admin/v1/sessions/${sessionId}`,
+  );
+};
+
+export const getEligibleUsers = (generation: string) => {
+  return axiosInstance.get<ApiResponse<EligibleUsersRes>>(
+    `/admin/v1/session-eligible-users?generation=${generation}`,
   );
 };

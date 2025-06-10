@@ -80,4 +80,5 @@ const Container = styled.div`
   flex-direction: column;
   padding: 32px 40px;
   gap: 40px;
+  overflow-y: auto;
 `;

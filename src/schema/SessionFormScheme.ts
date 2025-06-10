@@ -20,6 +20,8 @@ export const SessionFormSchema = z
     sessionType: z.enum(['ONLINE', 'OFFLINE', 'TEAM'], {
       required_error: '세션 타입을 선택해주세요.',
     }),
+    target: z.string().default('ALL'),
+    sessionAttendeeIds: z.string().array(),
   })
   .refine(
     (data) => {

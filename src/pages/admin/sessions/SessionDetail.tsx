@@ -113,12 +113,12 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           </Typography>
           <Typography variant="body1Normal">{data?.place}</Typography>
         </GridBox>
-        <GridBox columnGap={16} columns="80px auto">
+        <FlexBox direction="column" gap={16}>
           <Typography color="label-alternative" variant="body1Normal">
             세션 대상
           </Typography>
           <TargetTable sessionAttendees={data?.attendees} />
-        </GridBox>
+        </FlexBox>
       </Container>
       {isDeletePopup && (
         <ConfirmPopup

@@ -30,13 +30,15 @@ const GenerateForm: FC<Props> = (props) => {
       <Select
         optionList={positionOptionList}
         width="120px"
-        selectedValue={
-          positionOptionList.find(
-            (item) =>
-              item.value ===
-              watch(`activityUnits.${index}.position`).toUpperCase(),
-          )?.value ?? ''
-        }
+        selectedValue={(() => {
+          const watched = watch(
+            `activityUnits.${index}.position`,
+          ).toUpperCase();
+          const value = watched === '운영진' ? 'STAFF' : watched;
+          return (
+            positionOptionList.find((item) => item.value === value)?.value ?? ''
+          );
+        })()}
         onChange={(value: string) =>
           setValue(`activityUnits.${index}.position`, value)
         }

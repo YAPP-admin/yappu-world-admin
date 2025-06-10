@@ -1,7 +1,7 @@
 export type NoticeCategory = 'SESSION' | 'OPERATION';
 export type NoticeType = 'ALL' | NoticeCategory;
 
-export interface WriterInfo {
+export interface UserInfo {
   userId: string;
   name: string;
 }
@@ -15,7 +15,7 @@ export interface NoticeRes {
   noticeId: string;
   title: string;
   createdAt: string;
-  writer: WriterInfo;
+  writer: UserInfo;
   noticeType: string;
 }
 

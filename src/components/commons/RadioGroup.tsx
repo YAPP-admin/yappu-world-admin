@@ -6,9 +6,10 @@ import { OptionType } from './Select';
 interface RadioGroupProps {
   name: string;
   options: OptionType[];
+  disabled?: boolean;
 }
 
-const RadioGroup = ({ name, options }: RadioGroupProps) => {
+const RadioGroup = ({ name, options, disabled }: RadioGroupProps) => {
   const { control } = useFormContext();
 
   return (
@@ -22,6 +23,7 @@ const RadioGroup = ({ name, options }: RadioGroupProps) => {
               <Radio
                 key={option.value}
                 checked={field.value === option.value}
+                disabled={disabled}
                 value={option.label}
                 onChange={() => field.onChange(option.value)}
               />

@@ -29,7 +29,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log('error ', error);
     if (!error.response) {
       return Promise.reject(error);
     }
@@ -42,11 +41,10 @@ axiosInstance.interceptors.response.use(
       originalRequest.url?.includes('/auth/reissue') ||
       originalRequest._retry
     ) {
-      console.warn('⛔️ 재발급 요청 또는 이미 재시도한 요청입니다.');
+      console.warn('재발급 요청 또는 이미 재시도한 요청입니다.');
       return Promise.reject(error);
     }
 
-    // ✅ 비정상 토큰 → 즉시 로그아웃
     if (status === 401 && errorCode === 'TKN_0002') {
       logoutAndReset(message ?? '비정상 토큰입니다.');
       return Promise.reject(error);
@@ -58,7 +56,7 @@ axiosInstance.interceptors.response.use(
       try {
         const newAccessToken = await reissueToken();
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest); // 재요청
+        return axiosInstance(originalRequest);
       } catch (error) {
         if (isAxiosError<ErrorResponse>(error)) {
           return Promise.reject(error);
@@ -71,7 +69,7 @@ axiosInstance.interceptors.response.use(
       ['COM_0001', 'COM_0002'].includes(errorCode)
     ) {
       showErrorToast(response.data.message);
-      return;
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);

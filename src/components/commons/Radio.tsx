@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import theme from 'styles/theme';
 
-interface RadioProps {
+interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   color?: string;
   checked?: boolean;
@@ -11,16 +11,32 @@ interface RadioProps {
 }
 
 const Radio = forwardRef<HTMLInputElement, RadioProps>(
-  ({ value, color = '#E56738', checked = false, onChange }, ref) => {
+  (
+    {
+      value,
+      color = '#E56738',
+      checked = false,
+      disabled = false,
+      onChange,
+      ...rest
+    },
+    ref,
+  ) => {
     return (
-      <Container>
+      <Container disabled={disabled}>
         <HiddenInput
           ref={ref}
           checked={checked}
+          disabled={disabled}
           type="radio"
           onChange={onChange}
+          {...rest}
         />
-        <Circle checked={checked} color={color} onClick={onChange} />
+        <Circle
+          checked={checked}
+          color={color}
+          onClick={!disabled ? onChange : undefined}
+        />
         <Label>{value}</Label>
       </Container>
     );
@@ -31,18 +47,22 @@ Radio.displayName = 'Radio';
 
 export default Radio;
 
-const Container = styled.label`
+const Container = styled.label<{ disabled: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.43 : 1)};
 `;
 
 const HiddenInput = styled.input`
   display: none;
 `;
 
-const Circle = styled.div<{ checked: boolean; color: string }>`
+const Circle = styled.div<{
+  checked: boolean;
+  color: string;
+}>`
   width: 20px;
   height: 20px;
   border-radius: 50%;

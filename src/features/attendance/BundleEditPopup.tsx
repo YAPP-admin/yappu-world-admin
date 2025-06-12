@@ -100,7 +100,7 @@ const BundleEditPopup: FC<Props> = ({
           <FlexBox direction="column" gap={4}>
             <Typography variant="label1Normal">출석 상태</Typography>
             <Select
-              optionList={attendanceOptions}
+              optionList={attendanceOptions.slice(0, 6)}
               selectedValue={status}
               onChange={(value: string) => setStatus(value)}
             />

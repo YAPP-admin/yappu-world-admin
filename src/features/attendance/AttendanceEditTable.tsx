@@ -53,6 +53,7 @@ const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
                     optionList={attendanceOptions}
                     selectedValue={getAttendanceStatus(status)}
                     onChange={(value) => {
+                      if (getAttendanceStatus(status) === 'NULL') return;
                       updateStatus(session.sessionId, user.userId, value);
                     }}
                   />

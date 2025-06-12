@@ -1,7 +1,7 @@
-import _Chip, { ChipColor, ChipStyle } from 'components/commons/Chip';
 import { FC } from 'react';
 
 import { AttendanceStatusValueType } from 'apis/attendance/types';
+import _Chip, { ChipColor, ChipStyle } from 'components/commons/Chip';
 
 interface Props {
   type: AttendanceStatusValueType;

@@ -2,13 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC, useState } from 'react';
-import {
-  Controller,
-  FieldErrors,
-  FormProvider,
-  useForm,
-} from 'react-hook-form';
+import { FC, useEffect, useState } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -30,7 +25,7 @@ import { useEditSessionMutation } from '@queries/session/useEditSessionMutaion';
 import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligibleUserQuery';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
-import { SessionDetailRes } from 'apis/session/types';
+import { SessionDetailRes, UserPosition } from 'apis/session/types';
 import EditableTargetTable from 'features/session/EditableTargetTable';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { convertSessionAttendee } from 'features/session/utils/convertSessionAttendee';
@@ -86,6 +81,16 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     convertSessionAttendee(data?.attendees),
   );
 
+  useEffect(() => {
+    if (method.watch('target') === 'ALL' && eligibleUser) {
+      const all = eligibleUser.users.reduce((acc, cur) => {
+        acc[cur.position] = cur.users;
+        return acc;
+      }, {} as SelectedUsersMap);
+      setSelectedUsers(all);
+    }
+  }, [method.watch('target'), eligibleUser]);
+
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
       label: el.generation?.toString() + '기',
@@ -139,15 +144,35 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       }
     }
   };
+  const handleRemove = (position: UserPosition, userId: string) => {
+    setSelectedUsers((prev) => {
+      const updated = {
+        ...prev,
+        [position]: prev[position].filter((u) => u.userId !== userId),
+      };
 
-  const onInvalid = (error: FieldErrors) => {
-    console.log(error);
+      setTimeout(() => {
+        const allUsers = eligibleUser?.users.reduce((acc, cur) => {
+          acc[cur.position] = cur.users;
+          return acc;
+        }, {} as SelectedUsersMap);
+
+        const isAllSelected =
+          JSON.stringify(updated) === JSON.stringify(allUsers);
+
+        if (!isAllSelected) {
+          method.setValue('target', 'SELECT');
+        }
+      }, 0);
+
+      return updated;
+    });
   };
 
   return (
     <Form
       onClick={(e) => e.stopPropagation()}
-      onSubmit={method.handleSubmit(onSumbit, onInvalid)}
+      onSubmit={method.handleSubmit(onSumbit)}
     >
       <Typography variant="title3Bold">세션 수정</Typography>
       <FormProvider {...method}>
@@ -339,12 +364,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           </GridBox>
           <EditableTargetTable
             selectedUsers={selectedUsers}
-            onRemove={(position, userId) => {
-              setSelectedUsers((prev) => ({
-                ...prev,
-                [position]: prev[position].filter((u) => u.userId !== userId),
-              }));
-            }}
+            onRemove={handleRemove}
           />
         </FlexBox>
 

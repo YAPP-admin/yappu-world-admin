@@ -1,12 +1,14 @@
 import { FC } from 'react';
 
-import Chip from '@compnents/commons/Chip';
 import Typography from '@compnents/commons/Typography';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableRow from '@compnents/table/TableRow';
-import { getChipColor } from '@utils/getChipColor';
+import {
+  getAttendanceStatus,
+  substitutionAttendee,
+} from '@utils/getAttendanceStatus';
 import {
   AttendanceSession,
   AttendanceStatusValueType,
@@ -14,6 +16,7 @@ import {
 } from 'apis/attendance/types';
 
 import AttendanceHeader from './AttendanceHeader';
+import Chip from './Chip';
 
 interface Props {
   sessions: AttendanceSession[] | undefined;
@@ -38,15 +41,13 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
             </TableCell>
             {sessions?.map((session) => {
               if (!sessionMap) return <td key={session.sessionId}>-</td>;
-              const status = sessionMap[session.sessionId]?.[user.userId] ?? '';
+              const status = substitutionAttendee(
+                sessionMap[session.sessionId]?.[user.userId],
+              );
+              if (!status) return;
               return (
                 <TableCell key={session.sessionId} widthType="max">
-                  <Chip
-                    color={getChipColor(status).color}
-                    size="large"
-                    text={status}
-                    variant={getChipColor(status).variant}
-                  />
+                  <Chip label={status} type={getAttendanceStatus(status)} />
                 </TableCell>
               );
             })}

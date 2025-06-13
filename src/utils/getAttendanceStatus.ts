@@ -2,7 +2,7 @@ import { AttendanceStatusValueType } from 'apis/attendance/types';
 
 export const getAttendanceStatus = (
   status: string,
-): AttendanceStatusValueType => {
+): AttendanceStatusValueType | string => {
   switch (status) {
     case 'ON_TIME':
     case '출석':
@@ -23,12 +23,12 @@ export const getAttendanceStatus = (
     case '미출석':
       return 'PENDING';
     default:
-      return 'NULL';
+      return '-';
   }
 };
 
 export const substitutionAttendee = (status: string | null) => {
-  if (!status) return '미참여';
+  if (!status) return;
   switch (status) {
     case 'ON_TIME':
       return '출석';

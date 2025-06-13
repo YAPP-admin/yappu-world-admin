@@ -4,7 +4,7 @@ import { AttendanceStatusValueType } from 'apis/attendance/types';
 import _Chip, { ChipColor, ChipStyle } from 'components/commons/Chip';
 
 interface Props {
-  type: AttendanceStatusValueType;
+  type: AttendanceStatusValueType | string;
   label: string;
 }
 
@@ -16,7 +16,7 @@ const Chip: FC<Props> = ({ label, type }) => {
 export default Chip;
 
 const CHIP_STYLE_MAP: Record<
-  AttendanceStatusValueType,
+  AttendanceStatusValueType | string,
   {
     color: ChipColor;
     variant: ChipStyle;
@@ -31,5 +31,4 @@ const CHIP_STYLE_MAP: Record<
   },
   EARLY_CHECK_OUT: { color: 'violet', variant: 'weak' },
   EXCUSED_ABSENCE: { color: 'neutral', variant: 'weak' },
-  NULL: { color: 'neutral', variant: 'weak' },
 };

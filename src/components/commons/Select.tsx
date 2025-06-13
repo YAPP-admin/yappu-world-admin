@@ -18,6 +18,8 @@ interface Props {
   selectedValue: string;
   onChange?: (value: string) => void;
   size?: 'medium' | 'large';
+  disabled?: boolean;
+  defaultSelectLabel?: string;
 }
 
 const Select = ({
@@ -26,6 +28,8 @@ const Select = ({
   selectedValue,
   onChange,
   size = 'medium',
+  disabled = false,
+  defaultSelectLabel = '선택하세요',
 }: Props) => {
   const [isClick, setIsClick] = useState(false);
   const containerRef = useOutsideClick<HTMLDivElement>(
@@ -40,13 +44,18 @@ const Select = ({
 
   return (
     <Container ref={containerRef} width={width}>
-      <SelectButton size={size} type="button" onClick={openOptionList}>
+      <SelectButton
+        disabled={disabled}
+        size={size}
+        type="button"
+        onClick={openOptionList}
+      >
         <Typography
           style={{ whiteSpace: 'nowrap' }}
           variant={size === 'medium' ? 'body2Reading' : 'body1Normal'}
         >
           {optionList.find((option) => option.value === selectedValue)?.label ??
-            '선택하세요'}
+            defaultSelectLabel}
         </Typography>
         <IconWrapper $isOpen={isClick}>
           <DropDown size={size === 'medium' ? '20' : '24'} />
@@ -79,7 +88,10 @@ const Container = styled.div<{ width?: string }>`
   position: relative;
 `;
 
-const SelectButton = styled.button<{ size: 'medium' | 'large' }>`
+const SelectButton = styled.button<{
+  size: 'medium' | 'large';
+  disabled: boolean;
+}>`
   display: flex;
   padding: ${({ size }) => (size === 'medium' ? '12px' : '12px 16px')};
   height: ${({ size }) => (size === 'medium' ? '40px' : '48px')};
@@ -92,6 +104,7 @@ const SelectButton = styled.button<{ size: 'medium' | 'large' }>`
   background: #fff;
   box-sizing: border-box;
   width: 100%;
+  opacity: ${({ disabled }) => (disabled ? '0.43' : '')};
 `;
 
 const IconWrapper = styled.div<{ $isOpen: boolean }>`

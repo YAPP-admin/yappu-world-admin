@@ -58,8 +58,8 @@ export type AttendanceStatusValueType =
   | 'LATE'
   | 'ABSENT'
   | 'EARLY_CHECK_OUT'
-  | 'EXCUSED_ABSENCE'
-  | 'NULL';
+  | 'EXCUSED_ABSENCE';
+
 export interface AttendanceStatus {
   userId: string;
   status: AttendanceStatusValueType | null;

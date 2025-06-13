@@ -44,7 +44,13 @@ const AttandanceTable: FC<Props> = ({ sessions, users, sessionMap }) => {
               const status = substitutionAttendee(
                 sessionMap[session.sessionId]?.[user.userId],
               );
-              if (!status) return;
+              if (!status) {
+                return (
+                  <TableCell key={session.sessionId} widthType="max">
+                    <Typography variant="body1Normal">-</Typography>
+                  </TableCell>
+                );
+              }
               return (
                 <TableCell key={session.sessionId} widthType="max">
                   <Chip label={status} type={getAttendanceStatus(status)} />

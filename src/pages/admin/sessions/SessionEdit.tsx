@@ -33,7 +33,7 @@ import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { EditSessionType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
-import { SelectedUsersMap } from './SessionWrite';
+import { emptySelectedUsers, SelectedUsersMap } from './SessionWrite';
 
 interface Props {
   handleEdit: () => void;
@@ -333,7 +333,13 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
                       (item) => item.value === field.value?.toString(),
                     )?.value ?? ''
                   }
-                  onChange={field.onChange}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    setSelectedUsers(emptySelectedUsers);
+                    queryClient.invalidateQueries({
+                      queryKey: ['eligible-user', method.watch('generation')],
+                    });
+                  }}
                 />
               )}
             />

@@ -37,6 +37,16 @@ import { showErrorToast } from 'types/showErrorToast';
 
 export type SelectedUsersMap = Record<UserPosition, UserInfo[]>;
 
+export const emptySelectedUsers: SelectedUsersMap = {
+  PM: [],
+  DESIGN: [],
+  WEB: [],
+  ANDROID: [],
+  IOS: [],
+  FLUTTER: [],
+  SERVER: [],
+};
+
 const SessionWrite: FC = () => {
   const { data: generationList } = useGenerationListQuery(1);
   const method = useForm<SessionFormType>({
@@ -50,15 +60,6 @@ const SessionWrite: FC = () => {
     method.watch('generation'),
   );
   const { mutateAsync } = useSessionMutation();
-  const emptySelectedUsers: SelectedUsersMap = {
-    PM: [],
-    DESIGN: [],
-    WEB: [],
-    ANDROID: [],
-    IOS: [],
-    FLUTTER: [],
-    SERVER: [],
-  };
   const [selectedUsers, setSelectedUsers] =
     useState<SelectedUsersMap>(emptySelectedUsers);
 
@@ -130,6 +131,7 @@ const SessionWrite: FC = () => {
   const onClickBack = () => {
     navigate('/admin/sessions');
   };
+  console.log('gen:', method.watch('generation')); // 이 값 undefined 또는 ''
 
   return (
     <Container>
@@ -326,7 +328,16 @@ const SessionWrite: FC = () => {
                           (item) => item.value === field.value?.toString(),
                         )?.value ?? ''
                       }
-                      onChange={field.onChange}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setSelectedUsers(emptySelectedUsers);
+                        queryClient.invalidateQueries({
+                          queryKey: [
+                            'eligible-user',
+                            method.watch('generation'),
+                          ],
+                        });
+                      }}
                     />
                   )}
                 />

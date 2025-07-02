@@ -50,9 +50,12 @@ const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
               return (
                 <TableCell key={session.sessionId} widthType="max">
                   <Select
+                    defaultSelectLabel="-"
+                    disabled={!status}
                     optionList={attendanceOptions}
                     selectedValue={getAttendanceStatus(status)}
                     onChange={(value) => {
+                      if (getAttendanceStatus(status) === 'NULL') return;
                       updateStatus(session.sessionId, user.userId, value);
                     }}
                   />

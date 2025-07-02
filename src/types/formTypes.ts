@@ -61,6 +61,7 @@ export interface EditSessionType {
   endTime: string;
   generation: number;
   sessionType: SessionType;
+  sessionAttendeeIds: string[];
 }
 
 export interface AddSessionType {

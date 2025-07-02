@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
+import RadioGroup from '@compnents/commons/RadioGroup';
 import Select, { OptionType } from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
@@ -23,25 +24,57 @@ import {
   sessionTypeList,
 } from '@constants/optionList';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
+import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligibleUserQuery';
 import { useSessionMutation } from '@queries/session/useSessionMutation';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
-import { SesseionReq } from 'apis/session/types';
+import { UserInfo } from 'apis/notice/types';
+import { SesseionReq, UserPosition } from 'apis/session/types';
+import EditableTargetTable from 'features/session/EditableTargetTable';
+import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
+
+export type SelectedUsersMap = Record<UserPosition, UserInfo[]>;
+
+export const emptySelectedUsers: SelectedUsersMap = {
+  PM: [],
+  DESIGN: [],
+  WEB: [],
+  ANDROID: [],
+  IOS: [],
+  FLUTTER: [],
+  SERVER: [],
+};
 
 const SessionWrite: FC = () => {
   const { data: generationList } = useGenerationListQuery(1);
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
+    defaultValues: {
+      target: 'ALL',
+      sessionAttendeeIds: [],
+    },
   });
+  const { data: eligibleUser } = useSessionEligibleUserQuery(
+    method.watch('generation'),
+  );
   const { mutateAsync } = useSessionMutation();
+  const [selectedUsers, setSelectedUsers] =
+    useState<SelectedUsersMap>(emptySelectedUsers);
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const setAddCompletePopup = useSessionStore(
     (state) => state.setAddCompletePopup,
   );
   const page = useSessionStore((state) => state.page);
+  const sessionTargetPopup = useSessionStore(
+    (state) => state.sessionTargetPopup,
+  );
+  const setSessionTargetPopup = useSessionStore(
+    (state) => state.setSessionTargetPopup,
+  );
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -50,9 +83,31 @@ const SessionWrite: FC = () => {
     })) ?? [];
 
   const onSumbit = async (data: SessionFormType) => {
+    const hasSelectedUser = Object.values(selectedUsers).flat().length > 0;
+
+    if (data.target === 'SELECT' && !hasSelectedUser) {
+      window.alert('세션 대상을 선택해 주세요.');
+      return;
+    }
     try {
+      const allUserIds: string[] =
+        eligibleUser?.users.flatMap((group) =>
+          group.users.map((user) => user.userId),
+        ) ?? [];
+      if (data.target === 'ALL') {
+        data.sessionAttendeeIds = allUserIds;
+      } else {
+        const selectedIds: string[] = Object.values(selectedUsers)
+          .flat()
+          .map((user) => user.userId);
+
+        data.sessionAttendeeIds = selectedIds;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { target, ...rest } = data;
+
       const req: SesseionReq = {
-        ...data,
+        ...rest,
         generation: Number(data.generation),
         date: dayjs(data.date).format('YYYY-MM-DD'),
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
@@ -76,6 +131,7 @@ const SessionWrite: FC = () => {
   const onClickBack = () => {
     navigate('/admin/sessions');
   };
+  console.log('gen:', method.watch('generation')); // 이 값 undefined 또는 ''
 
   return (
     <Container>
@@ -89,8 +145,39 @@ const SessionWrite: FC = () => {
         <Typography variant="title3Bold">신규 세션 추가</Typography>
         <FormProvider {...method}>
           <FlexBox direction="column" gap={24}>
+            <GridBox align="center" columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="body1Normal">
+                세션 타입
+              </Typography>
+              <FlexBox direction="column">
+                <Controller
+                  control={method.control}
+                  name="sessionType"
+                  render={({ field }) => (
+                    <Select
+                      optionList={sessionTypeList}
+                      size="large"
+                      width="191px"
+                      selectedValue={
+                        sessionTypeList.find(
+                          (item) => item.value === field.value,
+                        )?.value ?? ''
+                      }
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+                {method.formState.errors.sessionType && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.sessionType.message}
+                  </Typography>
+                )}
+              </FlexBox>
+            </GridBox>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">제목</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                제목
+              </Typography>
               <FlexBox direction="column">
                 <TextInput {...method.register('name')} />
                 {method.formState.errors.name && (
@@ -101,7 +188,9 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">시작 날짜</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                시작일
+              </Typography>
               <FlexBox direction="column">
                 <FlexBox gap={20}>
                   <Calendar name="date" />
@@ -149,7 +238,9 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">종료 날짜</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                종료일
+              </Typography>
               <FlexBox direction="column">
                 <FlexBox gap={20}>
                   <Calendar name="endDate" />
@@ -196,70 +287,11 @@ const SessionWrite: FC = () => {
                 )}
               </FlexBox>
             </GridBox>
-            <FlexBox gap={90}>
-              <GridBox align="center" columns="79px 1fr" gap={16}>
-                <Typography variant="body1Normal">기수</Typography>
-                <FlexBox direction="column">
-                  <Controller
-                    control={method.control}
-                    name="generation"
-                    render={({ field }) => (
-                      <Select
-                        optionList={optionList}
-                        size="large"
-                        width="191px"
-                        selectedValue={
-                          optionList.find(
-                            (item) => item.value === field.value?.toString(),
-                          )?.value ?? ''
-                        }
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                  {method.formState.errors.generation && (
-                    <Typography
-                      color="status-negative"
-                      variant="caption1Regular"
-                    >
-                      {method.formState.errors.generation.message}
-                    </Typography>
-                  )}
-                </FlexBox>
-              </GridBox>
-              <GridBox align="center" columns="79px 1fr" gap={16}>
-                <Typography variant="body1Normal">세션 타입</Typography>
-                <FlexBox direction="column">
-                  <Controller
-                    control={method.control}
-                    name="sessionType"
-                    render={({ field }) => (
-                      <Select
-                        optionList={sessionTypeList}
-                        size="large"
-                        width="191px"
-                        selectedValue={
-                          sessionTypeList.find(
-                            (item) => item.value === field.value,
-                          )?.value ?? ''
-                        }
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                  {method.formState.errors.sessionType && (
-                    <Typography
-                      color="status-negative"
-                      variant="caption1Regular"
-                    >
-                      {method.formState.errors.sessionType.message}
-                    </Typography>
-                  )}
-                </FlexBox>
-              </GridBox>
-            </FlexBox>
+
             <GridBox fullWidth columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">장소</Typography>
+              <Typography fontWeight={600} variant="body1Normal">
+                장소
+              </Typography>
               <FlexBox direction="column">
                 <TextInput {...method.register('place')} />
                 {method.formState.errors.place && (
@@ -269,6 +301,90 @@ const SessionWrite: FC = () => {
                 )}
               </FlexBox>
             </GridBox>
+
+            <div
+              style={{
+                height: '1px',
+                background: 'rgba(112, 115, 124, 0.22)',
+                width: '100%',
+              }}
+            />
+
+            <GridBox align="center" columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="body1Normal">
+                기수
+              </Typography>
+              <FlexBox direction="column">
+                <Controller
+                  control={method.control}
+                  name="generation"
+                  render={({ field }) => (
+                    <Select
+                      optionList={optionList}
+                      size="large"
+                      width="191px"
+                      selectedValue={
+                        optionList.find(
+                          (item) => item.value === field.value?.toString(),
+                        )?.value ?? ''
+                      }
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setSelectedUsers(emptySelectedUsers);
+                        queryClient.invalidateQueries({
+                          queryKey: [
+                            'eligible-user',
+                            method.watch('generation'),
+                          ],
+                        });
+                      }}
+                    />
+                  )}
+                />
+                {method.formState.errors.generation && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.generation.message}
+                  </Typography>
+                )}
+              </FlexBox>
+            </GridBox>
+            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="body1Normal">
+                세션 대상
+              </Typography>
+              <FlexBox align="center" gap={12}>
+                <RadioGroup
+                  disabled={!method.watch('generation')}
+                  name="target"
+                  options={[
+                    { label: '전체', value: 'ALL' },
+                    { label: '선택', value: 'SELECT' },
+                  ]}
+                />
+                <SolidButton
+                  disabled={method.watch('target') !== 'SELECT'}
+                  size="small"
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setSessionTargetPopup(true)}
+                >
+                  대상 선택
+                </SolidButton>
+              </FlexBox>
+            </GridBox>
+            {method.watch('target') === 'SELECT' && (
+              <EditableTargetTable
+                selectedUsers={selectedUsers}
+                onRemove={(position, userId) => {
+                  setSelectedUsers((prev) => ({
+                    ...prev,
+                    [position]: prev[position].filter(
+                      (u) => u.userId !== userId,
+                    ),
+                  }));
+                }}
+              />
+            )}
           </FlexBox>
 
           <FlexBox gap={8} justify="flex-end">
@@ -285,6 +401,17 @@ const SessionWrite: FC = () => {
           </FlexBox>
         </FormProvider>
       </Form>
+      {sessionTargetPopup && (
+        <SessionTargetPopup
+          defaultSelectedUsers={selectedUsers}
+          eligibleUsers={eligibleUser?.users ?? []}
+          onClose={() => setSessionTargetPopup(false)}
+          onConfirm={(updated) => {
+            setSelectedUsers(updated);
+            setSessionTargetPopup(false);
+          }}
+        />
+      )}
     </Container>
   );
 };
@@ -295,10 +422,17 @@ const Container = styled.div`
   flex-direction: column;
   padding: 32px 40px;
   gap: 40px;
+  overflow-y: auto;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 40px;
+
+  #radio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
 `;

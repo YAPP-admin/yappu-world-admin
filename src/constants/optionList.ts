@@ -54,4 +54,16 @@ export const attendanceOptions = [
   { label: '결석', value: 'ABSENT' },
   { label: '조퇴', value: 'EARLY_CHECK_OUT' },
   { label: '공결', value: 'EXCUSED_ABSENCE' },
+  { label: '미출석', value: 'PENDING' },
+];
+
+export const positionList = [
+  'PM',
+  'Design',
+  'Web',
+  'Android',
+  'iOS',
+  'Flutter',
+  'Server',
+  'Staff',
 ];

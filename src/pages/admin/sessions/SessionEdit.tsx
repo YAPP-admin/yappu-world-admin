@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
@@ -11,6 +11,7 @@ import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
+import RadioGroup from '@compnents/commons/RadioGroup';
 import Select, { OptionType } from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
@@ -21,12 +22,18 @@ import {
 } from '@constants/optionList';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useEditSessionMutation } from '@queries/session/useEditSessionMutaion';
+import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligibleUserQuery';
 import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
-import { SessionDetailRes } from 'apis/session/types';
+import { SessionDetailRes, UserPosition } from 'apis/session/types';
+import EditableTargetTable from 'features/session/EditableTargetTable';
+import SessionTargetPopup from 'features/session/SessionTargetPopup';
+import { convertSessionAttendee } from 'features/session/utils/convertSessionAttendee';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { EditSessionType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
+
+import { emptySelectedUsers, SelectedUsersMap } from './SessionWrite';
 
 interface Props {
   handleEdit: () => void;
@@ -34,6 +41,10 @@ interface Props {
 }
 
 const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
+  const { data: generationList } = useGenerationListQuery(1);
+  const { data: eligibleUser } = useSessionEligibleUserQuery(
+    String(data?.generation),
+  );
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
     defaultValues: data
@@ -42,15 +53,43 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           date: new Date(data.date),
           endDate: new Date(data.endDate),
           generation: data.generation.toString(),
+          target:
+            eligibleUser?.users.map((el) => el.users).flat().length ===
+            data?.attendees.map((el) => el.attendees).flat().length
+              ? 'ALL'
+              : 'SELECT',
+          sessionAttendeeIds: data?.attendees
+            .map((el) => el.attendees)
+            .flat()
+            .map((el) => el.userId),
         }
       : undefined,
   });
-  const { data: generationList } = useGenerationListQuery(1);
   const { mutateAsync } = useEditSessionMutation();
   const setEditCompletePopup = useSessionStore(
     (state) => state.setEditCompletePopup,
   );
+  const sessionTargetPopup = useSessionStore(
+    (state) => state.sessionTargetPopup,
+  );
+  const setSessionTargetPopup = useSessionStore(
+    (state) => state.setSessionTargetPopup,
+  );
   const queryClient = useQueryClient();
+
+  const [selectedUsers, setSelectedUsers] = useState<SelectedUsersMap>(() =>
+    convertSessionAttendee(data?.attendees),
+  );
+
+  useEffect(() => {
+    if (method.watch('target') === 'ALL' && eligibleUser) {
+      const all = eligibleUser.users.reduce((acc, cur) => {
+        acc[cur.position] = cur.users;
+        return acc;
+      }, {} as SelectedUsersMap);
+      setSelectedUsers(all);
+    }
+  }, [method.watch('target'), eligibleUser]);
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -59,10 +98,33 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     })) ?? [];
 
   const onSumbit = async (formData: SessionFormType) => {
+    console.log('submit');
     if (!data) return;
+    const hasSelectedUser = Object.values(selectedUsers).flat().length > 0;
+
+    if (formData.target === 'SELECT' && !hasSelectedUser) {
+      window.alert('세션 대상을 선택해 주세요.');
+      return;
+    }
     try {
+      const allUserIds: string[] =
+        eligibleUser?.users.flatMap((group) =>
+          group.users.map((user) => user.userId),
+        ) ?? [];
+      if (formData.target === 'ALL') {
+        formData.sessionAttendeeIds = allUserIds;
+      } else {
+        const selectedIds: string[] = Object.values(selectedUsers)
+          .flat()
+          .map((user) => user.userId);
+
+        formData.sessionAttendeeIds = selectedIds;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { target, ...rest } = formData;
+
       const req: EditSessionType = {
-        ...formData,
+        ...rest,
         id: data.id,
         generation: Number(formData.generation),
         date: dayjs(formData.date).format('YYYY-MM-DD'),
@@ -74,11 +136,37 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       handleEdit();
     } catch (err) {
       if (isAxiosError<ErrorResponse>(err)) {
-        showErrorToast(
-          err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
-        );
+        if (err.status !== 500) {
+          showErrorToast(
+            err.response?.data.message ?? '알 수 없는 에러가 발생했습니다.',
+          );
+        }
       }
     }
+  };
+  const handleRemove = (position: UserPosition, userId: string) => {
+    setSelectedUsers((prev) => {
+      const updated = {
+        ...prev,
+        [position]: prev[position].filter((u) => u.userId !== userId),
+      };
+
+      setTimeout(() => {
+        const allUsers = eligibleUser?.users.reduce((acc, cur) => {
+          acc[cur.position] = cur.users;
+          return acc;
+        }, {} as SelectedUsersMap);
+
+        const isAllSelected =
+          JSON.stringify(updated) === JSON.stringify(allUsers);
+
+        if (!isAllSelected) {
+          method.setValue('target', 'SELECT');
+        }
+      }, 0);
+
+      return updated;
+    });
   };
 
   return (
@@ -89,8 +177,31 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       <Typography variant="title3Bold">세션 수정</Typography>
       <FormProvider {...method}>
         <FlexBox direction="column" gap={24}>
+          <GridBox align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              세션 타입
+            </Typography>
+            <Controller
+              control={method.control}
+              name="sessionType"
+              render={({ field }) => (
+                <Select
+                  optionList={sessionTypeList}
+                  size="large"
+                  width="191px"
+                  selectedValue={
+                    sessionTypeList.find((item) => item.value === field.value)
+                      ?.value ?? ''
+                  }
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </GridBox>
           <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-            <Typography variant="body1Normal">제목</Typography>
+            <Typography fontWeight={600} variant="body1Normal">
+              제목
+            </Typography>
             <FlexBox direction="column">
               <TextInput {...method.register('name')} />
               {method.formState.errors.name && (
@@ -100,8 +211,10 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               )}
             </FlexBox>
           </GridBox>
-          <GridBox columns="79px 1fr" gap={16}>
-            <Typography variant="body1Normal">시작 날짜</Typography>
+          <GridBox align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              시작일
+            </Typography>
             <FlexBox gap={20}>
               <Calendar name="date" />
               <Controller
@@ -137,8 +250,10 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               />
             </FlexBox>
           </GridBox>
-          <GridBox columns="79px 1fr" gap={16}>
-            <Typography variant="body1Normal">종료 날짜</Typography>
+          <GridBox align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              종료일
+            </Typography>
             <FlexBox direction="column">
               <FlexBox gap={20}>
                 <Calendar name="endDate" />
@@ -181,49 +296,10 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               )}
             </FlexBox>
           </GridBox>
-          <FlexBox gap={90}>
-            <GridBox columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">기수</Typography>
-              <Controller
-                control={method.control}
-                name="generation"
-                render={({ field }) => (
-                  <Select
-                    optionList={optionList}
-                    size="large"
-                    width="191px"
-                    selectedValue={
-                      optionList.find(
-                        (item) => item.value === field.value?.toString(),
-                      )?.value ?? ''
-                    }
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-            </GridBox>
-            <GridBox columns="79px 1fr" gap={16}>
-              <Typography variant="body1Normal">세션 타입</Typography>
-              <Controller
-                control={method.control}
-                name="sessionType"
-                render={({ field }) => (
-                  <Select
-                    optionList={sessionTypeList}
-                    size="large"
-                    width="191px"
-                    selectedValue={
-                      sessionTypeList.find((item) => item.value === field.value)
-                        ?.value ?? ''
-                    }
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-            </GridBox>
-          </FlexBox>
-          <GridBox fullWidth columns="79px 1fr" gap={16}>
-            <Typography variant="body1Normal">장소</Typography>
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              장소
+            </Typography>
             <FlexBox direction="column">
               <TextInput {...method.register('place')} />
               {method.formState.errors.place && (
@@ -233,6 +309,69 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               )}
             </FlexBox>
           </GridBox>
+          <div
+            style={{
+              height: '1px',
+              background: 'rgba(112, 115, 124, 0.22)',
+              width: '100%',
+            }}
+          />
+          <GridBox align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              기수
+            </Typography>
+            <Controller
+              control={method.control}
+              name="generation"
+              render={({ field }) => (
+                <Select
+                  optionList={optionList}
+                  size="large"
+                  width="191px"
+                  selectedValue={
+                    optionList.find(
+                      (item) => item.value === field.value?.toString(),
+                    )?.value ?? ''
+                  }
+                  onChange={(value) => {
+                    field.onChange(value);
+                    setSelectedUsers(emptySelectedUsers);
+                    queryClient.invalidateQueries({
+                      queryKey: ['eligible-user', method.watch('generation')],
+                    });
+                  }}
+                />
+              )}
+            />
+          </GridBox>
+
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              세션 대상
+            </Typography>
+            <FlexBox align="center" gap={12}>
+              <RadioGroup
+                disabled={!method.watch('generation')}
+                name="target"
+                options={[
+                  { label: '전체', value: 'ALL' },
+                  { label: '선택', value: 'SELECT' },
+                ]}
+              />
+              <SolidButton
+                size="small"
+                type="button"
+                variant="secondary"
+                onClick={() => setSessionTargetPopup(true)}
+              >
+                대상 선택
+              </SolidButton>
+            </FlexBox>
+          </GridBox>
+          <EditableTargetTable
+            selectedUsers={selectedUsers}
+            onRemove={handleRemove}
+          />
         </FlexBox>
 
         <FlexBox gap={8} justify="flex-end">
@@ -244,6 +383,18 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           </SolidButton>
         </FlexBox>
       </FormProvider>
+
+      {sessionTargetPopup && (
+        <SessionTargetPopup
+          defaultSelectedUsers={selectedUsers}
+          eligibleUsers={eligibleUser?.users ?? []}
+          onClose={() => setSessionTargetPopup(false)}
+          onConfirm={(updated) => {
+            setSelectedUsers(updated);
+            setSessionTargetPopup(false);
+          }}
+        />
+      )}
     </Form>
   );
 };
@@ -254,4 +405,10 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 40px;
+
+  #radio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
 `;

@@ -53,6 +53,7 @@ export interface AttendanceGroup {
 
 export type AttendanceStatusType = '출석' | '지각' | '결석' | '조퇴' | '공결';
 export type AttendanceStatusValueType =
+  | 'PENDING'
   | 'ON_TIME'
   | 'LATE'
   | 'ABSENT'

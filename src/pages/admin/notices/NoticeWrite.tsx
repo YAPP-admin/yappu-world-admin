@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import dayjs from 'dayjs';
 import { FC } from 'react';
 import { Control, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -43,10 +44,13 @@ const NoticeWrite: FC = () => {
   const setIsAddNoticeComplete = useNoticeStore(
     (state) => state.setIsAddNoticeComplete,
   );
+  const selectSessionPopupOpen = useNoticeStore(
+    (state) => state.selectSessionPopupOpen,
+  );
   const setSelectSessionPopupOpen = useNoticeStore(
     (state) => state.setSelectSessionPopupOpen,
   );
-
+  const selectedSession = useNoticeStore((state) => state.selectedSession);
   const onSumbit = async (data: BaseNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
@@ -56,6 +60,7 @@ const NoticeWrite: FC = () => {
     const newData = { ...data, plainContent: plainText };
     try {
       const req: BaseNoticeReq = newData;
+      console.log('req ', req);
       const res = await mutateAsync(req);
       const location = res.headers['location'];
       const id = location?.split('/').pop();
@@ -95,7 +100,7 @@ const NoticeWrite: FC = () => {
                 ]}
               />
               <SolidButton
-                disabled={methods.watch('type') === 'OPERATION'}
+                disabled={methods.watch('type') !== 'SESSION'}
                 size="small"
                 type="button"
                 variant="secondary"
@@ -103,6 +108,14 @@ const NoticeWrite: FC = () => {
               >
                 세션 선택
               </SolidButton>
+              {methods.watch('sessionId') && (
+                <FlexBox flex={1}>
+                  <Typography color="label-alternative" variant="body2Normal">
+                    {selectedSession?.generation} / {selectedSession?.title} (
+                    {dayjs(selectedSession?.date).format('YYYY.MM.DD')})
+                  </Typography>
+                </FlexBox>
+              )}
             </FlexBox>
           </GridBox>
           <GridBox fullWidth columnGap={16} columns={'80px 1fr'}>
@@ -150,7 +163,9 @@ const NoticeWrite: FC = () => {
           </SolidButton>
         </FlexBox>
       </Container>
-      <SelectSessionPopup onClose={() => setSelectSessionPopupOpen(false)} />
+      {selectSessionPopupOpen && (
+        <SelectSessionPopup onClose={() => setSelectSessionPopupOpen(false)} />
+      )}
     </FormProvider>
   );
 };

@@ -8,6 +8,7 @@ import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import { useNoticeStore } from '@stores/noticeStore';
 import { SessionRes } from 'apis/session/types';
 
 interface Props {
@@ -21,6 +22,9 @@ const SessionListTable: FC<Props> = ({
   selectedSessionId,
   onSelectSessionId,
 }) => {
+  const setSelectedSession = useNoticeStore(
+    (state) => state.setSelectedSession,
+  );
   return (
     <Table>
       <TableHead>
@@ -44,7 +48,10 @@ const SessionListTable: FC<Props> = ({
               <Radio
                 checked={selectedSessionId === el.id}
                 name="session"
-                onChange={() => onSelectSessionId(el.id)}
+                onChange={() => {
+                  onSelectSessionId(el.id);
+                  setSelectedSession(el);
+                }}
               />
             </TableCell>
             <TableCell>{el.title}</TableCell>

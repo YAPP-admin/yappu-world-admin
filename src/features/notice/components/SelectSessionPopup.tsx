@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 import Close from '@assets/Close';
@@ -12,6 +13,7 @@ import PopupContainer from '@compnents/popup/PopupContainer';
 import Pagination from '@compnents/table/Pagination';
 import { useSessionQuery } from '@queries/session/useSessionQuery';
 import theme from 'styles/theme';
+import { BaseNoticeType } from 'types/formTypes';
 
 import SessionListTable from './SessionListTable';
 import { useGenerationListQuery } from '../../../queries/operation/useGenerationListQuery';
@@ -21,6 +23,7 @@ interface Props {
 }
 
 const SelectSessionPopup: FC<Props> = ({ onClose }) => {
+  const { setValue, watch } = useFormContext<BaseNoticeType>();
   const { data: generationList, isFetching } = useGenerationListQuery(1, 100);
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -36,23 +39,21 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
     false,
     Number(selectedGeneration),
   );
-  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
-    null,
-  );
 
   const onClickGeneration = (value: string) => {
-    console.log('기수선택 :', value);
     setSelectedGeneration(value);
   };
 
   const onClickToRefetch = () => {
     refetch();
-    console.log('sessionList :', sessionList);
+    setPage(1);
   };
+
+  const selectedSessionId = watch('sessionId');
 
   return (
     <PopupContainer onClose={onClose}>
-      <Container>
+      <Container onClick={(e) => e.stopPropagation()}>
         <FlexBox justify="space-between" padding="24px">
           <Typography variant="headline1Bold">공지 대상 세션 선택</Typography>
           <IconButton onClick={onClose}>
@@ -61,10 +62,6 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
         </FlexBox>
         <Content>
           <FlexBox align="center" gap={16}>
-            {/* <Controller
-                  control={method.control}
-                  name="generation"
-                  render={({ field }) => ( */}
             <Select
               defaultSelectLabel="기수를 선택해주세요."
               disabled={isFetching}
@@ -92,8 +89,8 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
             <>
               <SessionListTable
                 selectedSessionId={selectedSessionId}
-                sessionList={sessionList?.data}
-                onSelectSessionId={setSelectedSessionId}
+                sessionList={sessionList.data}
+                onSelectSessionId={(id) => setValue('sessionId', id)}
               />
               <Pagination
                 isHideText
@@ -115,7 +112,11 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
           <OutlinedButton size="medium" variant="assistive">
             취소
           </OutlinedButton>
-          <SolidButton disabled={!selectedSessionId} size="medium">
+          <SolidButton
+            disabled={!selectedSessionId}
+            size="medium"
+            onClick={onClose}
+          >
             저장
           </SolidButton>
         </FlexBox>

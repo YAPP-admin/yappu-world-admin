@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import { SessionRes } from 'apis/session/types';
+
 interface NoticeState {
   isAddNoticeComplete: boolean;
   setIsAddNoticeComplete: (value: boolean) => void;
@@ -15,6 +17,8 @@ interface NoticeState {
   setPage: (value: number) => void;
   selectSessionPopupOpen: boolean;
   setSelectSessionPopupOpen: (value: boolean) => void;
+  selectedSession: SessionRes | null;
+  setSelectedSession: (value: SessionRes) => void;
 }
 
 export const useNoticeStore = create<NoticeState>((set) => ({
@@ -35,4 +39,6 @@ export const useNoticeStore = create<NoticeState>((set) => ({
   selectSessionPopupOpen: false,
   setSelectSessionPopupOpen: (value: boolean) =>
     set({ selectSessionPopupOpen: value }),
+  selectedSession: null,
+  setSelectedSession: (value: SessionRes) => set({ selectedSession: value }),
 }));

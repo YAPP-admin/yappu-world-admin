@@ -33,6 +33,7 @@ export interface BaseNoticeReq {
   title: string;
   content: string;
   plainContent: string;
+  sessionId: string | null;
 }
 
 export interface NoticeReq {

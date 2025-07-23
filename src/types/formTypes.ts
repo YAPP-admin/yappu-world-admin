@@ -18,6 +18,7 @@ export interface BaseNoticeType {
   title: string;
   content: string;
   plainContent: string;
+  sessionId: string | null;
 }
 
 export interface EditNoticeType extends BaseNoticeType {

@@ -19,6 +19,14 @@ export interface NoticeRes {
   noticeType: string;
 }
 
+export interface TargetSession {
+  sessionId: string;
+  title: string;
+  generation: number;
+  date: string;
+  time: string;
+}
+
 export interface NoticeDetailRes {
   noticeId: string;
   title: string;
@@ -26,6 +34,7 @@ export interface NoticeDetailRes {
   writer: WriterInfoDetail;
   content: string;
   type: NoticeCategory;
+  targetSession: TargetSession;
 }
 
 export interface BaseNoticeReq {
@@ -33,6 +42,7 @@ export interface BaseNoticeReq {
   title: string;
   content: string;
   plainContent: string;
+  sessionId: string | null;
 }
 
 export interface NoticeReq {

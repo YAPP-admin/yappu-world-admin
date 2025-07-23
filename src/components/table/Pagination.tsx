@@ -5,10 +5,18 @@ interface PaginationProps {
   totalPages: number;
   currentPage: number;
   onPageChange: (page: number) => void;
+  isHideText?: boolean;
+  style?: React.CSSProperties;
 }
 
 const Pagination: FC<PaginationProps> = (props) => {
-  const { totalPages, currentPage, onPageChange } = props;
+  const {
+    totalPages,
+    currentPage,
+    onPageChange,
+    isHideText = false,
+    style,
+  } = props;
   const groupSize = 10;
   const currentGroup = Math.floor((currentPage - 1) / groupSize); // 0-based
   const startPage = currentGroup * groupSize + 1;
@@ -26,13 +34,15 @@ const Pagination: FC<PaginationProps> = (props) => {
   );
 
   return (
-    <PaginationContainer>
-      <PaginationButton
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(1)}
-      >
-        처음
-      </PaginationButton>
+    <PaginationContainer style={style}>
+      {!isHideText && (
+        <PaginationButton
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(1)}
+        >
+          처음
+        </PaginationButton>
+      )}
       <PaginationButton
         disabled={currentPage === 1}
         onClick={() => handlePageChange(currentPage - 1)}
@@ -56,12 +66,14 @@ const Pagination: FC<PaginationProps> = (props) => {
       >
         &gt;
       </PaginationButton>
-      <PaginationButton
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(totalPages)}
-      >
-        마지막
-      </PaginationButton>
+      {!isHideText && (
+        <PaginationButton
+          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(totalPages)}
+        >
+          마지막
+        </PaginationButton>
+      )}
     </PaginationContainer>
   );
 };

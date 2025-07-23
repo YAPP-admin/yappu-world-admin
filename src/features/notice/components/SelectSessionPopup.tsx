@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 import Close from '@assets/Close';
@@ -13,17 +12,21 @@ import PopupContainer from '@compnents/popup/PopupContainer';
 import Pagination from '@compnents/table/Pagination';
 import { useSessionQuery } from '@queries/session/useSessionQuery';
 import theme from 'styles/theme';
-import { BaseNoticeType } from 'types/formTypes';
 
 import SessionListTable from './SessionListTable';
 import { useGenerationListQuery } from '../../../queries/operation/useGenerationListQuery';
 
 interface Props {
   onClose: () => void;
+  sessionId: string | null;
+  onChangeSessionId: (value: string) => void;
 }
 
-const SelectSessionPopup: FC<Props> = ({ onClose }) => {
-  const { setValue, watch } = useFormContext<BaseNoticeType>();
+const SelectSessionPopup: FC<Props> = ({
+  onClose,
+  sessionId,
+  onChangeSessionId,
+}) => {
   const { data: generationList, isFetching } = useGenerationListQuery(1, 100);
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -48,8 +51,6 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
     refetch();
     setPage(1);
   };
-
-  const selectedSessionId = watch('sessionId');
 
   return (
     <PopupContainer onClose={onClose}>
@@ -88,9 +89,9 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
           {sessionList?.data ? (
             <>
               <SessionListTable
-                selectedSessionId={selectedSessionId}
+                selectedSessionId={sessionId}
                 sessionList={sessionList.data}
-                onSelectSessionId={(id) => setValue('sessionId', id)}
+                onSelectSessionId={(id) => onChangeSessionId(id)}
               />
               <Pagination
                 isHideText
@@ -112,11 +113,7 @@ const SelectSessionPopup: FC<Props> = ({ onClose }) => {
           <OutlinedButton size="medium" variant="assistive">
             취소
           </OutlinedButton>
-          <SolidButton
-            disabled={!selectedSessionId}
-            size="medium"
-            onClick={onClose}
-          >
+          <SolidButton disabled={!sessionId} size="medium" onClick={onClose}>
             저장
           </SolidButton>
         </FlexBox>

@@ -164,7 +164,11 @@ const NoticeWrite: FC = () => {
         </FlexBox>
       </Container>
       {selectSessionPopupOpen && (
-        <SelectSessionPopup onClose={() => setSelectSessionPopupOpen(false)} />
+        <SelectSessionPopup
+          sessionId={methods.watch('sessionId')}
+          onChangeSessionId={(id) => methods.setValue('sessionId', id)}
+          onClose={() => setSelectSessionPopupOpen(false)}
+        />
       )}
     </FormProvider>
   );

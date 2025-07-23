@@ -13,6 +13,8 @@ interface NoticeState {
   setIsDeleteCompletePopup: (value: boolean) => void;
   page: number;
   setPage: (value: number) => void;
+  selectSessionPopupOpen: boolean;
+  setSelectSessionPopupOpen: (value: boolean) => void;
 }
 
 export const useNoticeStore = create<NoticeState>((set) => ({
@@ -30,4 +32,7 @@ export const useNoticeStore = create<NoticeState>((set) => ({
     set({ isDeleteCompletePopup: value }),
   page: 1,
   setPage: (value: number) => set({ page: value }),
+  selectSessionPopupOpen: false,
+  setSelectSessionPopupOpen: (value: boolean) =>
+    set({ selectSessionPopupOpen: value }),
 }));

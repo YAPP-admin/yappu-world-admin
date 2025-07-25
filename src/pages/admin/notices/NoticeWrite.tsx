@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import dayjs from 'dayjs';
 import { FC } from 'react';
-import { Control, Controller, useForm, useWatch } from 'react-hook-form';
+import { Control, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import removeMarkdown from 'remove-markdown';
 import styled from 'styled-components';
@@ -12,26 +13,27 @@ import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
-import Select from '@compnents/commons/Select';
+import RadioGroup from '@compnents/commons/RadioGroup';
 import TextInput from '@compnents/commons/TextInput';
 import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
-import { noticeOptionList } from '@constants/optionList';
 import { useNewNoticeMutation } from '@queries/notice/useNewNoticeMutation';
 import { useNoticeStore } from '@stores/noticeStore';
 import { ErrorResponse } from 'apis/common/types';
 import { BaseNoticeReq } from 'apis/notice/types';
+import SelectSessionPopup from 'features/notice/components/SelectSessionPopup';
 import { BaseNoticeType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
 const NoticeWrite: FC = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, control, watch } = useForm<BaseNoticeType>({
+  const methods = useForm<BaseNoticeType>({
     defaultValues: {
       type: undefined,
       title: '',
       content: '',
       plainContent: '',
+      sessionId: null,
     },
   });
   const { mutateAsync } = useNewNoticeMutation();
@@ -42,7 +44,13 @@ const NoticeWrite: FC = () => {
   const setIsAddNoticeComplete = useNoticeStore(
     (state) => state.setIsAddNoticeComplete,
   );
-
+  const selectSessionPopupOpen = useNoticeStore(
+    (state) => state.selectSessionPopupOpen,
+  );
+  const setSelectSessionPopupOpen = useNoticeStore(
+    (state) => state.setSelectSessionPopupOpen,
+  );
+  const selectedSession = useNoticeStore((state) => state.selectedSession);
   const onSumbit = async (data: BaseNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
@@ -52,6 +60,7 @@ const NoticeWrite: FC = () => {
     const newData = { ...data, plainContent: plainText };
     try {
       const req: BaseNoticeReq = newData;
+      console.log('req ', req);
       const res = await mutateAsync(req);
       const location = res.headers['location'];
       const id = location?.split('/').pop();
@@ -68,70 +77,100 @@ const NoticeWrite: FC = () => {
   };
 
   return (
-    <Container
-      onClick={(e) => e.stopPropagation()}
-      onSubmit={handleSubmit(onSumbit)}
-    >
-      <FlexBox direction="column" gap={24}>
-        <IconButton variant="outlined" onClick={onClickBack}>
-          <ArrowLeft size="20" />
-        </IconButton>
-        <Typography variant="title3Bold">새 공지 작성</Typography>
-      </FlexBox>
-      <FlexBox direction="column" gap={24}>
-        <GridBox columnGap={16} columns={'80px 1fr'}>
-          <Typography variant="headline1Bold">공지타입</Typography>
-          <Controller
-            control={control}
-            name="type"
-            render={({ field }) => (
-              <Select
-                optionList={noticeOptionList}
-                size="large"
-                width="191px"
-                selectedValue={
-                  noticeOptionList.find((item) => item.value === field.value)
-                    ?.value ?? ''
-                }
-                onChange={field.onChange}
+    <FormProvider {...methods}>
+      <Container
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={methods.handleSubmit(onSumbit)}
+      >
+        <FlexBox direction="column" gap={24}>
+          <IconButton variant="outlined" onClick={onClickBack}>
+            <ArrowLeft size="20" />
+          </IconButton>
+          <Typography variant="title3Bold">새 공지 작성</Typography>
+        </FlexBox>
+        <FlexBox direction="column" gap={24}>
+          <GridBox columnGap={16} columns={'80px 1fr'}>
+            <Typography variant="headline1Bold">공지타입</Typography>
+            <FlexBox align="center" gap={12}>
+              <RadioGroup
+                name="type"
+                options={[
+                  { label: '운영', value: 'OPERATION' },
+                  { label: '세션', value: 'SESSION' },
+                ]}
               />
-            )}
-          />
-        </GridBox>
-        <GridBox fullWidth columnGap={16} columns={'80px 1fr'}>
-          <Typography variant="headline1Bold">제목</Typography>
-          <TextInput
-            {...register('title')}
-            maxLength={50}
-            placeholder="제목을 입력하세요"
-          />
-        </GridBox>
-        <GridBox fullWidth columnGap={16} columns={'80px 1fr'} height={'400px'}>
-          <Typography variant="headline1Bold">내용</Typography>
-          <InputWrapper>
-            <TextInputBox
-              {...register('content')}
-              height={400}
-              maxLength={2000}
-              placeholder="내용을 입력해주세요"
+              <SolidButton
+                disabled={methods.watch('type') !== 'SESSION'}
+                size="small"
+                type="button"
+                variant="secondary"
+                onClick={() => setSelectSessionPopupOpen(true)}
+              >
+                세션 선택
+              </SolidButton>
+              {methods.watch('sessionId') && (
+                <FlexBox flex={1}>
+                  <Typography color="label-alternative" variant="body2Normal">
+                    {selectedSession?.generation} / {selectedSession?.title} (
+                    {dayjs(selectedSession?.date).format('YYYY.MM.DD')})
+                  </Typography>
+                </FlexBox>
+              )}
+            </FlexBox>
+          </GridBox>
+          <GridBox fullWidth columnGap={16} columns={'80px 1fr'}>
+            <Typography variant="headline1Bold">제목</Typography>
+            <TextInput
+              {...methods.register('title')}
+              maxLength={50}
+              placeholder="제목을 입력하세요"
             />
-            <Counter control={control} maxCount={2000} />
-          </InputWrapper>
-        </GridBox>
-      </FlexBox>
-      <FlexBox gap={16} justify="flex-end">
-        <OutlinedButton size="large" variant="assistive">
-          취소
-        </OutlinedButton>
-        <SolidButton
-          disabled={!(watch('type') && watch('title') && watch('content'))}
-          size="large"
-          type="submit"
-        >
-          저장
-        </SolidButton>
-      </FlexBox>
-    </Container>
+          </GridBox>
+          <GridBox
+            fullWidth
+            columnGap={16}
+            columns={'80px 1fr'}
+            height={'400px'}
+          >
+            <Typography variant="headline1Bold">내용</Typography>
+            <InputWrapper>
+              <TextInputBox
+                {...methods.register('content')}
+                height={400}
+                maxLength={2000}
+                placeholder="내용을 입력해주세요"
+              />
+              <Counter control={methods.control} maxCount={2000} />
+            </InputWrapper>
+          </GridBox>
+        </FlexBox>
+        <FlexBox gap={16} justify="flex-end">
+          <OutlinedButton size="large" variant="assistive">
+            취소
+          </OutlinedButton>
+          <SolidButton
+            size="large"
+            type="submit"
+            disabled={
+              !(
+                methods.watch('type') &&
+                methods.watch('title') &&
+                methods.watch('content')
+              )
+            }
+          >
+            저장
+          </SolidButton>
+        </FlexBox>
+      </Container>
+      {selectSessionPopupOpen && (
+        <SelectSessionPopup
+          sessionId={methods.watch('sessionId')}
+          onChangeSessionId={(id) => methods.setValue('sessionId', id)}
+          onClose={() => setSelectSessionPopupOpen(false)}
+        />
+      )}
+    </FormProvider>
   );
 };
 
@@ -145,6 +184,12 @@ const Container = styled.form`
   flex-direction: column;
   gap: 40px;
   flex-shrink: 0;
+
+  #radio-wrapper {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
 `;
 
 const InputWrapper = styled.div`

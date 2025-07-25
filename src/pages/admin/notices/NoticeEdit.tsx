@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { FC } from 'react';
-import { Control, Controller, useForm, useWatch } from 'react-hook-form';
+import dayjs from 'dayjs';
+import { FC, useEffect } from 'react';
+import { Control, FormProvider, useForm, useWatch } from 'react-hook-form';
 import removeMarkdown from 'remove-markdown';
 import styled from 'styled-components';
 
@@ -9,15 +10,16 @@ import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
-import Select from '@compnents/commons/Select';
+import RadioGroup from '@compnents/commons/RadioGroup';
 import TextInput from '@compnents/commons/TextInput';
 import TextInputBox from '@compnents/commons/TextInputBox';
 import Typography from '@compnents/commons/Typography';
-import { noticeOptionList } from '@constants/optionList';
 import { useEditNoticeMutation } from '@queries/notice/useEditNoticeMutation';
 import { useNoticeStore } from '@stores/noticeStore';
 import { ErrorResponse } from 'apis/common/types';
 import { EditNoticeReq, NoticeDetailRes } from 'apis/notice/types';
+import { SessionRes, SessionType } from 'apis/session/types';
+import SelectSessionPopup from 'features/notice/components/SelectSessionPopup';
 import { EditNoticeType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
@@ -27,20 +29,46 @@ interface Props {
 }
 
 const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
-  const { register, handleSubmit, control } = useForm<EditNoticeType>({
+  const methods = useForm<EditNoticeType>({
     defaultValues: {
       id: data?.noticeId,
       type: data?.type,
       title: data?.title,
       content: data?.content,
       plainContent: '',
+      sessionId: data?.targetSession.sessionId,
     },
   });
   const { mutateAsync } = useEditNoticeMutation();
   const setIsEditPopup = useNoticeStore((state) => state.setIsEditPopup);
   const queryClient = useQueryClient();
+  const selectSessionPopupOpen = useNoticeStore(
+    (state) => state.selectSessionPopupOpen,
+  );
+  const setSelectSessionPopupOpen = useNoticeStore(
+    (state) => state.setSelectSessionPopupOpen,
+  );
+  const selectedSession = useNoticeStore((state) => state.selectedSession);
+  const setSelectedSession = useNoticeStore(
+    (state) => state.setSelectedSession,
+  );
+  useEffect(() => {
+    if (!data) return;
+    const targetSession: SessionRes = {
+      id: data.targetSession.sessionId,
+      generation: data.targetSession.generation,
+      type: data.type as SessionType,
+      title: data.targetSession.title,
+      place: '',
+      date: data.targetSession.date,
+      time: data.targetSession.time,
+      endTime: '',
+    };
+    setSelectedSession(targetSession);
+  }, []);
 
   const onSumbit = async (data: EditNoticeType) => {
+    console.log(data);
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
       /[\x00-\x1F\x7F]/g,
@@ -64,36 +92,46 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
   };
 
   return (
-    <form
-      onClick={(e) => e.stopPropagation()}
-      onSubmit={handleSubmit(onSumbit)}
-    >
-      <FlexBox direction="column" gap={40}>
+    <FormProvider {...methods}>
+      <Container
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={methods.handleSubmit(onSumbit)}
+      >
         <Typography variant="title3Bold">공지 수정</Typography>
         <FlexBox direction="column" gap={24}>
           <GridBox columnGap={16} columns={'80px 1fr'}>
             <Typography variant="headline1Bold">공지타입</Typography>
-            <Controller
-              control={control}
-              name="type"
-              render={({ field }) => (
-                <Select
-                  optionList={noticeOptionList}
-                  size="large"
-                  width="191px"
-                  selectedValue={
-                    noticeOptionList.find((item) => item.value === field.value)
-                      ?.value ?? ''
-                  }
-                  onChange={field.onChange}
-                />
+            <FlexBox align="center" gap={12}>
+              <RadioGroup
+                name="type"
+                options={[
+                  { label: '운영', value: 'OPERATION' },
+                  { label: '세션', value: 'SESSION' },
+                ]}
+              />
+              <SolidButton
+                disabled={methods.watch('type') !== 'SESSION'}
+                size="small"
+                type="button"
+                variant="secondary"
+                onClick={() => setSelectSessionPopupOpen(true)}
+              >
+                세션 선택
+              </SolidButton>
+              {methods.watch('sessionId') && (
+                <FlexBox flex={1}>
+                  <Typography color="label-alternative" variant="body2Normal">
+                    {selectedSession?.generation} / {selectedSession?.title} (
+                    {dayjs(selectedSession?.date).format('YYYY.MM.DD')})
+                  </Typography>
+                </FlexBox>
               )}
-            />
+            </FlexBox>
           </GridBox>
           <GridBox fullWidth columnGap={16} columns={'80px 1fr'}>
             <Typography variant="headline1Bold">제목</Typography>
             <TextInput
-              {...register('title')}
+              {...methods.register('title')}
               maxLength={50}
               placeholder="제목을 입력하세요"
             />
@@ -107,12 +145,12 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
             <Typography variant="headline1Bold">내용</Typography>
             <InputWrapper>
               <TextInputBox
-                {...register('content')}
+                {...methods.register('content')}
                 height={400}
                 maxLength={1000}
                 placeholder="내용을 입력해주세요"
               />
-              <Counter control={control} maxCount={1000} />
+              <Counter control={methods.control} maxCount={1000} />
             </InputWrapper>
           </GridBox>
         </FlexBox>
@@ -124,12 +162,30 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
             저장
           </SolidButton>
         </FlexBox>
-      </FlexBox>
-    </form>
+      </Container>
+      {selectSessionPopupOpen && (
+        <SelectSessionPopup
+          sessionId={methods.watch('sessionId')}
+          onChangeSessionId={(id) => methods.setValue('sessionId', id)}
+          onClose={() => setSelectSessionPopupOpen(false)}
+        />
+      )}
+    </FormProvider>
   );
 };
 
 export default NoticeEdit;
+
+const Container = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  #radio-wrapper {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+`;
 
 const InputWrapper = styled.div`
   position: relative;

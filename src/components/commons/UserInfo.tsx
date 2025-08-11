@@ -54,6 +54,7 @@ const Info = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+  flex: 1;
 
   .name {
     color: #000;
@@ -61,5 +62,9 @@ const Info = styled.div`
     font-weight: 600;
     line-height: 28px;
     letter-spacing: -0.24px;
+  }
+
+  span {
+    flex: 1;
   }
 `;

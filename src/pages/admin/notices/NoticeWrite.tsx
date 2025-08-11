@@ -8,6 +8,7 @@ import removeMarkdown from 'remove-markdown';
 import styled from 'styled-components';
 
 import ArrowLeft from '@assets/ArrowLeft';
+import CircleClose from '@assets/CircleClose';
 import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
@@ -51,6 +52,9 @@ const NoticeWrite: FC = () => {
     (state) => state.setSelectSessionPopupOpen,
   );
   const selectedSession = useNoticeStore((state) => state.selectedSession);
+  const setSelectedSession = useNoticeStore(
+    (state) => state.setSelectedSession,
+  );
   const onSumbit = async (data: BaseNoticeType) => {
     const plainText = removeMarkdown(data.content).replaceAll(
       // eslint-disable-next-line no-control-regex
@@ -74,6 +78,11 @@ const NoticeWrite: FC = () => {
         );
       }
     }
+  };
+
+  const onClickClearTargetSession = () => {
+    methods.setValue('sessionId', null);
+    setSelectedSession(null);
   };
 
   return (
@@ -109,11 +118,14 @@ const NoticeWrite: FC = () => {
                 세션 선택
               </SolidButton>
               {methods.watch('sessionId') && (
-                <FlexBox flex={1}>
+                <FlexBox flex={1} gap={16}>
                   <Typography color="label-alternative" variant="body2Normal">
                     {selectedSession?.generation} / {selectedSession?.title} (
                     {dayjs(selectedSession?.date).format('YYYY.MM.DD')})
                   </Typography>
+                  <IconButton onClick={onClickClearTargetSession}>
+                    <CircleClose color="rgba(55, 56, 60, 0.28)" />
+                  </IconButton>
                 </FlexBox>
               )}
             </FlexBox>

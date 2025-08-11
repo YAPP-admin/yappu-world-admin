@@ -6,6 +6,8 @@ import { Control, FormProvider, useForm, useWatch } from 'react-hook-form';
 import removeMarkdown from 'remove-markdown';
 import styled from 'styled-components';
 
+import CircleClose from '@assets/CircleClose';
+import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import FlexBox from '@compnents/commons/FlexBox';
@@ -91,6 +93,11 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
     }
   };
 
+  const onClickClearTargetSession = () => {
+    methods.setValue('sessionId', null);
+    setSelectedSession(null);
+  };
+
   return (
     <FormProvider {...methods}>
       <Container
@@ -118,12 +125,15 @@ const NoticeEdit: FC<Props> = ({ handleEdit, data }) => {
               >
                 세션 선택
               </SolidButton>
-              {methods.watch('sessionId') && (
-                <FlexBox flex={1}>
+              {methods.watch('sessionId') && selectedSession && (
+                <FlexBox flex={1} gap={16}>
                   <Typography color="label-alternative" variant="body2Normal">
                     {selectedSession?.generation} / {selectedSession?.title} (
                     {dayjs(selectedSession?.date).format('YYYY.MM.DD')})
                   </Typography>
+                  <IconButton onClick={onClickClearTargetSession}>
+                    <CircleClose color="rgba(55, 56, 60, 0.28)" />
+                  </IconButton>
                 </FlexBox>
               )}
             </FlexBox>

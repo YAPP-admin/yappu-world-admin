@@ -18,7 +18,7 @@ interface NoticeState {
   selectSessionPopupOpen: boolean;
   setSelectSessionPopupOpen: (value: boolean) => void;
   selectedSession: SessionRes | null;
-  setSelectedSession: (value: SessionRes) => void;
+  setSelectedSession: (value: SessionRes | null) => void;
 }
 
 export const useNoticeStore = create<NoticeState>((set) => ({
@@ -40,5 +40,6 @@ export const useNoticeStore = create<NoticeState>((set) => ({
   setSelectSessionPopupOpen: (value: boolean) =>
     set({ selectSessionPopupOpen: value }),
   selectedSession: null,
-  setSelectedSession: (value: SessionRes) => set({ selectedSession: value }),
+  setSelectedSession: (value: SessionRes | null) =>
+    set({ selectedSession: value }),
 }));

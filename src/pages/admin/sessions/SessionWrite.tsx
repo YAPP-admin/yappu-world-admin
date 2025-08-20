@@ -48,7 +48,7 @@ export const emptySelectedUsers: SelectedUsersMap = {
 };
 
 const SessionWrite: FC = () => {
-  const { data: generationList } = useGenerationListQuery(1);
+  const { data: generationList } = useGenerationListQuery(1, 100);
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
     defaultValues: {

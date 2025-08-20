@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useParams } from 'react-router-dom';
@@ -6,6 +7,7 @@ import styled from 'styled-components';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
+import GridBox from '@compnents/commons/GridBox';
 import Typography from '@compnents/commons/Typography';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useDeleteNoticeMutation } from '@queries/notice/useDeleteNoticeMutation';
@@ -66,6 +68,26 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
           <Content>
             <ReactMarkdown>{data?.content}</ReactMarkdown>
           </Content>
+          <Divider />
+          <div>
+            <GridBox columns={'70px 1fr'}>
+              <Typography
+                color="label-assistive"
+                fontWeight={600}
+                variant="label1Normal"
+              >
+                연관세션
+              </Typography>
+              <Typography
+                color="primary-normal"
+                fontWeight={600}
+                variant="label1Normal"
+              >
+                {data?.targetSession.generation}기 / {data?.targetSession.title}{' '}
+                ({dayjs(data?.targetSession.date).format('YYYY.MM.DD')})
+              </Typography>
+            </GridBox>
+          </div>
         </FlexBox>
       </Container>
       {isDeletePopup && (
@@ -88,5 +110,11 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
+  width: 100%;
+`;
+
+const Divider = styled.div`
+  height: 1px;
+  background: rgba(112, 115, 124, 0.22);
   width: 100%;
 `;

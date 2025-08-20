@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import theme from 'styles/theme';
 
 interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  value: string;
+  value?: string;
   color?: string;
   checked?: boolean;
   onChange?: () => void;

@@ -84,3 +84,9 @@ export interface EligibleUser {
   position: UserPosition;
   users: UserInfo[];
 }
+
+export interface SessionReq {
+  page: number;
+  size: number;
+  generation?: number;
+}

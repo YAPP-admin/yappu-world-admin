@@ -19,6 +19,7 @@ interface Props extends React.HTMLAttributes<HTMLTableCellElement> {
   children?: React.ReactNode;
   style?: React.CSSProperties;
   widthType?: WidthType;
+  colSpan?: number;
 }
 
 const TableCell: FC<Props> = (props) => {

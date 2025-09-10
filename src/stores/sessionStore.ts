@@ -15,6 +15,10 @@ interface SessionState {
   setIsDeleteCompletePopup: (value: boolean) => void;
   sessionTargetPopup: boolean;
   setSessionTargetPopup: (value: boolean) => void;
+  relatedNoticePopup: boolean;
+  setReleatedNoticePopup: (value: boolean) => void;
+  selectedNoticeIds: string[];
+  setSelectedNoticeIds: (value: string[]) => void;
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
@@ -33,4 +37,9 @@ export const useSessionStore = create<SessionState>((set) => ({
     set({ isDeleteCompletePopup: value }),
   sessionTargetPopup: false,
   setSessionTargetPopup: (value: boolean) => set({ sessionTargetPopup: value }),
+  relatedNoticePopup: false,
+  setReleatedNoticePopup: (value: boolean) =>
+    set({ relatedNoticePopup: value }),
+  selectedNoticeIds: [],
+  setSelectedNoticeIds: (value: string[]) => set({ selectedNoticeIds: value }),
 }));

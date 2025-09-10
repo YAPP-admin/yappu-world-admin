@@ -31,6 +31,7 @@ import { ErrorResponse } from 'apis/common/types';
 import { UserInfo } from 'apis/notice/types';
 import { SesseionReq, UserPosition } from 'apis/session/types';
 import EditableTargetTable from 'features/session/EditableTargetTable';
+import RelatedNoticePopup from 'features/session/RelatedNoticePopup';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
@@ -74,6 +75,12 @@ const SessionWrite: FC = () => {
   );
   const setSessionTargetPopup = useSessionStore(
     (state) => state.setSessionTargetPopup,
+  );
+  const relatedNoticePopup = useSessionStore(
+    (state) => state.relatedNoticePopup,
+  );
+  const setReleatedNoticePopup = useSessionStore(
+    (state) => state.setReleatedNoticePopup,
   );
 
   const optionList: OptionType[] =
@@ -387,6 +394,30 @@ const SessionWrite: FC = () => {
             )}
           </FlexBox>
 
+          <div
+            style={{
+              height: '1px',
+              background: 'rgba(112, 115, 124, 0.22)',
+              width: '100%',
+            }}
+          />
+
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              공지사항
+            </Typography>
+
+            <OutlinedButton
+              size="medium"
+              style={{ width: 'fit-content' }}
+              type="button"
+              variant="primary"
+              onClick={() => setReleatedNoticePopup(true)}
+            >
+              추가
+            </OutlinedButton>
+          </GridBox>
+
           <FlexBox gap={8} justify="flex-end">
             <OutlinedButton
               size="large"
@@ -411,6 +442,9 @@ const SessionWrite: FC = () => {
             setSessionTargetPopup(false);
           }}
         />
+      )}
+      {relatedNoticePopup && (
+        <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
       )}
     </Container>
   );

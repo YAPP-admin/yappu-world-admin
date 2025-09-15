@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ArrowLeft from '@assets/ArrowLeft';
+import CircleClose from '@assets/CircleClose';
 import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
@@ -119,6 +120,7 @@ const SessionWrite: FC = () => {
         date: dayjs(data.date).format('YYYY-MM-DD'),
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
+        noticeIds: selectedNotices.map((el) => el.noticeId),
       };
       const res = await mutateAsync(req);
       const location = res.headers['location'];
@@ -138,7 +140,17 @@ const SessionWrite: FC = () => {
   const onClickBack = () => {
     navigate('/admin/sessions');
   };
-  console.log('gen:', method.watch('generation')); // 이 값 undefined 또는 ''
+
+  const selectedNotices = useSessionStore((state) => state.selectedNotices);
+  const setSelectedNoticds = useSessionStore(
+    (state) => state.setSelectedNoticds,
+  );
+
+  const deleteSelectedNotice = (id: string) => {
+    const next = selectedNotices.filter((n) => n.noticeId !== id);
+    if (next.length === selectedNotices.length) return;
+    setSelectedNoticds(next);
+  };
 
   return (
     <Container>
@@ -402,20 +414,34 @@ const SessionWrite: FC = () => {
             }}
           />
 
-          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+          <GridBox fullWidth columns="79px 1fr" gap={16}>
             <Typography fontWeight={600} variant="body1Normal">
               공지사항
             </Typography>
-
-            <OutlinedButton
-              size="medium"
-              style={{ width: 'fit-content' }}
-              type="button"
-              variant="primary"
-              onClick={() => setReleatedNoticePopup(true)}
-            >
-              추가
-            </OutlinedButton>
+            <FlexBox direction="column" gap={12}>
+              <OutlinedButton
+                size="medium"
+                style={{ width: 'fit-content' }}
+                type="button"
+                variant="primary"
+                onClick={() => setReleatedNoticePopup(true)}
+              >
+                추가
+              </OutlinedButton>
+              {!!selectedNotices.length &&
+                selectedNotices.map((el) => (
+                  <FlexBox key={el.noticeId} gap={16}>
+                    <Typography color="primary-normal" variant="body1Normal">
+                      {el.title}
+                    </Typography>
+                    <IconButton
+                      onClick={() => deleteSelectedNotice(el.noticeId)}
+                    >
+                      <CircleClose color="rgba(55, 56, 60, 0.28)" />
+                    </IconButton>
+                  </FlexBox>
+                ))}
+            </FlexBox>
           </GridBox>
 
           <FlexBox gap={8} justify="flex-end">

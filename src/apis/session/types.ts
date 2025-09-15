@@ -25,6 +25,7 @@ export interface SesseionReq {
   type: ScheduleType; // 항상 SESSION
   sessionType: SessionType;
   sessionAttendeeIds: string[];
+  noticeIds: string[];
 }
 
 export interface EditSessionReq {

@@ -12,6 +12,7 @@ import PopupContainer from '@compnents/popup/PopupContainer';
 import Pagination from '@compnents/table/Pagination';
 import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
 import { useSessionStore } from '@stores/sessionStore';
+import { NoticeRes } from 'apis/notice/types';
 
 interface Props {
   onClose: () => void;
@@ -20,21 +21,23 @@ interface Props {
 const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
   const [page, setPage] = useState(1);
   const { data } = useAllNoticeQuery(page);
-  const selectedNoticeIds = useSessionStore((state) => state.selectedNoticeIds);
-  const setSelectedNoticeIds = useSessionStore(
-    (state) => state.setSelectedNoticeIds,
+  const selectedNotices = useSessionStore((state) => state.selectedNotices);
+  const setSelectedNoticds = useSessionStore(
+    (state) => state.setSelectedNoticds,
   );
 
   const onChangePage = (page: number) => {
     setPage(page);
   };
 
-  const toggleChecked = (id: string) => {
-    const exists = selectedNoticeIds.includes(id);
+  const toggleChecked = (notice: NoticeRes) => {
+    const exists = selectedNotices.find(
+      (el) => el.noticeId === notice.noticeId,
+    );
     const next = exists
-      ? selectedNoticeIds.filter((x) => x !== id)
-      : [...selectedNoticeIds, id];
-    setSelectedNoticeIds(next);
+      ? selectedNotices.filter((s) => s.noticeId !== notice.noticeId)
+      : [...selectedNotices, notice];
+    setSelectedNoticds(next);
   };
 
   return (
@@ -49,13 +52,14 @@ const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
 
         <Content>
           {data?.data.map((el) => {
-            const id = el.noticeId;
-            const checked = selectedNoticeIds.includes(id);
+            const checked = selectedNotices.find(
+              (n) => n.noticeId === el.noticeId,
+            );
             return (
               <FlexBox key={el.noticeId} gap={8}>
                 <Checkbox
                   state={checked ? 'checked' : 'unchecked'}
-                  onClick={() => toggleChecked(el.noticeId)}
+                  onClick={() => toggleChecked(el)}
                 />
                 <Typography color="label-normal" variant="body2Normal">
                   {el.title}
@@ -77,7 +81,7 @@ const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
 
         <ButtonWrapper>
           <SolidButton
-            disabled={!selectedNoticeIds.length}
+            disabled={!selectedNotices.length}
             size="xlarge"
             variant="primary"
             onClick={onClose}

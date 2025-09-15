@@ -128,6 +128,7 @@ const SessionWrite: FC = () => {
       setAddCompletePopup(true);
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
       navigate(`/admin/sessions/detail/${id}`);
+      setSelectedNoticds([]);
     } catch (err) {
       if (isAxiosError<ErrorResponse>(err)) {
         showErrorToast(

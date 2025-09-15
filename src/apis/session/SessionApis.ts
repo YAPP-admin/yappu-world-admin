@@ -11,6 +11,8 @@ import {
   SessionDetailRes,
   SessionReq,
   SessionRes,
+  TargetableNoticesReq,
+  TargetableNoticesRes,
 } from './types';
 
 export const getSession = ({ page, size, generation }: SessionReq) => {
@@ -49,5 +51,23 @@ export const getSessionDetail = (sessionId: string) => {
 export const getEligibleUsers = (generation: string) => {
   return axiosInstance.get<ApiResponse<EligibleUsersRes>>(
     `/admin/v1/session-eligible-users?generation=${generation}`,
+  );
+};
+
+export const getTargetableNotices = ({
+  page,
+  size,
+  search,
+}: TargetableNoticesReq) => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    size: size.toString(),
+  });
+
+  if (search !== undefined) {
+    params.append('generation', search.toString());
+  }
+  return axiosInstance.get<PaginatedApiResponse<TargetableNoticesRes>>(
+    `/admin/v1/sessions/targetable-notices?${params.toString()}`,
   );
 };

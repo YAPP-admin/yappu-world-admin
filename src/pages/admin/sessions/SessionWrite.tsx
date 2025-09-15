@@ -120,7 +120,7 @@ const SessionWrite: FC = () => {
         date: dayjs(data.date).format('YYYY-MM-DD'),
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
-        noticeIds: selectedNotices.map((el) => el.noticeId),
+        noticeIds: selectedNotices.map((el) => el.id),
       };
       const res = await mutateAsync(req);
       const location = res.headers['location'];
@@ -147,7 +147,7 @@ const SessionWrite: FC = () => {
   );
 
   const deleteSelectedNotice = (id: string) => {
-    const next = selectedNotices.filter((n) => n.noticeId !== id);
+    const next = selectedNotices.filter((n) => n.id !== id);
     if (next.length === selectedNotices.length) return;
     setSelectedNoticds(next);
   };
@@ -430,13 +430,11 @@ const SessionWrite: FC = () => {
               </OutlinedButton>
               {!!selectedNotices.length &&
                 selectedNotices.map((el) => (
-                  <FlexBox key={el.noticeId} gap={16}>
+                  <FlexBox key={el.id} gap={16}>
                     <Typography color="primary-normal" variant="body1Normal">
                       {el.title}
                     </Typography>
-                    <IconButton
-                      onClick={() => deleteSelectedNotice(el.noticeId)}
-                    >
+                    <IconButton onClick={() => deleteSelectedNotice(el.id)}>
                       <CircleClose color="rgba(55, 56, 60, 0.28)" />
                     </IconButton>
                   </FlexBox>

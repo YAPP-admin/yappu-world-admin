@@ -10,9 +10,9 @@ import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import Pagination from '@compnents/table/Pagination';
-import { useAllNoticeQuery } from '@queries/notice/useAllNoticeQuery';
+import { useTargetableNoticesQuery } from '@queries/session/useTargetableNoticesQuery';
 import { useSessionStore } from '@stores/sessionStore';
-import { NoticeRes } from 'apis/notice/types';
+import { TargetableNoticesRes } from 'apis/session/types';
 
 interface Props {
   onClose: () => void;
@@ -20,7 +20,7 @@ interface Props {
 
 const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
   const [page, setPage] = useState(1);
-  const { data } = useAllNoticeQuery(page);
+  const { data } = useTargetableNoticesQuery(page, '');
   const selectedNotices = useSessionStore((state) => state.selectedNotices);
   const setSelectedNoticds = useSessionStore(
     (state) => state.setSelectedNoticds,
@@ -30,12 +30,10 @@ const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
     setPage(page);
   };
 
-  const toggleChecked = (notice: NoticeRes) => {
-    const exists = selectedNotices.find(
-      (el) => el.noticeId === notice.noticeId,
-    );
+  const toggleChecked = (notice: TargetableNoticesRes) => {
+    const exists = selectedNotices.find((el) => el.id === notice.id);
     const next = exists
-      ? selectedNotices.filter((s) => s.noticeId !== notice.noticeId)
+      ? selectedNotices.filter((s) => s.id !== notice.id)
       : [...selectedNotices, notice];
     setSelectedNoticds(next);
   };
@@ -52,19 +50,32 @@ const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
 
         <Content>
           {data?.data.map((el) => {
-            const checked = selectedNotices.find(
-              (n) => n.noticeId === el.noticeId,
-            );
+            const checked = selectedNotices.find((n) => n.id === el.id);
             return (
-              <FlexBox key={el.noticeId} gap={8}>
+              <FlexBox key={el.id} gap={8}>
                 <Checkbox
+                  disabled={el.isSelectedByOtherSession}
                   state={checked ? 'checked' : 'unchecked'}
                   onClick={() => toggleChecked(el)}
                 />
-                <Typography color="label-normal" variant="body2Normal">
+                <Typography
+                  variant="body2Normal"
+                  color={
+                    el.isSelectedByOtherSession
+                      ? 'label-disable'
+                      : 'label-normal'
+                  }
+                >
                   {el.title}
                   {'  '}
-                  <Typography color="label-assistive" variant="body2Normal">
+                  <Typography
+                    variant="body2Normal"
+                    color={
+                      el.isSelectedByOtherSession
+                        ? 'label-disable'
+                        : 'label-assistive'
+                    }
+                  >
                     ({dayjs(el.createdAt).format('YY.MM.DD')})
                   </Typography>
                 </Typography>

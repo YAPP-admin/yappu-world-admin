@@ -91,3 +91,16 @@ export interface SessionReq {
   size: number;
   generation?: number;
 }
+
+export interface TargetableNoticesReq {
+  page: number;
+  size: number;
+  search?: string;
+}
+
+export interface TargetableNoticesRes {
+  id: string;
+  title: string;
+  createdAt: string;
+  isSelectedByOtherSession: boolean;
+}

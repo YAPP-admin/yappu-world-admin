@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { NoticeRes } from 'apis/notice/types';
+import { TargetableNoticesRes } from 'apis/session/types';
 
 interface SessionState {
   selectedIndexes: string[];
@@ -19,8 +19,8 @@ interface SessionState {
   setSessionTargetPopup: (value: boolean) => void;
   relatedNoticePopup: boolean;
   setReleatedNoticePopup: (value: boolean) => void;
-  selectedNotices: NoticeRes[];
-  setSelectedNoticds: (value: NoticeRes[]) => void;
+  selectedNotices: TargetableNoticesRes[];
+  setSelectedNoticds: (value: TargetableNoticesRes[]) => void;
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
@@ -43,5 +43,6 @@ export const useSessionStore = create<SessionState>((set) => ({
   setReleatedNoticePopup: (value: boolean) =>
     set({ relatedNoticePopup: value }),
   selectedNotices: [],
-  setSelectedNoticds: (value: NoticeRes[]) => set({ selectedNotices: value }),
+  setSelectedNoticds: (value: TargetableNoticesRes[]) =>
+    set({ selectedNotices: value }),
 }));

@@ -56,6 +56,11 @@ export interface SessionAttendees {
   attendees: AttendeeRes[];
 }
 
+export interface SessionNoticeDetail {
+  noticeId: string;
+  title: string;
+}
+
 export interface SessionDetailRes {
   id: string;
   name: string;
@@ -67,6 +72,7 @@ export interface SessionDetailRes {
   endTime: string;
   sessionType: SessionType;
   attendees: SessionAttendees[];
+  notices: SessionNoticeDetail[];
 }
 
 export interface EligibleUsersRes {

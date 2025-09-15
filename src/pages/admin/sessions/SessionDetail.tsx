@@ -119,6 +119,22 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           </Typography>
           <TargetTable sessionAttendees={data?.attendees} />
         </FlexBox>
+        <GridBox columnGap={16} columns="80px 1fr">
+          <Typography color="label-alternative" variant="body1Normal">
+            공지사항
+          </Typography>
+          {data?.notices.length ? (
+            <FlexBox direction="column" gap={5}>
+              {data?.notices.map((el) => (
+                <Typography key={el.noticeId} variant="body1Normal">
+                  {el.title}
+                </Typography>
+              ))}
+            </FlexBox>
+          ) : (
+            <Typography variant="body1Normal">-</Typography>
+          )}
+        </GridBox>
       </Container>
       {isDeletePopup && (
         <ConfirmPopup

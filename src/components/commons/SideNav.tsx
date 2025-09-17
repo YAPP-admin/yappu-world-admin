@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-
 import SolidButton from '@compnents/Button/SolidButton';
 import { useLogout } from '@hooks/useLogout';
 import { useAuthStore } from '@stores/authStore';
@@ -47,6 +46,7 @@ const Container = styled.div`
   padding: 20px 24px;
   background: ${theme.colors.backgroundNormal.alternative};
   border-radius: 16px;
+  gap: 15px;
 
   button {
     width: 100%;

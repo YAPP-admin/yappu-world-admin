@@ -46,6 +46,7 @@ const Container = styled.div`
   padding: 20px 24px;
   background: ${theme.colors.backgroundNormal.alternative};
   border-radius: 16px;
+  gap: 15px;
 
   button {
     width: 100%;

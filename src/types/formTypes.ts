@@ -63,6 +63,7 @@ export interface EditSessionType {
   generation: number;
   sessionType: SessionType;
   sessionAttendeeIds: string[];
+  noticeIds: string[];
 }
 
 export interface AddSessionType {

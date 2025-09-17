@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 import Close from '@assets/Close';
@@ -11,8 +12,9 @@ import Checkbox from '@compnents/Control/Checkbox';
 import PopupContainer from '@compnents/popup/PopupContainer';
 import Pagination from '@compnents/table/Pagination';
 import { useTargetableNoticesQuery } from '@queries/session/useTargetableNoticesQuery';
-import { useSessionStore } from '@stores/sessionStore';
 import { TargetableNoticesRes } from 'apis/session/types';
+import { SessionFormType } from 'schema/SessionFormScheme';
+
 
 interface Props {
   onClose: () => void;
@@ -21,21 +23,21 @@ interface Props {
 const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
   const [page, setPage] = useState(1);
   const { data } = useTargetableNoticesQuery(page, '');
-  const selectedNotices = useSessionStore((state) => state.selectedNotices);
-  const setSelectedNoticds = useSessionStore(
-    (state) => state.setSelectedNoticds,
-  );
 
-  const onChangePage = (page: number) => {
-    setPage(page);
-  };
+  const { watch, setValue } = useFormContext<SessionFormType>();
+
+  const formNotices = watch('notices') ?? [];
+
+  const onChangePage = (page: number) => setPage(page);
 
   const toggleChecked = (notice: TargetableNoticesRes) => {
-    const exists = selectedNotices.find((el) => el.id === notice.id);
+    const id = notice.id;
+    const exists = formNotices.some((n) => n.noticeId === id);
     const next = exists
-      ? selectedNotices.filter((s) => s.id !== notice.id)
-      : [...selectedNotices, notice];
-    setSelectedNoticds(next);
+      ? formNotices.filter((n) => n.noticeId !== id)
+      : [...formNotices, { noticeId: id, title: notice.title }];
+
+    setValue('notices', next, { shouldDirty: true, shouldValidate: true });
   };
 
   return (
@@ -50,7 +52,7 @@ const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
 
         <Content>
           {data?.data.map((el) => {
-            const checked = selectedNotices.find((n) => n.id === el.id);
+            const checked = formNotices.find((n) => n.noticeId === el.id);
             return (
               <FlexBox key={el.id} gap={8}>
                 <Checkbox
@@ -92,7 +94,7 @@ const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
 
         <ButtonWrapper>
           <SolidButton
-            disabled={!selectedNotices.length}
+            disabled={!formNotices.length}
             size="xlarge"
             variant="primary"
             onClick={onClose}

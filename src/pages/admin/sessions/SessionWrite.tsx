@@ -120,7 +120,7 @@ const SessionWrite: FC = () => {
         date: dayjs(data.date).format('YYYY-MM-DD'),
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
-        noticeIds: selectedNotices.map((el) => el.id),
+        noticeIds: data.notices.map((el) => el.noticeId),
       };
       const res = await mutateAsync(req);
       const location = res.headers['location'];
@@ -128,7 +128,6 @@ const SessionWrite: FC = () => {
       setAddCompletePopup(true);
       queryClient.invalidateQueries({ queryKey: ['session-list', page] });
       navigate(`/admin/sessions/detail/${id}`);
-      setSelectedNoticds([]);
     } catch (err) {
       if (isAxiosError<ErrorResponse>(err)) {
         showErrorToast(
@@ -142,28 +141,28 @@ const SessionWrite: FC = () => {
     navigate('/admin/sessions');
   };
 
-  const selectedNotices = useSessionStore((state) => state.selectedNotices);
-  const setSelectedNoticds = useSessionStore(
-    (state) => state.setSelectedNoticds,
-  );
+  const formNotices = method.watch('notices') ?? [];
 
-  const deleteSelectedNotice = (id: string) => {
-    const next = selectedNotices.filter((n) => n.id !== id);
-    if (next.length === selectedNotices.length) return;
-    setSelectedNoticds(next);
+  const removeNotice = (noticeId: string) => {
+    const next = formNotices.filter((n) => n.noticeId !== noticeId);
+    method.setValue('notices', next, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   return (
-    <Container>
-      <IconButton variant="outlined" onClick={onClickBack}>
-        <ArrowLeft size="20" />
-      </IconButton>
-      <Form
-        onClick={(e) => e.stopPropagation()}
-        onSubmit={method.handleSubmit(onSumbit)}
-      >
-        <Typography variant="title3Bold">신규 세션 추가</Typography>
-        <FormProvider {...method}>
+    <FormProvider {...method}>
+      <Container>
+        <IconButton variant="outlined" onClick={onClickBack}>
+          <ArrowLeft size="20" />
+        </IconButton>
+        <Form
+          onClick={(e) => e.stopPropagation()}
+          onSubmit={method.handleSubmit(onSumbit)}
+        >
+          <Typography variant="title3Bold">신규 세션 추가</Typography>
+
           <FlexBox direction="column" gap={24}>
             <GridBox align="center" columns="79px 1fr" gap={16}>
               <Typography fontWeight={600} variant="body1Normal">
@@ -429,13 +428,13 @@ const SessionWrite: FC = () => {
               >
                 추가
               </OutlinedButton>
-              {!!selectedNotices.length &&
-                selectedNotices.map((el) => (
-                  <FlexBox key={el.id} gap={16}>
+              {!!formNotices.length &&
+                formNotices.map((el) => (
+                  <FlexBox key={el.noticeId} gap={16}>
                     <Typography color="primary-normal" variant="body1Normal">
                       {el.title}
                     </Typography>
-                    <IconButton onClick={() => deleteSelectedNotice(el.id)}>
+                    <IconButton onClick={() => removeNotice(el.noticeId)}>
                       <CircleClose color="rgba(55, 56, 60, 0.28)" />
                     </IconButton>
                   </FlexBox>
@@ -455,23 +454,23 @@ const SessionWrite: FC = () => {
               저장
             </SolidButton>
           </FlexBox>
-        </FormProvider>
-      </Form>
-      {sessionTargetPopup && (
-        <SessionTargetPopup
-          defaultSelectedUsers={selectedUsers}
-          eligibleUsers={eligibleUser?.users ?? []}
-          onClose={() => setSessionTargetPopup(false)}
-          onConfirm={(updated) => {
-            setSelectedUsers(updated);
-            setSessionTargetPopup(false);
-          }}
-        />
-      )}
-      {relatedNoticePopup && (
-        <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
-      )}
-    </Container>
+        </Form>
+        {sessionTargetPopup && (
+          <SessionTargetPopup
+            defaultSelectedUsers={selectedUsers}
+            eligibleUsers={eligibleUser?.users ?? []}
+            onClose={() => setSessionTargetPopup(false)}
+            onConfirm={(updated) => {
+              setSelectedUsers(updated);
+              setSessionTargetPopup(false);
+            }}
+          />
+        )}
+        {relatedNoticePopup && (
+          <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
+        )}
+      </Container>{' '}
+    </FormProvider>
   );
 };
 export default SessionWrite;

@@ -38,7 +38,7 @@ export default SideNav;
 const Container = styled.div`
   box-sizing: border-box;
   height: 100%;
-  width: 202px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

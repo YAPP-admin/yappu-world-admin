@@ -20,8 +20,8 @@ export default AdminLayer;
 const Container = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 234px 1fr;
-  overflow: auto;
+  grid-template-columns: 250px 1fr;
+  overflow: hidden;
 `;
 
 const SideNavWrapper = styled.div`

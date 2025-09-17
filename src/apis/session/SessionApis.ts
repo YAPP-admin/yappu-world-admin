@@ -65,7 +65,7 @@ export const getTargetableNotices = ({
   });
 
   if (search !== undefined) {
-    params.append('generation', search.toString());
+    params.append('search', search.toString());
   }
   return axiosInstance.get<PaginatedApiResponse<TargetableNoticesRes>>(
     `/admin/v1/sessions/targetable-notices?${params.toString()}`,

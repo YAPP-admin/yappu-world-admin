@@ -25,6 +25,7 @@ export interface SesseionReq {
   type: ScheduleType; // 항상 SESSION
   sessionType: SessionType;
   sessionAttendeeIds: string[];
+  noticeIds: string[];
 }
 
 export interface EditSessionReq {
@@ -55,6 +56,11 @@ export interface SessionAttendees {
   attendees: AttendeeRes[];
 }
 
+export interface SessionNoticeDetail {
+  noticeId: string;
+  title: string;
+}
+
 export interface SessionDetailRes {
   id: string;
   name: string;
@@ -66,6 +72,7 @@ export interface SessionDetailRes {
   endTime: string;
   sessionType: SessionType;
   attendees: SessionAttendees[];
+  notices: SessionNoticeDetail[];
 }
 
 export interface EligibleUsersRes {
@@ -89,4 +96,17 @@ export interface SessionReq {
   page: number;
   size: number;
   generation?: number;
+}
+
+export interface TargetableNoticesReq {
+  page: number;
+  size: number;
+  search?: string;
+}
+
+export interface TargetableNoticesRes {
+  id: string;
+  title: string;
+  createdAt: string;
+  isSelectedByOtherSession: boolean;
 }

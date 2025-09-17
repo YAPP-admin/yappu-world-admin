@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ArrowLeft from '@assets/ArrowLeft';
+import CircleClose from '@assets/CircleClose';
 import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
@@ -31,6 +32,7 @@ import { ErrorResponse } from 'apis/common/types';
 import { UserInfo } from 'apis/notice/types';
 import { SesseionReq, UserPosition } from 'apis/session/types';
 import EditableTargetTable from 'features/session/EditableTargetTable';
+import RelatedNoticePopup from 'features/session/RelatedNoticePopup';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
 import { showErrorToast } from 'types/showErrorToast';
@@ -75,6 +77,12 @@ const SessionWrite: FC = () => {
   const setSessionTargetPopup = useSessionStore(
     (state) => state.setSessionTargetPopup,
   );
+  const relatedNoticePopup = useSessionStore(
+    (state) => state.relatedNoticePopup,
+  );
+  const setReleatedNoticePopup = useSessionStore(
+    (state) => state.setReleatedNoticePopup,
+  );
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -112,6 +120,7 @@ const SessionWrite: FC = () => {
         date: dayjs(data.date).format('YYYY-MM-DD'),
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
+        noticeIds: data.notices.map((el) => el.noticeId),
       };
       const res = await mutateAsync(req);
       const location = res.headers['location'];
@@ -131,19 +140,29 @@ const SessionWrite: FC = () => {
   const onClickBack = () => {
     navigate('/admin/sessions');
   };
-  console.log('gen:', method.watch('generation')); // 이 값 undefined 또는 ''
+
+  const formNotices = method.watch('notices') ?? [];
+
+  const removeNotice = (noticeId: string) => {
+    const next = formNotices.filter((n) => n.noticeId !== noticeId);
+    method.setValue('notices', next, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
 
   return (
-    <Container>
-      <IconButton variant="outlined" onClick={onClickBack}>
-        <ArrowLeft size="20" />
-      </IconButton>
-      <Form
-        onClick={(e) => e.stopPropagation()}
-        onSubmit={method.handleSubmit(onSumbit)}
-      >
-        <Typography variant="title3Bold">신규 세션 추가</Typography>
-        <FormProvider {...method}>
+    <FormProvider {...method}>
+      <Container>
+        <IconButton variant="outlined" onClick={onClickBack}>
+          <ArrowLeft size="20" />
+        </IconButton>
+        <Form
+          onClick={(e) => e.stopPropagation()}
+          onSubmit={method.handleSubmit(onSumbit)}
+        >
+          <Typography variant="title3Bold">신규 세션 추가</Typography>
+
           <FlexBox direction="column" gap={24}>
             <GridBox align="center" columns="79px 1fr" gap={16}>
               <Typography fontWeight={600} variant="body1Normal">
@@ -387,6 +406,42 @@ const SessionWrite: FC = () => {
             )}
           </FlexBox>
 
+          <div
+            style={{
+              height: '1px',
+              background: 'rgba(112, 115, 124, 0.22)',
+              width: '100%',
+            }}
+          />
+
+          <GridBox fullWidth columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              공지사항
+            </Typography>
+            <FlexBox direction="column" gap={12}>
+              <OutlinedButton
+                size="medium"
+                style={{ width: 'fit-content' }}
+                type="button"
+                variant="primary"
+                onClick={() => setReleatedNoticePopup(true)}
+              >
+                추가
+              </OutlinedButton>
+              {!!formNotices.length &&
+                formNotices.map((el) => (
+                  <FlexBox key={el.noticeId} gap={16}>
+                    <Typography color="primary-normal" variant="body1Normal">
+                      {el.title}
+                    </Typography>
+                    <IconButton onClick={() => removeNotice(el.noticeId)}>
+                      <CircleClose color="rgba(55, 56, 60, 0.28)" />
+                    </IconButton>
+                  </FlexBox>
+                ))}
+            </FlexBox>
+          </GridBox>
+
           <FlexBox gap={8} justify="flex-end">
             <OutlinedButton
               size="large"
@@ -399,20 +454,23 @@ const SessionWrite: FC = () => {
               저장
             </SolidButton>
           </FlexBox>
-        </FormProvider>
-      </Form>
-      {sessionTargetPopup && (
-        <SessionTargetPopup
-          defaultSelectedUsers={selectedUsers}
-          eligibleUsers={eligibleUser?.users ?? []}
-          onClose={() => setSessionTargetPopup(false)}
-          onConfirm={(updated) => {
-            setSelectedUsers(updated);
-            setSessionTargetPopup(false);
-          }}
-        />
-      )}
-    </Container>
+        </Form>
+        {sessionTargetPopup && (
+          <SessionTargetPopup
+            defaultSelectedUsers={selectedUsers}
+            eligibleUsers={eligibleUser?.users ?? []}
+            onClose={() => setSessionTargetPopup(false)}
+            onConfirm={(updated) => {
+              setSelectedUsers(updated);
+              setSessionTargetPopup(false);
+            }}
+          />
+        )}
+        {relatedNoticePopup && (
+          <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
+        )}
+      </Container>{' '}
+    </FormProvider>
   );
 };
 export default SessionWrite;

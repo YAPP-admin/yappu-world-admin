@@ -123,6 +123,10 @@ const Input = styled.input<{ $inputSize: TextInputSize }>`
   &:disabled {
     background: none;
   }
+
+  &::placeholder {
+    color: rgba(55, 56, 60, 0.28);
+  }
 `;
 
 const IconWrapper = styled.div`

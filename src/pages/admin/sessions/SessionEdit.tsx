@@ -6,6 +6,7 @@ import { FC, useEffect, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
+import CircleClose from '@assets/CircleClose';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
@@ -27,6 +28,7 @@ import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
 import { SessionDetailRes, UserPosition } from 'apis/session/types';
 import EditableTargetTable from 'features/session/EditableTargetTable';
+import RelatedNoticePopup from 'features/session/RelatedNoticePopup';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { convertSessionAttendee } from 'features/session/utils/convertSessionAttendee';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
@@ -34,6 +36,7 @@ import { EditSessionType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
 import { emptySelectedUsers, SelectedUsersMap } from './SessionWrite';
+import IconButton from '../../../components/Button/IconButton';
 
 interface Props {
   handleEdit: () => void;
@@ -65,7 +68,9 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         }
       : undefined,
   });
+
   const { mutateAsync } = useEditSessionMutation();
+
   const setEditCompletePopup = useSessionStore(
     (state) => state.setEditCompletePopup,
   );
@@ -75,6 +80,13 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   const setSessionTargetPopup = useSessionStore(
     (state) => state.setSessionTargetPopup,
   );
+  const relatedNoticePopup = useSessionStore(
+    (state) => state.relatedNoticePopup,
+  );
+  const setReleatedNoticePopup = useSessionStore(
+    (state) => state.setReleatedNoticePopup,
+  );
+
   const queryClient = useQueryClient();
 
   const [selectedUsers, setSelectedUsers] = useState<SelectedUsersMap>(() =>
@@ -98,7 +110,6 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     })) ?? [];
 
   const onSumbit = async (formData: SessionFormType) => {
-    console.log('submit');
     if (!data) return;
     const hasSelectedUser = Object.values(selectedUsers).flat().length > 0;
 
@@ -129,6 +140,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         generation: Number(formData.generation),
         date: dayjs(formData.date).format('YYYY-MM-DD'),
         endDate: dayjs(formData.endDate).format('YYYY-MM-DD'),
+        noticeIds: data.notices.map((el) => el.noticeId),
       };
       await mutateAsync(req);
       setEditCompletePopup(true);
@@ -144,6 +156,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       }
     }
   };
+
   const handleRemove = (position: UserPosition, userId: string) => {
     setSelectedUsers((prev) => {
       const updated = {
@@ -169,13 +182,23 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     });
   };
 
+  const formNotices = method.watch('notices') ?? [];
+
+  const removeNotice = (noticeId: string) => {
+    const next = formNotices.filter((n) => n.noticeId !== noticeId);
+    method.setValue('notices', next, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
   return (
-    <Form
-      onClick={(e) => e.stopPropagation()}
-      onSubmit={method.handleSubmit(onSumbit)}
-    >
-      <Typography variant="title3Bold">세션 수정</Typography>
-      <FormProvider {...method}>
+    <FormProvider {...method}>
+      <Form
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={method.handleSubmit(onSumbit)}
+      >
+        <Typography variant="title3Bold">세션 수정</Typography>
         <FlexBox direction="column" gap={24}>
           <GridBox align="center" columns="79px 1fr" gap={16}>
             <Typography fontWeight={600} variant="body1Normal">
@@ -372,6 +395,42 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             selectedUsers={selectedUsers}
             onRemove={handleRemove}
           />
+
+          <div
+            style={{
+              height: '1px',
+              background: 'rgba(112, 115, 124, 0.22)',
+              width: '100%',
+            }}
+          />
+
+          <GridBox fullWidth columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              공지사항
+            </Typography>
+            <FlexBox direction="column" gap={12}>
+              <OutlinedButton
+                size="medium"
+                style={{ width: 'fit-content' }}
+                type="button"
+                variant="primary"
+                onClick={() => setReleatedNoticePopup(true)}
+              >
+                추가
+              </OutlinedButton>
+              {!!formNotices.length &&
+                formNotices.map((el) => (
+                  <FlexBox key={el.noticeId} gap={16}>
+                    <Typography color="primary-normal" variant="body1Normal">
+                      {el.title}
+                    </Typography>
+                    <IconButton onClick={() => removeNotice(el.noticeId)}>
+                      <CircleClose color="rgba(55, 56, 60, 0.28)" />
+                    </IconButton>
+                  </FlexBox>
+                ))}
+            </FlexBox>
+          </GridBox>
         </FlexBox>
 
         <FlexBox gap={8} justify="flex-end">
@@ -382,20 +441,24 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             저장
           </SolidButton>
         </FlexBox>
-      </FormProvider>
 
-      {sessionTargetPopup && (
-        <SessionTargetPopup
-          defaultSelectedUsers={selectedUsers}
-          eligibleUsers={eligibleUser?.users ?? []}
-          onClose={() => setSessionTargetPopup(false)}
-          onConfirm={(updated) => {
-            setSelectedUsers(updated);
-            setSessionTargetPopup(false);
-          }}
-        />
-      )}
-    </Form>
+        {sessionTargetPopup && (
+          <SessionTargetPopup
+            defaultSelectedUsers={selectedUsers}
+            eligibleUsers={eligibleUser?.users ?? []}
+            onClose={() => setSessionTargetPopup(false)}
+            onConfirm={(updated) => {
+              setSelectedUsers(updated);
+              setSessionTargetPopup(false);
+            }}
+          />
+        )}
+
+        {relatedNoticePopup && (
+          <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
+        )}
+      </Form>
+    </FormProvider>
   );
 };
 

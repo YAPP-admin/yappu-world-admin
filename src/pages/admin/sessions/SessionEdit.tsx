@@ -132,7 +132,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         formData.sessionAttendeeIds = selectedIds;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { target, ...rest } = formData;
+      const { target, notices, ...rest } = formData;
 
       const req: EditSessionType = {
         ...rest,
@@ -140,8 +140,9 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         generation: Number(formData.generation),
         date: dayjs(formData.date).format('YYYY-MM-DD'),
         endDate: dayjs(formData.endDate).format('YYYY-MM-DD'),
-        noticeIds: data.notices.map((el) => el.noticeId),
+        noticeIds: formData.notices.map((el) => el.noticeId),
       };
+
       await mutateAsync(req);
       setEditCompletePopup(true);
       queryClient.invalidateQueries({ queryKey: ['session-detail', data.id] });

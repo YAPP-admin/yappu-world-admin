@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -16,6 +16,8 @@ import { getSessionType } from '@utils/getSessionType';
 import { SessionDetailRes } from 'apis/session/types';
 import 'dayjs/locale/ko';
 import TargetTable from 'features/session/TargetTable';
+
+import NoticeEdit from '../notices/NoticeEdit';
 
 dayjs.locale('ko');
 
@@ -126,9 +128,12 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           {data?.notices.length ? (
             <FlexBox direction="column" gap={5}>
               {data?.notices.map((el) => (
-                <Typography key={el.noticeId} variant="body1Normal">
-                  {el.title}
-                </Typography>
+                <Link
+                  key={el.noticeId}
+                  to={`/admin/notices/detail/${el.noticeId}`}
+                >
+                  <Typography variant="body1Normal">{el.title}</Typography>
+                </Link>
               ))}
             </FlexBox>
           ) : (
@@ -155,4 +160,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  a {
+    text-decoration: none;
+  }
 `;

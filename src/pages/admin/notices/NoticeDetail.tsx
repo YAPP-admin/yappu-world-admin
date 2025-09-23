@@ -68,26 +68,31 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
           <Content>
             <ReactMarkdown>{data?.content}</ReactMarkdown>
           </Content>
-          <Divider />
-          <div>
-            <GridBox columns={'70px 1fr'}>
-              <Typography
-                color="label-assistive"
-                fontWeight={600}
-                variant="label1Normal"
-              >
-                연관세션
-              </Typography>
-              <Typography
-                color="primary-normal"
-                fontWeight={600}
-                variant="label1Normal"
-              >
-                {data?.targetSession.generation}기 / {data?.targetSession.title}{' '}
-                ({dayjs(data?.targetSession.date).format('YYYY.MM.DD')})
-              </Typography>
-            </GridBox>
-          </div>
+          {data?.targetSession && (
+            <>
+              <Divider />
+              <div>
+                <GridBox columns={'70px 1fr'}>
+                  <Typography
+                    color="label-assistive"
+                    fontWeight={600}
+                    variant="label1Normal"
+                  >
+                    연관세션
+                  </Typography>
+                  <Typography
+                    color="primary-normal"
+                    fontWeight={600}
+                    variant="label1Normal"
+                  >
+                    {data?.targetSession.generation}기 /{' '}
+                    {data?.targetSession.title} (
+                    {dayjs(data?.targetSession.date).format('YYYY.MM.DD')})
+                  </Typography>
+                </GridBox>
+              </div>
+            </>
+          )}
         </FlexBox>
       </Container>
       {isDeletePopup && (

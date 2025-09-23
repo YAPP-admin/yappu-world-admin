@@ -17,8 +17,6 @@ import { SessionDetailRes } from 'apis/session/types';
 import 'dayjs/locale/ko';
 import TargetTable from 'features/session/TargetTable';
 
-import NoticeEdit from '../notices/NoticeEdit';
-
 dayjs.locale('ko');
 
 interface Props {

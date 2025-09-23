@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -80,15 +80,20 @@ const NoticeDetail: FC<Props> = ({ handleEdit, data }) => {
                   >
                     연관세션
                   </Typography>
-                  <Typography
-                    color="primary-normal"
-                    fontWeight={600}
-                    variant="label1Normal"
+
+                  <Link
+                    to={`/admin/sessions/detail/${data.targetSession.sessionId}`}
                   >
-                    {data?.targetSession.generation}기 /{' '}
-                    {data?.targetSession.title} (
-                    {dayjs(data?.targetSession.date).format('YYYY.MM.DD')})
-                  </Typography>
+                    <Typography
+                      color="primary-normal"
+                      fontWeight={600}
+                      variant="label1Normal"
+                    >
+                      {data?.targetSession.generation}기 /{' '}
+                      {data?.targetSession.title} (
+                      {dayjs(data?.targetSession.date).format('YYYY.MM.DD')})
+                    </Typography>
+                  </Link>
                 </GridBox>
               </div>
             </>
@@ -112,6 +117,9 @@ export default NoticeDetail;
 
 const Container = styled.div`
   flex-shrink: 0;
+  a {
+    text-decoration: none;
+  }
 `;
 
 const Content = styled.div`

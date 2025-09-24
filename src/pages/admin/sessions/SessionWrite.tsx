@@ -485,7 +485,7 @@ const SessionWrite: FC = () => {
         {relatedNoticePopup && (
           <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
         )}
-      </Container>{' '}
+      </Container>
     </FormProvider>
   );
 };

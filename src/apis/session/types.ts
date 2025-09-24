@@ -101,6 +101,7 @@ export interface SessionReq {
 export interface TargetableNoticesReq {
   page: number;
   size: number;
+  sessionId: string;
   search?: string;
 }
 

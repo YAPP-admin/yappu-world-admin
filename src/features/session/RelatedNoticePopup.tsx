@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Close from '@assets/Close';
@@ -17,7 +18,6 @@ import { useTargetableNoticesQuery } from '@queries/session/useTargetableNotices
 import { TargetableNoticesRes } from 'apis/session/types';
 import { SessionFormType } from 'schema/SessionFormScheme';
 
-
 interface Props {
   onClose: () => void;
 }
@@ -25,7 +25,9 @@ interface Props {
 const RelatedNoticePopup: FC<Props> = ({ onClose }) => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const { data } = useTargetableNoticesQuery(page, search);
+  const params = useParams();
+  const sessionId = params.id ?? '';
+  const { data } = useTargetableNoticesQuery(page, sessionId, search);
 
   const { watch, setValue } = useFormContext<SessionFormType>();
 

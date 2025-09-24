@@ -112,7 +112,7 @@ const SessionWrite: FC = () => {
         data.sessionAttendeeIds = selectedIds;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { target, ...rest } = data;
+      const { target, notices, ...rest } = data;
 
       const req: SesseionReq = {
         ...rest,
@@ -121,6 +121,8 @@ const SessionWrite: FC = () => {
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
         noticeIds: data.notices.map((el) => el.noticeId),
+        longitude: 0,
+        latitude: 0,
       };
       const res = await mutateAsync(req);
       const location = res.headers['location'];
@@ -316,6 +318,20 @@ const SessionWrite: FC = () => {
                 {method.formState.errors.place && (
                   <Typography color="status-negative" variant="caption1Regular">
                     {method.formState.errors.place.message}
+                  </Typography>
+                )}
+              </FlexBox>
+            </GridBox>
+
+            <GridBox fullWidth columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="body1Normal">
+                상세 주소
+              </Typography>
+              <FlexBox direction="column">
+                <TextInput {...method.register('address')} />
+                {method.formState.errors.address && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.address.message}
                   </Typography>
                 )}
               </FlexBox>

@@ -111,7 +111,12 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           <Typography color="label-alternative" variant="body1Normal">
             장소
           </Typography>
-          <Typography variant="body1Normal">{data?.place}</Typography>
+          <Typography variant="body1Normal">
+            {data?.place}{' '}
+            {data?.address && (
+              <Typography variant="body1Normal">[{data.address}]</Typography>
+            )}
+          </Typography>
         </GridBox>
         <FlexBox direction="column" gap={16}>
           <Typography color="label-alternative" variant="body1Normal">

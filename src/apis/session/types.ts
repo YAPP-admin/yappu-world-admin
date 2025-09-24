@@ -17,6 +17,9 @@ export interface SessionRes {
 export interface SesseionReq {
   name: string;
   place: string;
+  address: string;
+  longitude: number;
+  latitude: number;
   date: string;
   endDate: string;
   time: string;
@@ -32,6 +35,7 @@ export interface EditSessionReq {
   id: string;
   name: string;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;
@@ -66,6 +70,7 @@ export interface SessionDetailRes {
   name: string;
   generation: number;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;

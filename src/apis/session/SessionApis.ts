@@ -57,11 +57,13 @@ export const getEligibleUsers = (generation: string) => {
 export const getTargetableNotices = ({
   page,
   size,
+  sessionId,
   search,
 }: TargetableNoticesReq) => {
   const params = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
+    sessionId: sessionId.toString(),
   });
 
   if (search !== undefined) {

@@ -18,6 +18,7 @@ export interface BaseNoticeType {
   title: string;
   content: string;
   plainContent: string;
+  sessionId: string | null;
 }
 
 export interface EditNoticeType extends BaseNoticeType {
@@ -55,6 +56,7 @@ export interface EditSessionType {
   id: string;
   name: string;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;
@@ -62,11 +64,13 @@ export interface EditSessionType {
   generation: number;
   sessionType: SessionType;
   sessionAttendeeIds: string[];
+  noticeIds: string[];
 }
 
 export interface AddSessionType {
   name: string;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;

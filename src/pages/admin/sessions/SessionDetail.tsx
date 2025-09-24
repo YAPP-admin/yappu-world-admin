@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -111,7 +111,12 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           <Typography color="label-alternative" variant="body1Normal">
             장소
           </Typography>
-          <Typography variant="body1Normal">{data?.place}</Typography>
+          <Typography variant="body1Normal">
+            {data?.place}{' '}
+            {data?.address && (
+              <Typography variant="body1Normal">[{data.address}]</Typography>
+            )}
+          </Typography>
         </GridBox>
         <FlexBox direction="column" gap={16}>
           <Typography color="label-alternative" variant="body1Normal">
@@ -119,6 +124,25 @@ const SessionDetail: FC<Props> = ({ data, handleEdit }) => {
           </Typography>
           <TargetTable sessionAttendees={data?.attendees} />
         </FlexBox>
+        <GridBox columnGap={16} columns="80px 1fr">
+          <Typography color="label-alternative" variant="body1Normal">
+            공지사항
+          </Typography>
+          {data?.notices.length ? (
+            <FlexBox direction="column" gap={5}>
+              {data?.notices.map((el) => (
+                <Link
+                  key={el.noticeId}
+                  to={`/admin/notices/detail/${el.noticeId}`}
+                >
+                  <Typography variant="body1Normal">{el.title}</Typography>
+                </Link>
+              ))}
+            </FlexBox>
+          ) : (
+            <Typography variant="body1Normal">-</Typography>
+          )}
+        </GridBox>
       </Container>
       {isDeletePopup && (
         <ConfirmPopup
@@ -139,4 +163,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  a {
+    text-decoration: none;
+  }
 `;

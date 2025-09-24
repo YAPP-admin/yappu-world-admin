@@ -17,6 +17,9 @@ export interface SessionRes {
 export interface SesseionReq {
   name: string;
   place: string;
+  address: string;
+  longitude: number;
+  latitude: number;
   date: string;
   endDate: string;
   time: string;
@@ -25,12 +28,14 @@ export interface SesseionReq {
   type: ScheduleType; // 항상 SESSION
   sessionType: SessionType;
   sessionAttendeeIds: string[];
+  noticeIds: string[];
 }
 
 export interface EditSessionReq {
   id: string;
   name: string;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;
@@ -55,17 +60,24 @@ export interface SessionAttendees {
   attendees: AttendeeRes[];
 }
 
+export interface SessionNoticeDetail {
+  noticeId: string;
+  title: string;
+}
+
 export interface SessionDetailRes {
   id: string;
   name: string;
   generation: number;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;
   endTime: string;
   sessionType: SessionType;
   attendees: SessionAttendees[];
+  notices: SessionNoticeDetail[];
 }
 
 export interface EligibleUsersRes {
@@ -83,4 +95,24 @@ export type UserPosition =
 export interface EligibleUser {
   position: UserPosition;
   users: UserInfo[];
+}
+
+export interface SessionReq {
+  page: number;
+  size: number;
+  generation?: number;
+}
+
+export interface TargetableNoticesReq {
+  page: number;
+  size: number;
+  sessionId: string;
+  search?: string;
+}
+
+export interface TargetableNoticesRes {
+  id: string;
+  title: string;
+  createdAt: string;
+  isSelectedByOtherSession: boolean;
 }

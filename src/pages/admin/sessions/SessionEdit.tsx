@@ -3,9 +3,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { FC, useEffect, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
 
+import CircleClose from '@assets/CircleClose';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import SolidButton from '@compnents/Button/SolidButton';
 import Calendar from '@compnents/commons/Calendar';
@@ -27,6 +28,7 @@ import { useSessionStore } from '@stores/sessionStore';
 import { ErrorResponse } from 'apis/common/types';
 import { SessionDetailRes, UserPosition } from 'apis/session/types';
 import EditableTargetTable from 'features/session/EditableTargetTable';
+import RelatedNoticePopup from 'features/session/RelatedNoticePopup';
 import SessionTargetPopup from 'features/session/SessionTargetPopup';
 import { convertSessionAttendee } from 'features/session/utils/convertSessionAttendee';
 import { SessionFormSchema, SessionFormType } from 'schema/SessionFormScheme';
@@ -34,6 +36,7 @@ import { EditSessionType } from 'types/formTypes';
 import { showErrorToast } from 'types/showErrorToast';
 
 import { emptySelectedUsers, SelectedUsersMap } from './SessionWrite';
+import IconButton from '../../../components/Button/IconButton';
 
 interface Props {
   handleEdit: () => void;
@@ -42,9 +45,7 @@ interface Props {
 
 const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   const { data: generationList } = useGenerationListQuery(1);
-  const { data: eligibleUser } = useSessionEligibleUserQuery(
-    String(data?.generation),
-  );
+
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
     defaultValues: data
@@ -53,11 +54,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           date: new Date(data.date),
           endDate: new Date(data.endDate),
           generation: data.generation.toString(),
-          target:
-            eligibleUser?.users.map((el) => el.users).flat().length ===
-            data?.attendees.map((el) => el.attendees).flat().length
-              ? 'ALL'
-              : 'SELECT',
+          target: 'SELECT',
           sessionAttendeeIds: data?.attendees
             .map((el) => el.attendees)
             .flat()
@@ -65,7 +62,16 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         }
       : undefined,
   });
+
+  const generation = useWatch({ control: method.control, name: 'generation' });
+  const target = useWatch({ control: method.control, name: 'target' });
+
+  const { data: eligibleUser } = useSessionEligibleUserQuery(
+    String(generation ?? ''),
+  );
+
   const { mutateAsync } = useEditSessionMutation();
+
   const setEditCompletePopup = useSessionStore(
     (state) => state.setEditCompletePopup,
   );
@@ -75,6 +81,13 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   const setSessionTargetPopup = useSessionStore(
     (state) => state.setSessionTargetPopup,
   );
+  const relatedNoticePopup = useSessionStore(
+    (state) => state.relatedNoticePopup,
+  );
+  const setReleatedNoticePopup = useSessionStore(
+    (state) => state.setReleatedNoticePopup,
+  );
+
   const queryClient = useQueryClient();
 
   const [selectedUsers, setSelectedUsers] = useState<SelectedUsersMap>(() =>
@@ -82,14 +95,27 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   );
 
   useEffect(() => {
-    if (method.watch('target') === 'ALL' && eligibleUser) {
+    if (!data || !eligibleUser) return;
+
+    const totalEligible = eligibleUser.users.map((g) => g.users).flat().length;
+    const totalAttendees = data.attendees.map((g) => g.attendees).flat().length;
+
+    if (totalEligible > 0 && totalEligible === totalAttendees) {
+      method.setValue('target', 'ALL', { shouldDirty: true });
+    } else {
+      method.setValue('target', 'SELECT', { shouldDirty: true });
+    }
+  }, [data, eligibleUser, method]);
+
+  useEffect(() => {
+    if (target === 'ALL' && eligibleUser) {
       const all = eligibleUser.users.reduce((acc, cur) => {
         acc[cur.position] = cur.users;
         return acc;
       }, {} as SelectedUsersMap);
       setSelectedUsers(all);
     }
-  }, [method.watch('target'), eligibleUser]);
+  }, [target, eligibleUser]);
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -98,7 +124,6 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     })) ?? [];
 
   const onSumbit = async (formData: SessionFormType) => {
-    console.log('submit');
     if (!data) return;
     const hasSelectedUser = Object.values(selectedUsers).flat().length > 0;
 
@@ -121,7 +146,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         formData.sessionAttendeeIds = selectedIds;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { target, ...rest } = formData;
+      const { target, notices, ...rest } = formData;
 
       const req: EditSessionType = {
         ...rest,
@@ -129,7 +154,9 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         generation: Number(formData.generation),
         date: dayjs(formData.date).format('YYYY-MM-DD'),
         endDate: dayjs(formData.endDate).format('YYYY-MM-DD'),
+        noticeIds: formData.notices.map((el) => el.noticeId),
       };
+
       await mutateAsync(req);
       setEditCompletePopup(true);
       queryClient.invalidateQueries({ queryKey: ['session-detail', data.id] });
@@ -144,6 +171,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       }
     }
   };
+
   const handleRemove = (position: UserPosition, userId: string) => {
     setSelectedUsers((prev) => {
       const updated = {
@@ -169,13 +197,23 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
     });
   };
 
+  const formNotices = method.watch('notices') ?? [];
+
+  const removeNotice = (noticeId: string) => {
+    const next = formNotices.filter((n) => n.noticeId !== noticeId);
+    method.setValue('notices', next, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
   return (
-    <Form
-      onClick={(e) => e.stopPropagation()}
-      onSubmit={method.handleSubmit(onSumbit)}
-    >
-      <Typography variant="title3Bold">세션 수정</Typography>
-      <FormProvider {...method}>
+    <FormProvider {...method}>
+      <Form
+        onClick={(e) => e.stopPropagation()}
+        onSubmit={method.handleSubmit(onSumbit)}
+      >
+        <Typography variant="title3Bold">세션 수정</Typography>
         <FlexBox direction="column" gap={24}>
           <GridBox align="center" columns="79px 1fr" gap={16}>
             <Typography fontWeight={600} variant="body1Normal">
@@ -309,6 +347,19 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               )}
             </FlexBox>
           </GridBox>
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              상세 주소
+            </Typography>
+            <FlexBox direction="column">
+              <TextInput {...method.register('address')} />
+              {method.formState.errors.address && (
+                <Typography color="status-negative" variant="caption1Regular">
+                  {method.formState.errors.address.message}
+                </Typography>
+              )}
+            </FlexBox>
+          </GridBox>
           <div
             style={{
               height: '1px',
@@ -372,6 +423,42 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             selectedUsers={selectedUsers}
             onRemove={handleRemove}
           />
+
+          <div
+            style={{
+              height: '1px',
+              background: 'rgba(112, 115, 124, 0.22)',
+              width: '100%',
+            }}
+          />
+
+          <GridBox fullWidth columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              공지사항
+            </Typography>
+            <FlexBox direction="column" gap={12}>
+              <OutlinedButton
+                size="medium"
+                style={{ width: 'fit-content' }}
+                type="button"
+                variant="primary"
+                onClick={() => setReleatedNoticePopup(true)}
+              >
+                추가
+              </OutlinedButton>
+              {!!formNotices.length &&
+                formNotices.map((el) => (
+                  <FlexBox key={el.noticeId} gap={16}>
+                    <Typography color="primary-normal" variant="body1Normal">
+                      {el.title}
+                    </Typography>
+                    <IconButton onClick={() => removeNotice(el.noticeId)}>
+                      <CircleClose color="rgba(55, 56, 60, 0.28)" />
+                    </IconButton>
+                  </FlexBox>
+                ))}
+            </FlexBox>
+          </GridBox>
         </FlexBox>
 
         <FlexBox gap={8} justify="flex-end">
@@ -382,20 +469,24 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             저장
           </SolidButton>
         </FlexBox>
-      </FormProvider>
 
-      {sessionTargetPopup && (
-        <SessionTargetPopup
-          defaultSelectedUsers={selectedUsers}
-          eligibleUsers={eligibleUser?.users ?? []}
-          onClose={() => setSessionTargetPopup(false)}
-          onConfirm={(updated) => {
-            setSelectedUsers(updated);
-            setSessionTargetPopup(false);
-          }}
-        />
-      )}
-    </Form>
+        {sessionTargetPopup && (
+          <SessionTargetPopup
+            defaultSelectedUsers={selectedUsers}
+            eligibleUsers={eligibleUser?.users ?? []}
+            onClose={() => setSessionTargetPopup(false)}
+            onConfirm={(updated) => {
+              setSelectedUsers(updated);
+              setSessionTargetPopup(false);
+            }}
+          />
+        )}
+
+        {relatedNoticePopup && (
+          <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
+        )}
+      </Form>
+    </FormProvider>
   );
 };
 

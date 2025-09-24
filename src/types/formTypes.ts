@@ -56,6 +56,7 @@ export interface EditSessionType {
   id: string;
   name: string;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;
@@ -69,6 +70,7 @@ export interface EditSessionType {
 export interface AddSessionType {
   name: string;
   place: string;
+  address: string;
   date: string;
   endDate: string;
   time: string;

@@ -333,6 +333,19 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               )}
             </FlexBox>
           </GridBox>
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="body1Normal">
+              상세 주소
+            </Typography>
+            <FlexBox direction="column">
+              <TextInput {...method.register('address')} />
+              {method.formState.errors.address && (
+                <Typography color="status-negative" variant="caption1Regular">
+                  {method.formState.errors.address.message}
+                </Typography>
+              )}
+            </FlexBox>
+          </GridBox>
           <div
             style={{
               height: '1px',

@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { FC, useEffect, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import styled from 'styled-components';
 
 import CircleClose from '@assets/CircleClose';
@@ -45,9 +45,7 @@ interface Props {
 
 const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   const { data: generationList } = useGenerationListQuery(1);
-  const { data: eligibleUser } = useSessionEligibleUserQuery(
-    String(data?.generation),
-  );
+
   const method = useForm<SessionFormType>({
     resolver: zodResolver(SessionFormSchema),
     defaultValues: data
@@ -56,11 +54,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           date: new Date(data.date),
           endDate: new Date(data.endDate),
           generation: data.generation.toString(),
-          target:
-            eligibleUser?.users.map((el) => el.users).flat().length ===
-            data?.attendees.map((el) => el.attendees).flat().length
-              ? 'ALL'
-              : 'SELECT',
+          target: 'SELECT',
           sessionAttendeeIds: data?.attendees
             .map((el) => el.attendees)
             .flat()
@@ -68,6 +62,13 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         }
       : undefined,
   });
+
+  const generation = useWatch({ control: method.control, name: 'generation' });
+  const target = useWatch({ control: method.control, name: 'target' });
+
+  const { data: eligibleUser } = useSessionEligibleUserQuery(
+    String(generation ?? ''),
+  );
 
   const { mutateAsync } = useEditSessionMutation();
 
@@ -94,14 +95,27 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
   );
 
   useEffect(() => {
-    if (method.watch('target') === 'ALL' && eligibleUser) {
+    if (!data || !eligibleUser) return;
+
+    const totalEligible = eligibleUser.users.map((g) => g.users).flat().length;
+    const totalAttendees = data.attendees.map((g) => g.attendees).flat().length;
+
+    if (totalEligible > 0 && totalEligible === totalAttendees) {
+      method.setValue('target', 'ALL', { shouldDirty: true });
+    } else {
+      method.setValue('target', 'SELECT', { shouldDirty: true });
+    }
+  }, [data, eligibleUser, method]);
+
+  useEffect(() => {
+    if (target === 'ALL' && eligibleUser) {
       const all = eligibleUser.users.reduce((acc, cur) => {
         acc[cur.position] = cur.users;
         return acc;
       }, {} as SelectedUsersMap);
       setSelectedUsers(all);
     }
-  }, [method.watch('target'), eligibleUser]);
+  }, [target, eligibleUser]);
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({

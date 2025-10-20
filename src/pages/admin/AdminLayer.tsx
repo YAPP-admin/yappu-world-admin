@@ -21,7 +21,6 @@ const Container = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: 250px 1fr;
-  overflow: auto;
 `;
 
 const SideNavWrapper = styled.div`

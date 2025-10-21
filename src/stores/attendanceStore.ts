@@ -25,6 +25,8 @@ interface AttendanceStore {
   setBundleEditPopupOpen: (value: boolean) => void;
   bundleEditCompletePopupOpen: boolean;
   setBundleEditCompletePopupOpen: (value: boolean) => void;
+  generation: number | null;
+  setGeneration: (value: number) => void;
 }
 
 export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
@@ -85,4 +87,6 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
   bundleEditCompletePopupOpen: false,
   setBundleEditCompletePopupOpen: (value: boolean) =>
     set({ bundleEditCompletePopupOpen: value }),
+  generation: null,
+  setGeneration: (value: number) => set({ generation: value }),
 }));

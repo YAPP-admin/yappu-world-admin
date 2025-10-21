@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
 import OutlinedButton from '@compnents/Button/OutlinedButton';
@@ -11,6 +11,7 @@ import CompletePopup from '@compnents/popup/CompletePopup';
 import ConfirmPopup from '@compnents/popup/ConfirmPopup';
 import { useAttendancesQuery } from '@queries/attendance/useAttendancesQuery';
 import { useEditAttendanceMutation } from '@queries/attendance/useEditAttendanceMutation';
+import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useAttendanceStore } from '@stores/attendanceStore';
 import {
   AttendanceStatusValueType,
@@ -24,7 +25,8 @@ import AttendanceDetail from './AttendanceDetail';
 import AttendaceEdit from './AttendanceEdit';
 
 const Attendances: FC = () => {
-  const { data } = useAttendancesQuery();
+  const { data: attendancesData } = useAttendancesQuery();
+  const { data: generationData } = useGenerationListQuery(1, 100);
   const getTargets = useAttendanceStore((state) => state.getTargets);
   const {
     isEdit,
@@ -35,12 +37,14 @@ const Attendances: FC = () => {
     setBundleEditPopupOpen,
     bundleEditCompletePopupOpen,
     setBundleEditCompletePopupOpen,
+    generation,
+    setGeneration,
   } = useAttendanceStore();
   const { mutateAsync } = useEditAttendanceMutation();
   const queryClient = useQueryClient();
 
   const sessionMap = useMemo(() => {
-    return data?.attendancesGroupedBySession.reduce(
+    return attendancesData?.attendancesGroupedBySession.reduce(
       (acc, group) => {
         acc[group.sessionId] = group.attendances.reduce(
           (userMap, status) => {
@@ -53,7 +57,7 @@ const Attendances: FC = () => {
       },
       {} as Record<string, Record<string, AttendanceStatusValueType | null>>,
     );
-  }, [data?.attendancesGroupedBySession]);
+  }, [attendancesData?.attendancesGroupedBySession]);
 
   const onClickToSave = async () => {
     try {
@@ -71,14 +75,21 @@ const Attendances: FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (!generationData?.data) return;
+    const activeGeneration = generationData.data.find((el) => el.isActive);
+    console.log(activeGeneration);
+    if (activeGeneration) setGeneration(activeGeneration?.generation);
+  }, [generationData?.data]);
+
   return (
     <Container>
       <Typography variant="title2Bold">출석관리</Typography>
       <FlexBox justify="space-between" width="100%">
         <FlexBox align="center" gap={8} justify="center" width="fit-content">
-          <Typography variant="headline1Bold">26기</Typography>
+          <Typography variant="headline1Bold">{generation}기</Typography>
           <Typography color="label-assistive" variant="body1Normal">
-            {data?.users.length}명
+            {attendancesData?.users.length}명
           </Typography>
         </FlexBox>
         {isEdit ? (
@@ -108,14 +119,14 @@ const Attendances: FC = () => {
         {isEdit ? (
           <AttendaceEdit
             sessionMap={sessionMap}
-            sessions={data?.sessions}
-            users={data?.users}
+            sessions={attendancesData?.sessions}
+            users={attendancesData?.users}
           />
         ) : (
           <AttendanceDetail
             sessionMap={sessionMap}
-            sessions={data?.sessions}
-            users={data?.users}
+            sessions={attendancesData?.sessions}
+            users={attendancesData?.users}
           />
         )}
       </Wrapper>
@@ -130,8 +141,10 @@ const Attendances: FC = () => {
       )}
       {bundleEditPopupOpen && (
         <BundleEditPopup
-          attendancesGroupedBySession={data?.attendancesGroupedBySession}
-          session={data?.sessions}
+          session={attendancesData?.sessions}
+          attendancesGroupedBySession={
+            attendancesData?.attendancesGroupedBySession
+          }
           onClose={() => setBundleEditPopupOpen(false)}
         />
       )}

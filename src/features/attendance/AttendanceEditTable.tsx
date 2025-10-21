@@ -6,7 +6,7 @@ import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
 import TableRow from '@compnents/table/TableRow';
-import { attendanceOptions } from '@constants/optionList';
+import { attendanceOptions, latePassOptions } from '@constants/optionList';
 import { useAttendanceStore } from '@stores/attendanceStore';
 import { getAttendanceStatus } from '@utils/getAttendanceStatus';
 import {
@@ -26,7 +26,8 @@ interface Props {
 }
 
 const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
-  const { editedMap, updateStatus } = useAttendanceStore();
+  const { editedMap, updateStatus, latePassMap, updateLatePass } =
+    useAttendanceStore();
 
   return (
     <Table>
@@ -70,11 +71,25 @@ const AttendanceEditTable: FC<Props> = ({ sessionMap, sessions, users }) => {
                 {user.earlyCheckOutCount}
               </Typography>
             </TableCell>
+
             <TableCell widthType="max">
-              <Typography variant="body1Normal">
-                {user.latePassCount}
-              </Typography>
+              <Select
+                optionList={latePassOptions}
+                defaultSelectLabel={
+                  latePassOptions.find(
+                    (el) => el.value === user.latePassCount.toString(),
+                  )?.label
+                }
+                selectedValue={
+                  latePassMap[user.userId]?.toString() ??
+                  user.latePassCount.toString()
+                }
+                onChange={(value) => {
+                  updateLatePass(user.userId, Number(value));
+                }}
+              />
             </TableCell>
+
             <TableCell widthType="max">
               <Typography variant="body1Normal">{user.absentCount}</Typography>
             </TableCell>

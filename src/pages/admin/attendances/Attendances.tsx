@@ -61,9 +61,7 @@ const Attendances: FC = () => {
 
   const onClickToSave = async () => {
     try {
-      const req: EditAttendanceReq = {
-        targets: getTargets(),
-      };
+      const req: EditAttendanceReq = getTargets();
       await mutateAsync(req);
       setEditPopupOpen(false);
       setIsEdit(false);
@@ -78,7 +76,6 @@ const Attendances: FC = () => {
   useEffect(() => {
     if (!generationData?.data) return;
     const activeGeneration = generationData.data.find((el) => el.isActive);
-    console.log(activeGeneration);
     if (activeGeneration) setGeneration(activeGeneration?.generation);
   }, [generationData?.data]);
 

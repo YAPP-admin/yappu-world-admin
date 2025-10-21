@@ -2,7 +2,9 @@ import { create } from 'zustand';
 
 import {
   AttendanceStatusValueType,
+  EditAttendanceReq,
   EditAttendanceTarget,
+  EditLatePassTarget,
 } from 'apis/attendance/types';
 
 interface AttendanceStore {
@@ -13,8 +15,15 @@ interface AttendanceStore {
     userIds: string[],
     status: string,
   ) => void;
+  latePassMap: Record<string, number>;
+  updateLatePass: (userId: string, count: number) => void;
+  getTargets: () => {
+    generation: number;
+    attendances: EditAttendanceTarget[];
+    latePasses: EditLatePassTarget[];
+  };
   resetEditedMap: () => void;
-  getTargets: () => EditAttendanceTarget[];
+
   isEdit: boolean;
   setIsEdit: (value: boolean) => void;
   editPopupOpen: boolean;
@@ -25,6 +34,8 @@ interface AttendanceStore {
   setBundleEditPopupOpen: (value: boolean) => void;
   bundleEditCompletePopupOpen: boolean;
   setBundleEditCompletePopupOpen: (value: boolean) => void;
+  generation: number | null;
+  setGeneration: (value: number) => void;
 }
 
 export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
@@ -57,21 +68,54 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
       };
     });
   },
-  resetEditedMap: () => set({ editedMap: {} }),
+
+  latePassMap: {},
+  updateLatePass: (userId, count) =>
+    set((state) => ({
+      latePassMap: {
+        ...state.latePassMap,
+        [userId]: count,
+      },
+    })),
+
   getTargets: () => {
-    const result: EditAttendanceTarget[] = [];
-    const map = get().editedMap;
-    for (const sessionId in map) {
-      for (const userId in map[sessionId]) {
-        result.push({
+    const result: EditAttendanceReq = {
+      generation: get().generation ?? 0,
+      attendances: [],
+      latePasses: [],
+    };
+
+    const attendaceResult: EditAttendanceTarget[] = [];
+    const attendanceMap = get().editedMap;
+    const latePassMap = get().latePassMap;
+
+    for (const sessionId in attendanceMap) {
+      for (const userId in attendanceMap[sessionId]) {
+        attendaceResult.push({
           sessionId,
           userId,
-          attendanceStatus: map[sessionId][userId] as AttendanceStatusValueType,
+          attendanceStatus: attendanceMap[sessionId][
+            userId
+          ] as AttendanceStatusValueType,
         });
       }
     }
+
+    const latePasses = Object.entries(latePassMap).map(
+      ([userId, latePassCount]) => ({
+        userId,
+        latePassCount,
+      }),
+    );
+
+    result.attendances = attendaceResult;
+    result.latePasses = latePasses;
+
     return result;
   },
+
+  resetEditedMap: () => set({ editedMap: {} }),
+
   isEdit: false,
   setIsEdit: (value: boolean) => set({ isEdit: value }),
   editPopupOpen: false,
@@ -85,4 +129,6 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
   bundleEditCompletePopupOpen: false,
   setBundleEditCompletePopupOpen: (value: boolean) =>
     set({ bundleEditCompletePopupOpen: value }),
+  generation: null,
+  setGeneration: (value: number) => set({ generation: value }),
 }));

@@ -66,13 +66,20 @@ export interface AttendanceStatus {
 }
 
 export interface EditAttendanceReq {
-  targets: EditAttendanceTarget[];
+  generation: number;
+  attendances: EditAttendanceTarget[];
+  latePasses: EditLatePassTarget[];
 }
 
 export interface EditAttendanceTarget {
   userId: string;
   sessionId: string;
   attendanceStatus: AttendanceStatusValueType;
+}
+
+export interface EditLatePassTarget {
+  userId: string;
+  latePassCount: number;
 }
 
 export interface AttendanceCodeRes {

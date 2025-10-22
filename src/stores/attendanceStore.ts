@@ -79,12 +79,6 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
     })),
 
   getTargets: () => {
-    const result: EditAttendanceReq = {
-      generation: get().generation ?? 0,
-      attendances: [],
-      latePasses: [],
-    };
-
     const attendaceResult: EditAttendanceTarget[] = [];
     const attendanceMap = get().editedMap;
     const latePassMap = get().latePassMap;
@@ -108,10 +102,11 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
       }),
     );
 
-    result.attendances = attendaceResult;
-    result.latePasses = latePasses;
-
-    return result;
+    return {
+      attendances: attendaceResult,
+      latePasses,
+      generation: get().generation ?? 0,
+    } as EditAttendanceReq;
   },
 
   resetEditedMap: () => set({ editedMap: {} }),

@@ -79,18 +79,16 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
     })),
 
   getTargets: () => {
-    const attendaceResult: EditAttendanceTarget[] = [];
+    const attendanceResult: EditAttendanceTarget[] = [];
     const attendanceMap = get().editedMap;
     const latePassMap = get().latePassMap;
 
-    for (const sessionId in attendanceMap) {
-      for (const userId in attendanceMap[sessionId]) {
-        attendaceResult.push({
+    for (const [sessionId, userMap] of Object.entries(attendanceMap)) {
+      for (const [userId, status] of Object.entries(userMap)) {
+        attendanceResult.push({
           sessionId,
           userId,
-          attendanceStatus: attendanceMap[sessionId][
-            userId
-          ] as AttendanceStatusValueType,
+          attendanceStatus: status as AttendanceStatusValueType,
         });
       }
     }
@@ -103,7 +101,7 @@ export const useAttendanceStore = create<AttendanceStore>((set, get) => ({
     );
 
     return {
-      attendances: attendaceResult,
+      attendances: attendanceResult,
       latePasses,
       generation: get().generation ?? 0,
     } as EditAttendanceReq;

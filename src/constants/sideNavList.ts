@@ -3,7 +3,7 @@ import { NavList } from 'types/NavTypes';
 export const sideNavList: NavList[] = [
   {
     title: '회원관리',
-    path: '/admin',
+    path: '/admin/members',
     childs: [
       {
         title: '전체 회원 리스트',

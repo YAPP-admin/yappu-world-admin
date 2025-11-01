@@ -5,11 +5,12 @@ import CircleClose from '@assets/CircleClose';
 import { View } from '@assets/View';
 import { ViewSlash } from '@assets/ViewSlash';
 import IconButton from '@compnents/Button/IconButton';
+import { INPUT_STYLES } from '@constants/InputStyles';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
 
-type TextInputSize = 'large' | 'medium';
+type TextInputSize = 'large' | 'medium' | 'small';
 type State = 'default' | 'active' | 'error' | 'success';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -21,6 +22,7 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   state?: State;
   remove?: boolean;
   onRemove?: () => void;
+  icon?: React.ReactNode;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -34,6 +36,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       state,
       remove,
       onRemove,
+      icon,
       ...rest
     },
     ref,
@@ -51,6 +54,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <Container width={width}>
         {title && <Typography variant="label1Normal">{title}</Typography>}
         <InputWrapper $inputSize={inputSize} $state={state}>
+          {icon && <IconLeftWrapper>{icon}</IconLeftWrapper>}
           <Input ref={ref} {...rest} $inputSize={inputSize} type={inputType} />
           {isShow && (
             <IconWrapper onClick={handleVisible}>
@@ -85,12 +89,10 @@ const InputWrapper = styled.div<{
   $state?: State;
 }>`
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  border-radius: ${({ $inputSize }) =>
-    $inputSize === 'large' ? '10px' : '8px'};
+  padding: 8px 12px;
   border: 1px solid
     ${({ $state }) => {
       switch ($state) {
@@ -107,17 +109,24 @@ const InputWrapper = styled.div<{
     }};
   width: 100%;
   box-sizing: border-box;
-  height: ${({ $inputSize }) => ($inputSize === 'large' ? '48px' : '40px')};
+  ${({ $inputSize }) =>
+    INPUT_STYLES[$inputSize] &&
+    `
+    height: ${INPUT_STYLES[$inputSize].height};
+    border-radius: ${INPUT_STYLES[$inputSize].borderRadius};
+  `}
 `;
 
 const Input = styled.input<{ $inputSize: TextInputSize }>`
   border: none;
   outline: none;
-  font-size: ${({ $inputSize }) => ($inputSize === 'large' ? '16px' : '15px')};
-  line-height: ${({ $inputSize }) =>
-    $inputSize === 'large' ? '24px' : '22px'};
-  letter-spacing: ${({ $inputSize }) =>
-    $inputSize === 'large' ? '0.091px' : '0.144px'};
+  ${({ $inputSize }) =>
+    INPUT_STYLES[$inputSize] &&
+    `
+    font-size: ${INPUT_STYLES[$inputSize].fontSize};
+    line-height: ${INPUT_STYLES[$inputSize].lineHeight};
+    letter-spacing: ${INPUT_STYLES[$inputSize].letterSpacing};
+  `}
   width: 100%;
 
   &:disabled {
@@ -140,4 +149,11 @@ const UnitText = styled.span`
   font-style: normal;
   line-height: 22px;
   letter-spacing: 0.144px;
+`;
+
+const IconLeftWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.16;
 `;

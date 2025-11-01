@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import Tune from '@assets/Tune';
+import IconButton from '@compnents/Button/IconButton';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
 import Typography from '@compnents/commons/Typography';
@@ -65,14 +67,21 @@ const MemberList: FC = () => {
               <TableHead>
                 <TableRow>
                   {memberListHeader.map((col) => (
-                    <TableCell key={col} as="th">
-                      <Typography
-                        color="label-normal"
-                        style={{ fontWeight: 600 }}
-                        variant="body1Normal"
-                      >
-                        {col}
-                      </Typography>
+                    <TableCell key={col.title} as="th">
+                      <FlexBox align="center" gap={4} justify="center">
+                        <Typography
+                          color="label-normal"
+                          style={{ fontWeight: 600 }}
+                          variant="body1Normal"
+                        >
+                          {col.title}
+                        </Typography>
+                        {col.isFilter && (
+                          <IconButton>
+                            <Tune size="16" />
+                          </IconButton>
+                        )}
+                      </FlexBox>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -83,11 +92,6 @@ const MemberList: FC = () => {
                     <TableCell>
                       <Typography color="primary-normal" variant="body1Normal">
                         {el.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color="label-normal" variant="body1Normal">
-                        {el.email}
                       </Typography>
                     </TableCell>
                     <TableCell>

@@ -49,14 +49,13 @@ const MemberList: FC = () => {
                 width="fit-content"
               >
                 <Typography variant="headline1Bold">회원리스트</Typography>
+
                 <Typography
-                  color="label-alternative"
+                  color="primary-normal"
+                  fontWeight="bold"
                   variant="body1Normal"
-                  style={{
-                    fontWeight: 600,
-                  }}
                 >
-                  {data?.totalCount}개
+                  {data?.totalCount}명
                 </Typography>
               </FlexBox>
             </FlexBox>

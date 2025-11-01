@@ -15,6 +15,7 @@ import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
 import { UserList } from 'apis/user/types';
 import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
+import SearchBar from 'features/member/list/SearchBar';
 
 const MemberList: FC = () => {
   const {
@@ -38,7 +39,8 @@ const MemberList: FC = () => {
         <Wrapper>
           <FlexBox direction="column" gap={8}>
             <FlexBox
-              align="center"
+              direction="column"
+              gap={8}
               height="fit-content"
               justify="space-between"
             >
@@ -49,7 +51,6 @@ const MemberList: FC = () => {
                 width="fit-content"
               >
                 <Typography variant="headline1Bold">회원리스트</Typography>
-
                 <Typography
                   color="primary-normal"
                   fontWeight="bold"
@@ -58,6 +59,7 @@ const MemberList: FC = () => {
                   {data?.totalCount}명
                 </Typography>
               </FlexBox>
+              <SearchBar />
             </FlexBox>
             <Table>
               <TableHead>

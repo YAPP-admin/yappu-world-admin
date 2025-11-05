@@ -36,8 +36,6 @@ const MemberList: FC = () => {
     page,
     setPage,
   } = useMemberStore();
-  const { data: userList } = useUserListQuery({ page, size: 10 });
-  const { data: generation } = useGenerationListQuery(1, 100);
   const {
     selectedFilters,
     openFilterType,
@@ -49,7 +47,15 @@ const MemberList: FC = () => {
     handleFilterClick,
     handleSelectFilter,
   } = useTableFilter();
-  console.log(selectedFilters);
+  const { data: userList } = useUserListQuery({
+    page,
+    size: 10,
+    name: '',
+    generation: selectedFilters.generation,
+    position: selectedFilters.position,
+    role: selectedFilters.role,
+  });
+  const { data: generation } = useGenerationListQuery(1, 100);
 
   const onClickRow = (row: UserList) => {
     if (openFilterIndex !== null) {

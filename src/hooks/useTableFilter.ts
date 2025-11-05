@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 
 export type FilterType = 'generation' | 'position' | 'role' | null;
 
-interface SelectedFilters {
+export interface SelectedFilters {
   generation: string;
   position: string;
   role: string;

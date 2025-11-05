@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import Tune from '@assets/Tune';
@@ -19,6 +19,7 @@ import {
   userRoleOptionList,
 } from '@constants/optionList';
 import { memberListHeader } from '@constants/tableHeader';
+import { useTableFilter } from '@hooks/useTableFilter';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
 import { UserList } from 'apis/user/types';
@@ -26,8 +27,6 @@ import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
 import SearchBar from 'features/member/list/SearchBar';
 
 import { useGenerationListQuery } from '../../../queries/operation/useGenerationListQuery';
-
-type FilterType = 'generation' | 'position' | 'role' | null;
 
 const MemberList: FC = () => {
   const {
@@ -39,20 +38,18 @@ const MemberList: FC = () => {
   } = useMemberStore();
   const { data: userList } = useUserListQuery({ page, size: 10 });
   const { data: generation } = useGenerationListQuery(1, 100);
-
-  const [selectedFilters, setSelectedFilters] = useState({
-    generation: '',
-    role: '',
-    position: '',
-  });
-  const [openFilterType, setOpenFilterType] = useState<FilterType>(null);
-  const [openFilterIndex, setOpenFilterIndex] = useState<number | null>(null);
-  const filterRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const popoverRef = useRef<HTMLDivElement | null>(null);
-  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({
-    top: 0,
-    left: 0,
-  });
+  const {
+    selectedFilters,
+    openFilterType,
+    setOpenFilterIndex,
+    openFilterIndex,
+    filterRefs,
+    popoverRef,
+    popoverPos,
+    handleFilterClick,
+    handleSelectFilter,
+  } = useTableFilter();
+  console.log(selectedFilters);
 
   const onClickRow = (row: UserList) => {
     if (openFilterIndex !== null) {
@@ -62,50 +59,6 @@ const MemberList: FC = () => {
 
     setSelectedUserId(row.userId);
     setDetailPopupOpen();
-  };
-
-  const handleFilterClick = (index: number, type: FilterType) => {
-    if (openFilterType === type && openFilterIndex === index) {
-      setOpenFilterType(null);
-      setOpenFilterIndex(null);
-      return;
-    }
-
-    const button = filterRefs.current[index];
-    if (button) {
-      const rect = button.getBoundingClientRect();
-      setPopoverPos({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX - 20,
-      });
-    }
-
-    setOpenFilterIndex(index);
-    setOpenFilterType(type);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const popoverEl = popoverRef.current;
-      const isInPopover = popoverEl?.contains(e.target as Node);
-      const isInFilterButton = filterRefs.current.some((btn) =>
-        btn?.contains(e.target as Node),
-      );
-
-      if (!isInPopover && !isInFilterButton) {
-        setOpenFilterIndex(null);
-        setOpenFilterType(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleSelectFilter = (type: FilterType, value: string) => {
-    setSelectedFilters((prev) => ({ ...prev, [type!]: value }));
   };
 
   return (

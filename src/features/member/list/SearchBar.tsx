@@ -6,16 +6,35 @@ import FlexBox from '@compnents/commons/FlexBox';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 
-const SearchBar: FC = () => {
+interface Props {
+  value: string;
+  placeholder?: string;
+  width?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
+const SearchBar: FC<Props> = ({
+  value,
+  placeholder = '검색하세요',
+  width = '250px',
+  onChange,
+  onSearch,
+  onKeyDown,
+}) => {
   return (
     <FlexBox align="center" gap={8} height="fit-content" width="fit-content">
       <TextInput
         icon={<Search size="16" />}
         inputSize="small"
-        placeholder="이름으로 검색하세요"
-        width="250px"
+        placeholder={placeholder}
+        value={value}
+        width={width}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
       />
-      <SolidButton variant="secondary">
+      <SolidButton variant="secondary" onClick={onSearch}>
         <Typography
           color="primary-normal"
           fontWeight={600}

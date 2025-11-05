@@ -19,6 +19,8 @@ import {
   userRoleOptionList,
 } from '@constants/optionList';
 import { memberListHeader } from '@constants/tableHeader';
+import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
+import { useNameSearch } from '@hooks/useNameSearch';
 import { useTableFilter } from '@hooks/useTableFilter';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
@@ -36,6 +38,7 @@ const MemberList: FC = () => {
     page,
     setPage,
   } = useMemberStore();
+
   const {
     selectedFilters,
     openFilterType,
@@ -47,10 +50,13 @@ const MemberList: FC = () => {
     handleFilterClick,
     handleSelectFilter,
   } = useTableFilter();
-  const { data: userList } = useUserListQuery({
+
+  const { name, handleSearchChange } = useNameSearch();
+
+  const { data: userList, refetch } = useUserListQuery({
     page,
     size: 10,
-    name: '',
+    name,
     generation: selectedFilters.generation,
     position: selectedFilters.position,
     role: selectedFilters.role,
@@ -62,10 +68,13 @@ const MemberList: FC = () => {
       setOpenFilterIndex(null);
       return;
     }
-
     setSelectedUserId(row.userId);
     setDetailPopupOpen();
   };
+
+  const handleSearch = useDebounceCallBack(() => {
+    refetch();
+  }, 500);
 
   return (
     <>
@@ -94,7 +103,13 @@ const MemberList: FC = () => {
                   {userList?.totalCount}명
                 </Typography>
               </FlexBox>
-              <SearchBar />
+              <SearchBar
+                placeholder="이름으로 검색하세요"
+                value={name}
+                onChange={handleSearchChange}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                onSearch={handleSearch}
+              />
             </FlexBox>
             <Table>
               <TableHead>

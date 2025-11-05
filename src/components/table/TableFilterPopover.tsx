@@ -57,6 +57,7 @@ const Container = styled.div`
     0 1px 4px 0 rgba(0, 0, 0, 0.08),
     0 0 1px 0 rgba(0, 0, 0, 0.08);
   width: fit-content;
+  background: #fff;
 `;
 
 const Divider = styled.div`

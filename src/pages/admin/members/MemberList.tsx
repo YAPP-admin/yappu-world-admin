@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import Tune from '@assets/Tune';
@@ -10,6 +10,7 @@ import Pagination from '@compnents/table/Pagination';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
+import TableFilterPopover from '@compnents/table/TableFilterPopover';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { memberListHeader } from '@constants/tableHeader';
@@ -29,10 +30,60 @@ const MemberList: FC = () => {
   } = useMemberStore();
   const { data } = useUserListQuery({ page, size: 10 });
 
+  const [openFilterIndex, setOpenFilterIndex] = useState<number | null>(null);
+  const filterRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const popoverRef = useRef<HTMLDivElement | null>(null);
+  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number }>({
+    top: 0,
+    left: 0,
+  });
+
   const onClickRow = (row: UserList) => {
+    if (openFilterIndex !== null) {
+      setOpenFilterIndex(null);
+      return;
+    }
+
     setSelectedUserId(row.userId);
     setDetailPopupOpen();
   };
+
+  const handleFilterClick = (index: number) => {
+    if (openFilterIndex === index) {
+      setOpenFilterIndex(null);
+      return;
+    }
+
+    const button = filterRefs.current[index];
+    if (button) {
+      const rect = button.getBoundingClientRect();
+      setPopoverPos({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX - 20,
+      });
+    }
+
+    setOpenFilterIndex(index);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const popoverEl = popoverRef.current;
+      const isInPopover = popoverEl?.contains(e.target as Node);
+      const isInFilterButton = filterRefs.current.some((btn) =>
+        btn?.contains(e.target as Node),
+      );
+
+      if (!isInPopover && !isInFilterButton) {
+        setOpenFilterIndex(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -66,7 +117,7 @@ const MemberList: FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  {memberListHeader.map((col) => (
+                  {memberListHeader.map((col, index) => (
                     <TableCell key={col.title} as="th">
                       <FlexBox align="center" gap={4} justify="center">
                         <Typography
@@ -77,7 +128,12 @@ const MemberList: FC = () => {
                           {col.title}
                         </Typography>
                         {col.isFilter && (
-                          <IconButton>
+                          <IconButton
+                            ref={(el) => {
+                              filterRefs.current[index] = el;
+                            }}
+                            onClick={() => handleFilterClick(index)}
+                          >
                             <Tune size="16" />
                           </IconButton>
                         )}
@@ -133,6 +189,14 @@ const MemberList: FC = () => {
           />
         </Wrapper>
       </Container>
+      {openFilterIndex !== null && (
+        <PopoverContainer
+          ref={popoverRef}
+          style={{ top: popoverPos.top, left: popoverPos.left }}
+        >
+          <TableFilterPopover />
+        </PopoverContainer>
+      )}
       {detailPopupOpen && <MemberDetailPopup onClose={setDetailPopupOpen} />}
     </>
   );
@@ -155,4 +219,9 @@ const Wrapper = styled.div`
   > div:first-child {
     flex: 1;
   }
+`;
+
+const PopoverContainer = styled.div`
+  position: absolute;
+  z-index: 10;
 `;

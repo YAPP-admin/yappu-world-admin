@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import Tune from '@assets/Tune';
@@ -10,14 +10,25 @@ import Pagination from '@compnents/table/Pagination';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
+import TableFilterPopover from '@compnents/table/TableFilterPopover';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import {
+  OptionType,
+  positionOptionList,
+  userRoleOptionList,
+} from '@constants/optionList';
 import { memberListHeader } from '@constants/tableHeader';
+import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
+import { useTableFilter } from '@hooks/useTableFilter';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
+import { titleToFilterTypeMap } from '@utils/getTableFilter';
 import { UserList } from 'apis/user/types';
 import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
 import SearchBar from 'features/member/list/SearchBar';
+
+import { useGenerationListQuery } from '../../../queries/operation/useGenerationListQuery';
 
 const MemberList: FC = () => {
   const {
@@ -27,12 +38,47 @@ const MemberList: FC = () => {
     page,
     setPage,
   } = useMemberStore();
-  const { data } = useUserListQuery({ page, size: 10 });
+
+  const {
+    selectedFilters,
+    openFilterType,
+    setOpenFilterIndex,
+    openFilterIndex,
+    filterRefs,
+    popoverRef,
+    popoverPos,
+    handleFilterClick,
+    handleSelectFilter,
+  } = useTableFilter();
+
+  const [name, setName] = useState('');
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const { data: userList, refetch } = useUserListQuery({
+    page,
+    size: 10,
+    name,
+    generation: selectedFilters.generation,
+    position: selectedFilters.position,
+    role: selectedFilters.role,
+  });
+  const { data: generation } = useGenerationListQuery(1, 100);
 
   const onClickRow = (row: UserList) => {
+    if (openFilterIndex !== null) {
+      setOpenFilterIndex(null);
+      return;
+    }
     setSelectedUserId(row.userId);
     setDetailPopupOpen();
   };
+
+  const handleSearch = useDebounceCallBack(() => {
+    refetch();
+  }, 500);
 
   return (
     <>
@@ -58,36 +104,58 @@ const MemberList: FC = () => {
                   fontWeight="bold"
                   variant="body1Normal"
                 >
-                  {data?.totalCount}명
+                  {userList?.totalCount}명
                 </Typography>
               </FlexBox>
-              <SearchBar />
+              <SearchBar
+                placeholder="이름으로 검색하세요"
+                value={name}
+                onChange={handleSearchChange}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                onSearch={handleSearch}
+              />
             </FlexBox>
             <Table>
               <TableHead>
                 <TableRow>
-                  {memberListHeader.map((col) => (
-                    <TableCell key={col.title} as="th">
-                      <FlexBox align="center" gap={4} justify="center">
-                        <Typography
-                          color="label-normal"
-                          style={{ fontWeight: 600 }}
-                          variant="body1Normal"
-                        >
-                          {col.title}
-                        </Typography>
-                        {col.isFilter && (
-                          <IconButton>
-                            <Tune size="16" />
-                          </IconButton>
-                        )}
-                      </FlexBox>
-                    </TableCell>
-                  ))}
+                  {memberListHeader.map((col, index) => {
+                    const type = titleToFilterTypeMap[col.title] ?? null;
+
+                    const hasValue = type
+                      ? selectedFilters[type] !== ''
+                      : false;
+
+                    return (
+                      <TableCell key={col.title} as="th">
+                        <FlexBox align="center" gap={4} justify="center">
+                          <Typography
+                            color="label-normal"
+                            style={{ fontWeight: 600 }}
+                            variant="body1Normal"
+                          >
+                            {col.title}
+                          </Typography>
+                          {col.isFilter && (
+                            <IconButton
+                              ref={(el) => {
+                                filterRefs.current[index] = el;
+                              }}
+                              onClick={() => handleFilterClick(index, type)}
+                            >
+                              <Tune
+                                color={hasValue ? '#FA6027' : '#171719'}
+                                size="16"
+                              />
+                            </IconButton>
+                          )}
+                        </FlexBox>
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.data.map((el) => (
+                {userList?.data.map((el) => (
                   <TableRow key={el.userId} onClick={() => onClickRow(el)}>
                     <TableCell>
                       <Typography color="primary-normal" variant="body1Normal">
@@ -128,11 +196,47 @@ const MemberList: FC = () => {
           </FlexBox>
           <Pagination
             currentPage={page}
-            totalPages={data?.totalPages ?? 0}
+            totalPages={userList?.totalPages ?? 0}
             onPageChange={setPage}
           />
         </Wrapper>
       </Container>
+      {openFilterIndex !== null && (
+        <PopoverContainer
+          ref={popoverRef}
+          style={{ top: popoverPos.top, left: popoverPos.left }}
+        >
+          {openFilterType === 'generation' && (
+            <TableFilterPopover
+              title="기수"
+              value={selectedFilters.generation}
+              optionList={
+                (generation?.data?.map((g) => ({
+                  label: `${g.generation.toString()}기`,
+                  value: g.generation.toString(),
+                })) as OptionType[]) ?? []
+              }
+              onSelect={(v) => handleSelectFilter('generation', v)}
+            />
+          )}
+          {openFilterType === 'position' && (
+            <TableFilterPopover
+              optionList={positionOptionList}
+              title="직군"
+              value={selectedFilters.position}
+              onSelect={(v) => handleSelectFilter('position', v)}
+            />
+          )}
+          {openFilterType === 'role' && (
+            <TableFilterPopover
+              optionList={userRoleOptionList}
+              title="권한"
+              value={selectedFilters.role}
+              onSelect={(v) => handleSelectFilter('role', v)}
+            />
+          )}
+        </PopoverContainer>
+      )}
       {detailPopupOpen && <MemberDetailPopup onClose={setDetailPopupOpen} />}
     </>
   );
@@ -155,4 +259,9 @@ const Wrapper = styled.div`
   > div:first-child {
     flex: 1;
   }
+`;
+
+const PopoverContainer = styled.div`
+  position: absolute;
+  z-index: 10;
 `;

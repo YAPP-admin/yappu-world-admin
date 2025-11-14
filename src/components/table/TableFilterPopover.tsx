@@ -4,37 +4,45 @@ import styled from 'styled-components';
 import FlexBox from '@compnents/commons/FlexBox';
 import Radio from '@compnents/commons/Radio';
 import Typography from '@compnents/commons/Typography';
+import { OptionType } from '@constants/optionList';
 
-const list = [
-  '20기',
-  '21기',
-  '22기',
-  '23기',
-  '24기',
-  '25기',
-  '26기',
-  '27기',
-  '28기',
-  '29기',
-]; // 추후 제거 예정
+interface Props {
+  title: string;
+  optionList: OptionType[];
+  onSelect: (value: string) => void;
+  value: string;
+}
 
-const TableFilterPopover: FC = () => {
+const TableFilterPopover: FC<Props> = ({
+  title,
+  optionList,
+  onSelect,
+  value,
+}) => {
   return (
     <Container>
-      <FlexBox align="center" gap={8}>
-        <Radio />
+      <FlexBox align="center" gap={8} onClick={() => onSelect('')}>
+        <Radio checked={value === ''} onChange={() => onSelect('')} />
         <Typography color="label-normal" variant="body2Normal">
-          전체 기수 선택
+          전체 {title} 선택
         </Typography>
       </FlexBox>
       <Divider />
       <ScrollArea>
         <ListWrapper>
-          {list.map((li, index) => (
-            <FlexBox key={index} align="center" gap={8}>
-              <Radio />
+          {optionList.map((option, index) => (
+            <FlexBox
+              key={index}
+              align="center"
+              gap={8}
+              onClick={() => onSelect(option.value)}
+            >
+              <Radio
+                checked={value === option.value}
+                onChange={() => onSelect(option.value)}
+              />
               <Typography color="label-normal" variant="body2Normal">
-                {li}
+                {option.label}
               </Typography>
             </FlexBox>
           ))}
@@ -57,6 +65,7 @@ const Container = styled.div`
     0 1px 4px 0 rgba(0, 0, 0, 0.08),
     0 0 1px 0 rgba(0, 0, 0, 0.08);
   width: fit-content;
+  background: #fff;
 `;
 
 const Divider = styled.div`

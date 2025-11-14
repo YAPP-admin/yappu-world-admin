@@ -25,6 +25,7 @@ interface FlexBoxProps {
   fullHeight?: boolean;
   padding?: string;
   margin?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const FlexBox: FC<FlexBoxProps> = ({
@@ -41,6 +42,7 @@ const FlexBox: FC<FlexBoxProps> = ({
   fullHeight,
   padding,
   margin,
+  onClick,
 }) => {
   return (
     <StyledFlexBox
@@ -56,6 +58,7 @@ const FlexBox: FC<FlexBoxProps> = ({
       padding={padding}
       width={width}
       wrap={wrap}
+      onClick={onClick}
     >
       {children}
     </StyledFlexBox>

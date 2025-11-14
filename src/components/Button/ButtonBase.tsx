@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FC } from 'react';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
 import styled from 'styled-components';
 
 export type ButtonSize = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
@@ -9,21 +9,19 @@ interface ButtonBaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
 }
 
-const ButtonBase: FC<ButtonBaseProps> = ({
-  children,
-  rightIcon,
-  leftIcon,
-  ...props
-}) => {
-  return (
-    <StyledButton {...props}>
-      {leftIcon}
-      {children}
-      {rightIcon}
-    </StyledButton>
-  );
-};
+const ButtonBase = forwardRef<HTMLButtonElement, ButtonBaseProps>(
+  ({ children, rightIcon, leftIcon, ...props }, ref) => {
+    return (
+      <StyledButton ref={ref} {...props}>
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </StyledButton>
+    );
+  },
+);
 
+ButtonBase.displayName = 'ButtonBase';
 export default ButtonBase;
 
 const StyledButton = styled.button`

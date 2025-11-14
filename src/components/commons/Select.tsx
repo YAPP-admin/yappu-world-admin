@@ -2,15 +2,11 @@ import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import DropDown from '@assets/DropDown';
+import { OptionType } from '@constants/optionList';
 import useOutsideClick from '@hooks/useOutsideClick';
 import theme from 'styles/theme';
 
 import Typography from './Typography';
-
-export interface OptionType {
-  label: string;
-  value: string;
-}
 
 interface Props {
   width?: string;

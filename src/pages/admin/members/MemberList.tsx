@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import Tune from '@assets/Tune';
@@ -20,10 +20,10 @@ import {
 } from '@constants/optionList';
 import { memberListHeader } from '@constants/tableHeader';
 import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
-import { useNameSearch } from '@hooks/useNameSearch';
 import { useTableFilter } from '@hooks/useTableFilter';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
+import { titleToFilterTypeMap } from '@utils/getTableFilter';
 import { UserList } from 'apis/user/types';
 import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
 import SearchBar from 'features/member/list/SearchBar';
@@ -51,7 +51,11 @@ const MemberList: FC = () => {
     handleSelectFilter,
   } = useTableFilter();
 
-  const { name, handleSearchChange } = useNameSearch();
+  const [name, setName] = useState('');
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
 
   const { data: userList, refetch } = useUserListQuery({
     page,
@@ -115,14 +119,7 @@ const MemberList: FC = () => {
               <TableHead>
                 <TableRow>
                   {memberListHeader.map((col, index) => {
-                    const type =
-                      col.title === '최근활동기수'
-                        ? 'generation'
-                        : col.title === '직군'
-                          ? 'position'
-                          : col.title === '권한'
-                            ? 'role'
-                            : null;
+                    const type = titleToFilterTypeMap[col.title] ?? null;
 
                     const hasValue = type
                       ? selectedFilters[type] !== ''

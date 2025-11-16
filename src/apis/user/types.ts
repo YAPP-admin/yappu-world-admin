@@ -1,3 +1,5 @@
+import { PaginatedReq } from 'apis/common/types';
+
 export interface UserListRes {
   userId: string;
   name: string;
@@ -74,4 +76,11 @@ export interface UserProfileRes {
   name: string;
   role: RoleLabel;
   position: string;
+}
+
+export interface UserListReq extends PaginatedReq {
+  name: string;
+  generation: string;
+  position: string;
+  role: string;
 }

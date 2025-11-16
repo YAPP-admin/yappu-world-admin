@@ -1,6 +1,9 @@
-import { OptionType } from '@compnents/commons/Select';
+export interface OptionType {
+  label: string;
+  value: string;
+}
 
-export const userRoleOptionList = [
+export const userRoleOptionList: OptionType[] = [
   { label: '관리자', value: 'ADMIN' },
   { label: '운영진', value: 'STAFF' },
   { label: '정회원', value: 'ALUMNI' },
@@ -8,12 +11,12 @@ export const userRoleOptionList = [
   { label: '활동회원', value: 'ACTIVE' },
 ];
 
-export const noticeOptionList = [
+export const noticeOptionList: OptionType[] = [
   { label: '운영', value: 'OPERATION' },
   { label: '세션', value: 'SESSION' },
 ];
 
-export const positionOptionList = [
+export const positionOptionList: OptionType[] = [
   { label: 'PM', value: 'PM' },
   { label: 'Design', value: 'DESIGN' },
   { label: 'Web', value: 'WEB' },
@@ -24,9 +27,11 @@ export const positionOptionList = [
   { label: '운영진', value: 'STAFF' },
 ];
 
-export const rejectOptionList = [{ label: '직접입력', value: '직접입력' }];
+export const rejectOptionList: OptionType[] = [
+  { label: '직접입력', value: '직접입력' },
+];
 
-export const sessionTypeList = [
+export const sessionTypeList: OptionType[] = [
   { label: '오프라인', value: 'OFFLINE' },
   { label: '온라인', value: 'ONLINE' },
   { label: '팀', value: 'TEAM' },
@@ -48,7 +53,7 @@ export const minuteOptions: OptionType[] = Array.from({ length: 6 }, (_, i) => {
   };
 });
 
-export const attendanceOptions = [
+export const attendanceOptions: OptionType[] = [
   { label: '출석', value: 'ON_TIME' },
   { label: '지각', value: 'LATE' },
   { label: '결석', value: 'ABSENT' },
@@ -68,7 +73,7 @@ export const positionList = [
   'Staff',
 ];
 
-export const latePassOptions = [
+export const latePassOptions: OptionType[] = [
   { label: '0', value: '0' },
   { label: '1', value: '1' },
   { label: '2', value: '2' },

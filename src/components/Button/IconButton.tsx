@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FC } from 'react';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { iconButtonVariantStyles } from '@constants/buttonStyles';
@@ -16,29 +16,35 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   buttonType?: 'button' | 'reset' | 'submit' | undefined;
 }
 
-const IconButton: FC<Props> = (props) => {
-  const {
-    children,
-    variant = 'normal',
-    size = 'normal',
-    disabled = false,
-    buttonType = 'button',
-    ...rest
-  } = props;
+const IconButton = forwardRef<HTMLButtonElement, Props>(
+  (
+    {
+      children,
+      variant = 'normal',
+      size = 'normal',
+      disabled = false,
+      buttonType = 'button',
+      ...rest
+    },
+    ref,
+  ) => {
+    return (
+      <StyledButton
+        {...rest}
+        ref={ref}
+        $disabled={disabled}
+        $size={size}
+        $variant={variant}
+        type={buttonType}
+      >
+        {children}
+      </StyledButton>
+    );
+  },
+);
 
-  return (
-    <StyledButton
-      {...rest}
-      $disabled={disabled}
-      $size={size}
-      $variant={variant}
-      type={buttonType}
-    >
-      {children}
-    </StyledButton>
-  );
-};
-
+// export default IconButton;
+IconButton.displayName = 'IconButton';
 export default IconButton;
 
 const StyledButton = styled(ButtonBase)<{

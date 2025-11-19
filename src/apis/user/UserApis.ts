@@ -1,20 +1,24 @@
 import axiosInstance from 'apis/common/axiosInstance';
-import {
-  ApiResponse,
-  PaginatedApiResponse,
-  PaginatedReq,
-} from 'apis/common/types';
+import { ApiResponse, PaginatedApiResponse } from 'apis/common/types';
 
 import {
   UserDetailReq,
   UserDetailRes,
+  UserListReq,
   UserListRes,
   UserProfileRes,
 } from './types';
 
-export const getUserList = ({ page, size }: PaginatedReq) => {
+export const getUserList = ({
+  page,
+  size,
+  name,
+  generation,
+  position,
+  role,
+}: UserListReq) => {
   return axiosInstance.get<PaginatedApiResponse<UserListRes>>(
-    `/admin/v1/users?page=${page}&size=${size}`,
+    `/admin/v1/users?page=${page}&size=${size}&name=${name}&generation=${generation}&position=${position}&role=${role}`,
   );
 };
 

@@ -1,12 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { PaginatedReq } from 'apis/common/types';
+import { UserListReq } from 'apis/user/types';
 import { getUserList } from 'apis/user/UserApis';
 
-export const useUserListQuery = ({ page, size }: PaginatedReq) => {
+export const useUserListQuery = ({
+  page,
+  size,
+  name,
+  generation,
+  position,
+  role,
+}: UserListReq) => {
   return useQuery({
-    queryKey: ['user-list', page, size],
-    queryFn: () => getUserList({ page, size }),
+    queryKey: ['user-list', page, size, generation, position, role],
+    queryFn: () =>
+      getUserList({ page, size, name, generation, position, role }),
     select: (response) => ({
       totalCount: response.data.data.totalCount,
       page: response.data.data.page,

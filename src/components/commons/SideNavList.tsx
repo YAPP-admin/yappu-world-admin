@@ -12,6 +12,10 @@ interface Props {
 const SideNavList: FC<Props> = (props) => {
   const { pathname } = props;
 
+  const isActive = (path: string) => {
+    return pathname === path || pathname.startsWith(path + '/');
+  };
+
   return (
     <Container>
       {sideNavList.map((el) => (
@@ -20,8 +24,8 @@ const SideNavList: FC<Props> = (props) => {
             style={{ textDecoration: 'none', color: 'inherit' }}
             to={el.path}
           >
-            <Route $active={pathname === el.path}>
-              <NormalBlank active={pathname === el.path} />
+            <Route $active={isActive(el.path)}>
+              <NormalBlank active={isActive(el.path)} />
               <span>{el.title}</span>
             </Route>
           </Link>
@@ -34,11 +38,11 @@ const SideNavList: FC<Props> = (props) => {
               >
                 <Route
                   key={index}
-                  $active={pathname === child.path}
+                  $active={isActive(child.path)}
                   className="child"
                 >
                   <NormalBlank
-                    active={pathname === child.path}
+                    active={isActive(child.path)}
                     height="16"
                     width="16"
                   />

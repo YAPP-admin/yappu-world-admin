@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import CircleCheck from '@assets/CircleCheck';
@@ -8,6 +8,7 @@ import OutlinedButton from '@compnents/Button/OutlinedButton';
 import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
+import SearchBar from '@compnents/commons/SearchBar';
 import Typography from '@compnents/commons/Typography';
 import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
@@ -18,6 +19,7 @@ import TableCell from '@compnents/table/TableCell';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
 import { applicationHeader } from '@constants/tableHeader';
+import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
 import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
 import { getChipColor } from '@utils/getChipColor';
@@ -46,7 +48,23 @@ const MemberApplication: FC = () => {
     page,
     setPage,
   } = useApplicationStore();
-  const { data } = useApplicationListQuery(page, 10);
+  const [name, setName] = useState('');
+  const { data, refetch } = useApplicationListQuery({
+    page,
+    size: 10,
+    name,
+    generation: '',
+    position: '',
+    status: '',
+  });
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleSearch = useDebounceCallBack(() => {
+    refetch();
+  }, 500);
 
   useEffect(() => {
     setSelectedIndexes([]);
@@ -91,7 +109,9 @@ const MemberApplication: FC = () => {
         <Wrapper>
           <FlexBox direction="column" gap={8}>
             <FlexBox
-              align="center"
+              // align="center"
+              direction="column"
+              gap={8}
               height="fit-content"
               justify="space-between"
             >
@@ -112,36 +132,44 @@ const MemberApplication: FC = () => {
                   {data?.totalCount}개
                 </Typography>
               </FlexBox>
-
-              <FlexBox align="center" gap={8} width="fit-content">
-                <OutlinedButton
-                  color="status-positive"
-                  disabled={!selectedIndexes.length}
-                  variant="assistive"
-                  leftIcon={
-                    <CircleCheck
-                      color={theme.colors.status.positive}
-                      size="16"
-                    />
-                  }
-                  onClick={() => setIsApprovePopup(true)}
-                >
-                  승인
-                </OutlinedButton>
-                <OutlinedButton
-                  color="status-negative"
-                  disabled={!selectedIndexes.length}
-                  variant="assistive"
-                  leftIcon={
-                    <CircleClose
-                      color={theme.colors.status.nagative}
-                      size="16"
-                    />
-                  }
-                  onClick={() => setIsRejectPopup(true)}
-                >
-                  거절
-                </OutlinedButton>
+              <FlexBox justify="space-between">
+                <SearchBar
+                  placeholder="이름으로 검색하세요"
+                  value={name}
+                  onChange={handleSearchChange}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  onSearch={handleSearch}
+                />
+                <FlexBox align="center" gap={8} width="fit-content">
+                  <OutlinedButton
+                    color="status-positive"
+                    disabled={!selectedIndexes.length}
+                    variant="assistive"
+                    leftIcon={
+                      <CircleCheck
+                        color={theme.colors.status.positive}
+                        size="16"
+                      />
+                    }
+                    onClick={() => setIsApprovePopup(true)}
+                  >
+                    승인
+                  </OutlinedButton>
+                  <OutlinedButton
+                    color="status-negative"
+                    disabled={!selectedIndexes.length}
+                    variant="assistive"
+                    leftIcon={
+                      <CircleClose
+                        color={theme.colors.status.nagative}
+                        size="16"
+                      />
+                    }
+                    onClick={() => setIsRejectPopup(true)}
+                  >
+                    거절
+                  </OutlinedButton>
+                </FlexBox>
               </FlexBox>
             </FlexBox>
             <Table>

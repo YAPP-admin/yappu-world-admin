@@ -1,10 +1,10 @@
-import { FC } from 'react';
-
 import Search from '@assets/Search';
 import SolidButton from '@compnents/Button/SolidButton';
-import FlexBox from '@compnents/commons/FlexBox';
-import TextInput from '@compnents/commons/TextInput';
-import Typography from '@compnents/commons/Typography';
+import { FC } from 'react';
+
+import FlexBox from './FlexBox';
+import TextInput from './TextInput';
+import Typography from './Typography';
 
 interface Props {
   value: string;

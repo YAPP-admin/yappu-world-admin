@@ -5,6 +5,7 @@ import Tune from '@assets/Tune';
 import IconButton from '@compnents/Button/IconButton';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
+import SearchBar from '@compnents/commons/SearchBar';
 import Typography from '@compnents/commons/Typography';
 import Pagination from '@compnents/table/Pagination';
 import Table from '@compnents/table/Table';
@@ -26,7 +27,6 @@ import { useMemberStore } from '@stores/memberStore';
 import { titleToFilterTypeMap } from '@utils/getTableFilter';
 import { UserList } from 'apis/user/types';
 import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
-import SearchBar from 'features/member/list/SearchBar';
 
 import { useGenerationListQuery } from '../../../queries/operation/useGenerationListQuery';
 

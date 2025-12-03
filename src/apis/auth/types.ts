@@ -1,3 +1,4 @@
+import { PaginatedReq } from 'apis/common/types';
 import { RoleName, UserRole } from 'apis/user/types';
 
 export interface LoginReq {
@@ -87,4 +88,11 @@ export interface ApplicationDetailRes {
 export interface ReissueTokenReq {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface ApplicationListReq extends PaginatedReq {
+  name: string;
+  status: string;
+  generation: string;
+  position: string;
 }

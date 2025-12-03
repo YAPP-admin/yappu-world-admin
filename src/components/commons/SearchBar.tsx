@@ -1,6 +1,7 @@
+import { FC } from 'react';
+
 import Search from '@assets/Search';
 import SolidButton from '@compnents/Button/SolidButton';
-import { FC } from 'react';
 
 import FlexBox from './FlexBox';
 import TextInput from './TextInput';

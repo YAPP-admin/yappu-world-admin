@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 import CircleCheck from '@assets/CircleCheck';
 import CircleClose from '@assets/CircleClose';
+import Tune from '@assets/Tune';
+import IconButton from '@compnents/Button/IconButton';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
 import TextButton from '@compnents/Button/TextButton';
 import Chip from '@compnents/commons/Chip';
@@ -16,13 +18,22 @@ import Pagination from '@compnents/table/Pagination';
 import Table from '@compnents/table/Table';
 import TableBody from '@compnents/table/TableBody';
 import TableCell from '@compnents/table/TableCell';
+import TableFilterPopover from '@compnents/table/TableFilterPopover';
 import TableHead from '@compnents/table/TableHead';
 import TableRow from '@compnents/table/TableRow';
+import {
+  OptionType,
+  positionOptionList,
+  statusOptionList,
+} from '@constants/optionList';
 import { applicationHeader } from '@constants/tableHeader';
 import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
+import { useTableFilter } from '@hooks/useTableFilter';
 import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
+import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
 import { getChipColor } from '@utils/getChipColor';
+import { applicationFilterTypeMap } from '@utils/getTableFilter';
 import { ApplicationListRes } from 'apis/auth/types';
 import ApprovePopup from 'features/member/application/ApprovePopup';
 import DetailPopup from 'features/member/application/DetailPopup';
@@ -49,14 +60,30 @@ const MemberApplication: FC = () => {
     setPage,
   } = useApplicationStore();
   const [name, setName] = useState('');
-  const { data, refetch } = useApplicationListQuery({
-    page,
-    size: 10,
-    name,
+  const {
+    selectedFilters,
+    openFilterType,
+    setOpenFilterIndex,
+    openFilterIndex,
+    filterRefs,
+    popoverRef,
+    popoverPos,
+    handleFilterClick,
+    handleSelectFilter,
+  } = useTableFilter({
     generation: '',
     position: '',
     status: '',
   });
+  const { data, refetch } = useApplicationListQuery({
+    page,
+    size: 10,
+    name,
+    generation: selectedFilters.generation,
+    position: selectedFilters.position,
+    status: selectedFilters.status,
+  });
+  const { data: generation } = useGenerationListQuery(1, 100);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -95,6 +122,10 @@ const MemberApplication: FC = () => {
   const onClickToDetail = (list: ApplicationListRes) => {
     setSelectedList(list);
     setIsDetailPopup(true);
+    if (openFilterIndex !== null) {
+      setOpenFilterIndex(null);
+      return;
+    }
   };
 
   const onChangePage = (page: number) => {
@@ -123,13 +154,13 @@ const MemberApplication: FC = () => {
               >
                 <Typography variant="headline1Bold">신청리스트</Typography>
                 <Typography
-                  color="label-alternative"
+                  color="primary-normal"
                   variant="body1Normal"
                   style={{
                     fontWeight: 600,
                   }}
                 >
-                  {data?.totalCount}개
+                  {data?.totalCount}명
                 </Typography>
               </FlexBox>
               <FlexBox justify="space-between">
@@ -181,17 +212,43 @@ const MemberApplication: FC = () => {
                       onClick={onClickAllCheck}
                     />
                   </TableCell>
-                  {applicationHeader.map((col) => (
-                    <TableCell key={col} as="th">
-                      <Typography
-                        color="label-normal"
-                        style={{ fontWeight: 600 }}
-                        variant="body1Normal"
-                      >
-                        {col}
-                      </Typography>
-                    </TableCell>
-                  ))}
+                  {applicationHeader.map((col, index) => {
+                    const filterType =
+                      applicationFilterTypeMap[col.title] ?? null;
+
+                    const hasValue = filterType
+                      ? selectedFilters[filterType] !== ''
+                      : false;
+
+                    return (
+                      <TableCell key={col.title} as="th">
+                        <FlexBox align="center" gap={4} justify="center">
+                          <Typography
+                            color="label-normal"
+                            style={{ fontWeight: 600 }}
+                            variant="body1Normal"
+                          >
+                            {col.title}
+                          </Typography>
+                          {col.isFilter && filterType && (
+                            <IconButton
+                              ref={(el) => {
+                                filterRefs.current[index] = el;
+                              }}
+                              onClick={() =>
+                                handleFilterClick(index, filterType)
+                              }
+                            >
+                              <Tune
+                                color={hasValue ? '#FA6027' : '#171719'}
+                                size="16"
+                              />
+                            </IconButton>
+                          )}
+                        </FlexBox>
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -241,11 +298,6 @@ const MemberApplication: FC = () => {
                       </TableCell>
                       <TableCell>
                         <Typography color="label-normal" variant="body1Normal">
-                          {dayjs(el.applicationDate).format('YYYY-MM-DD')}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
                           {el.processDate
                             ? dayjs(el.processDate).format('YYYY-MM-DD')
                             : '-'}
@@ -260,11 +312,13 @@ const MemberApplication: FC = () => {
               </TableBody>
             </Table>
           </FlexBox>
-          <Pagination
-            currentPage={page}
-            totalPages={data?.totalPages ?? 0}
-            onPageChange={onChangePage}
-          />
+          {!!data?.data.length && (
+            <Pagination
+              currentPage={page}
+              totalPages={data?.totalPages ?? 0}
+              onPageChange={onChangePage}
+            />
+          )}
         </Wrapper>
       </Container>
       {isDetailPopup && (
@@ -301,6 +355,42 @@ const MemberApplication: FC = () => {
           onClose={() => setIsRejectCompletePopup(false)}
         />
       )}
+      {openFilterIndex !== null && (
+        <PopoverContainer
+          ref={popoverRef}
+          style={{ top: popoverPos.top, left: popoverPos.left }}
+        >
+          {openFilterType === 'generation' && (
+            <TableFilterPopover
+              title="기수"
+              value={selectedFilters.generation}
+              optionList={
+                (generation?.data?.map((g) => ({
+                  label: `${g.generation.toString()}기`,
+                  value: g.generation.toString(),
+                })) as OptionType[]) ?? []
+              }
+              onSelect={(v) => handleSelectFilter('generation', v)}
+            />
+          )}
+          {openFilterType === 'position' && (
+            <TableFilterPopover
+              optionList={positionOptionList}
+              title="직군"
+              value={selectedFilters.position}
+              onSelect={(v) => handleSelectFilter('position', v)}
+            />
+          )}
+          {openFilterType === 'status' && (
+            <TableFilterPopover
+              optionList={statusOptionList}
+              title="상태"
+              value={selectedFilters.status}
+              onSelect={(v) => handleSelectFilter('status', v)}
+            />
+          )}
+        </PopoverContainer>
+      )}
     </>
   );
 };
@@ -322,4 +412,9 @@ const Wrapper = styled.div`
   > div:first-child {
     flex: 1;
   }
+`;
+
+const PopoverContainer = styled.div`
+  position: absolute;
+  z-index: 10;
 `;

@@ -1,21 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export type FilterType = 'generation' | 'position' | 'role' | null;
+export type FilterKey = string;
+export type FilterMap<T extends Record<string, string>> = T;
 
-export interface SelectedFilters {
-  generation: string;
-  position: string;
-  role: string;
-}
+export const useTableFilter = <T extends Record<string, string>>(
+  initialFilters: T,
+) => {
+  const [selectedFilters, setSelectedFilters] =
+    useState<FilterMap<T>>(initialFilters);
 
-export const useTableFilter = () => {
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
-    generation: '',
-    role: '',
-    position: '',
-  });
-
-  const [openFilterType, setOpenFilterType] = useState<FilterType>(null);
+  const [openFilterType, setOpenFilterType] = useState<keyof T | null>(null);
   const [openFilterIndex, setOpenFilterIndex] = useState<number | null>(null);
 
   const filterRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -26,8 +20,8 @@ export const useTableFilter = () => {
     left: 0,
   });
 
-  const handleFilterClick = (index: number, type: FilterType) => {
-    if (openFilterType === type && openFilterIndex === index) {
+  const handleFilterClick = (index: number, key: keyof T) => {
+    if (openFilterType === key && openFilterIndex === index) {
       setOpenFilterType(null);
       setOpenFilterIndex(null);
       return;
@@ -43,7 +37,7 @@ export const useTableFilter = () => {
     }
 
     setOpenFilterIndex(index);
-    setOpenFilterType(type);
+    setOpenFilterType(key);
   };
 
   useEffect(() => {
@@ -66,16 +60,12 @@ export const useTableFilter = () => {
     };
   }, []);
 
-  const handleSelectFilter = (type: FilterType, value: string) => {
-    setSelectedFilters((prev) => ({ ...prev, [type!]: value }));
+  const handleSelectFilter = (key: keyof T, value: string) => {
+    setSelectedFilters((prev) => ({ ...prev, [key!]: value }));
   };
 
   const resetFilters = () => {
-    setSelectedFilters({
-      generation: '',
-      role: '',
-      position: '',
-    });
+    setSelectedFilters(initialFilters);
     setOpenFilterType(null);
     setOpenFilterIndex(null);
   };

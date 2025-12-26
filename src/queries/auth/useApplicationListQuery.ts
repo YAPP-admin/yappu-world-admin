@@ -12,7 +12,7 @@ export const useApplicationListQuery = ({
   status,
 }: ApplicationListReq) => {
   return useQuery({
-    queryKey: ['application-list', page],
+    queryKey: ['application-list', page, generation, position, status],
     queryFn: () =>
       getApplicationList({ page, size, name, generation, position, status }),
     select: (data) => {

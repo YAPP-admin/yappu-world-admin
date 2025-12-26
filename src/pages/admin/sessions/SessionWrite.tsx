@@ -16,12 +16,13 @@ import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
 import RadioGroup from '@compnents/commons/RadioGroup';
-import Select, { OptionType } from '@compnents/commons/Select';
+import Select from '@compnents/commons/Select';
 import TextInput from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import {
   hourOptions,
   minuteOptions,
+  OptionType,
   sessionTypeList,
 } from '@constants/optionList';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';

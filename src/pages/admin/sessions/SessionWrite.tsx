@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { FC, useMemo, useState } from 'react';
+import { Controller, FieldError, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -16,9 +16,10 @@ import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
 import RadioGroup from '@compnents/commons/RadioGroup';
-import Select, { OptionType } from '@compnents/commons/Select';
-import TextInput from '@compnents/commons/TextInput';
+import Select from '@compnents/commons/Select';
+import TextInput, { State } from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
+import { OptionType } from '@constants/optionList';
 import {
   hourOptions,
   minuteOptions,
@@ -83,6 +84,23 @@ const SessionWrite: FC = () => {
   const setReleatedNoticePopup = useSessionStore(
     (state) => state.setReleatedNoticePopup,
   );
+
+  const values = method.watch(['name', 'place', 'address']);
+  const { errors } = method.formState;
+
+  const states = useMemo(() => {
+    const getState = (value: string, error?: FieldError): State => {
+      if (!value) return 'default';
+      if (error) return 'error';
+      return 'success';
+    };
+
+    return {
+      name: getState(values[0], errors.name),
+      place: getState(values[1], errors.place),
+      address: getState(values[2], errors.address),
+    };
+  }, [values, errors]);
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -167,27 +185,11 @@ const SessionWrite: FC = () => {
 
           <FlexBox direction="column" gap={24}>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+              <Typography fontWeight={600} variant="headline1Bold">
                 세션 타입
               </Typography>
               <FlexBox direction="column">
-                <Controller
-                  control={method.control}
-                  name="sessionType"
-                  render={({ field }) => (
-                    <Select
-                      optionList={sessionTypeList}
-                      size="large"
-                      width="191px"
-                      selectedValue={
-                        sessionTypeList.find(
-                          (item) => item.value === field.value,
-                        )?.value ?? ''
-                      }
-                      onChange={field.onChange}
-                    />
-                  )}
-                />
+                <RadioGroup name="sessionType" options={sessionTypeList} />
                 {method.formState.errors.sessionType && (
                   <Typography color="status-negative" variant="caption1Regular">
                     {method.formState.errors.sessionType.message}
@@ -196,11 +198,15 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+              <Typography fontWeight={600} variant="headline1Bold">
                 제목
               </Typography>
               <FlexBox direction="column">
-                <TextInput {...method.register('name')} />
+                <TextInput
+                  placeholder="제목을 입력하세요"
+                  {...method.register('name')}
+                  state={states.name}
+                />
                 {method.formState.errors.name && (
                   <Typography color="status-negative" variant="caption1Regular">
                     {method.formState.errors.name.message}
@@ -209,7 +215,7 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+              <Typography fontWeight={600} variant="headline1Bold">
                 시작일
               </Typography>
               <FlexBox direction="column">
@@ -227,8 +233,10 @@ const SessionWrite: FC = () => {
                       return (
                         <FlexBox gap={8}>
                           <Select
+                            defaultSelectLabel="00시"
                             optionList={hourOptions}
                             selectedValue={hour ?? '-'}
+                            size="large"
                             width="130px"
                             onChange={(selectedHour) => {
                               const newTime = `${selectedHour}:${minute}:00`;
@@ -236,8 +244,10 @@ const SessionWrite: FC = () => {
                             }}
                           />
                           <Select
+                            defaultSelectLabel="00분"
                             optionList={minuteOptions}
                             selectedValue={minute}
+                            size="large"
                             width="130px"
                             onChange={(selectedMinute) => {
                               const newTime = `${hour}:${selectedMinute}:00`;
@@ -259,7 +269,7 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+              <Typography fontWeight={600} variant="headline1Bold">
                 종료일
               </Typography>
               <FlexBox direction="column">
@@ -277,8 +287,10 @@ const SessionWrite: FC = () => {
                       return (
                         <FlexBox gap={8}>
                           <Select
+                            defaultSelectLabel="00시"
                             optionList={hourOptions}
                             selectedValue={hour}
+                            size="large"
                             width="130px"
                             onChange={(selectedHour) => {
                               const newTime = `${selectedHour}:${minute}:00`;
@@ -286,8 +298,10 @@ const SessionWrite: FC = () => {
                             }}
                           />
                           <Select
+                            defaultSelectLabel="00분"
                             optionList={minuteOptions}
                             selectedValue={minute}
+                            size="large"
                             width="130px"
                             onChange={(selectedMinute) => {
                               const newTime = `${hour}:${selectedMinute}:00`;
@@ -309,12 +323,12 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
 
-            <GridBox fullWidth columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="headline1Bold">
                 장소
               </Typography>
               <FlexBox direction="column">
-                <TextInput {...method.register('place')} />
+                <TextInput {...method.register('place')} state={states.place} />
                 {method.formState.errors.place && (
                   <Typography color="status-negative" variant="caption1Regular">
                     {method.formState.errors.place.message}
@@ -323,12 +337,15 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
 
-            <GridBox fullWidth columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="headline1Bold">
                 상세 주소
               </Typography>
               <FlexBox direction="column">
-                <TextInput {...method.register('address')} />
+                <TextInput
+                  {...method.register('address')}
+                  state={states.address}
+                />
                 {method.formState.errors.address && (
                   <Typography color="status-negative" variant="caption1Regular">
                     {method.formState.errors.address.message}
@@ -346,7 +363,7 @@ const SessionWrite: FC = () => {
             />
 
             <GridBox align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+              <Typography fontWeight={600} variant="headline1Bold">
                 기수
               </Typography>
               <FlexBox direction="column">
@@ -384,7 +401,7 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
             <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="body1Normal">
+              <Typography fontWeight={600} variant="headline1Bold">
                 세션 대상
               </Typography>
               <FlexBox align="center" gap={12}>
@@ -430,8 +447,8 @@ const SessionWrite: FC = () => {
             }}
           />
 
-          <GridBox fullWidth columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="headline1Bold">
               공지사항
             </Typography>
             <FlexBox direction="column" gap={12}>
@@ -447,7 +464,7 @@ const SessionWrite: FC = () => {
               {!!formNotices.length &&
                 formNotices.map((el) => (
                   <FlexBox key={el.noticeId} gap={16}>
-                    <Typography color="primary-normal" variant="body1Normal">
+                    <Typography color="primary-normal" variant="headline1Bold">
                       {el.title}
                     </Typography>
                     <IconButton onClick={() => removeNotice(el.noticeId)}>

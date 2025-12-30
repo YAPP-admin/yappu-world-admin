@@ -11,8 +11,8 @@ export const SessionFormSchema = z
     name: z
       .string({ required_error: '제목을 입력해주세요.' })
       .min(1, '제목을 입력해주세요.'),
-    place: z.string(),
-    address: z.string(),
+    place: z.string().min(1, '장소명을 입력해주세요.'),
+    address: z.string().nullable(),
     date: z.date({ required_error: '시작일을 선택해주세요.' }),
     endDate: z.date({ required_error: '종료일을 선택해주세요.' }),
     time: z
@@ -29,6 +29,8 @@ export const SessionFormSchema = z
     target: z.string().default('ALL'),
     sessionAttendeeIds: z.string().array(),
     notices: z.array(NoticeSchema).default([]),
+    longitude: z.number().default(0),
+    latitude: z.number().default(0),
   })
   .refine(
     (data) => {

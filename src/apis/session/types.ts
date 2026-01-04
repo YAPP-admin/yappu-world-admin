@@ -17,7 +17,7 @@ export interface SessionRes {
 export interface SesseionReq {
   name: string;
   place: string;
-  address: string;
+  address: string | null;
   longitude: number;
   latitude: number;
   date: string;
@@ -35,7 +35,9 @@ export interface EditSessionReq {
   id: string;
   name: string;
   place: string;
-  address: string;
+  address: string | null;
+  longitude: number;
+  latitude: number;
   date: string;
   endDate: string;
   time: string;
@@ -43,6 +45,7 @@ export interface EditSessionReq {
   generation: number;
   sessionType: SessionType;
   sessionAttendeeIds: string[];
+  noticeIds: string[];
 }
 
 export interface DeleteSessionReq {
@@ -71,6 +74,8 @@ export interface SessionDetailRes {
   generation: number;
   place: string;
   address: string;
+  longitude?: number;
+  latitude?: number;
   date: string;
   endDate: string;
   time: string;
@@ -90,7 +95,8 @@ export type UserPosition =
   | 'ANDROID'
   | 'IOS'
   | 'FLUTTER'
-  | 'SERVER';
+  | 'SERVER'
+  | 'STAFF';
 
 export interface EligibleUser {
   position: UserPosition;

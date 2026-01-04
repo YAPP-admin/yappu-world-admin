@@ -56,7 +56,9 @@ export interface EditSessionType {
   id: string;
   name: string;
   place: string;
-  address: string;
+  address: string | null;
+  longitude: number;
+  latitude: number;
   date: string;
   endDate: string;
   time: string;

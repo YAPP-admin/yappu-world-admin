@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, useEffect } from 'react';
 import { Controller, FieldError, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,12 +19,14 @@ import RadioGroup from '@compnents/commons/RadioGroup';
 import Select from '@compnents/commons/Select';
 import TextInput, { State } from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
+import PostcodePopup from '@compnents/popup/PostcodePopup';
 import { OptionType } from '@constants/optionList';
 import {
   hourOptions,
   minuteOptions,
   sessionTypeList,
 } from '@constants/optionList';
+import { useDaumPostcode } from '@hooks/useDaumPostcode';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligibleUserQuery';
 import { useSessionMutation } from '@queries/session/useSessionMutation';
@@ -48,6 +50,7 @@ export const emptySelectedUsers: SelectedUsersMap = {
   IOS: [],
   FLUTTER: [],
   SERVER: [],
+  STAFF: [],
 };
 
 const SessionWrite: FC = () => {
@@ -57,6 +60,9 @@ const SessionWrite: FC = () => {
     defaultValues: {
       target: 'ALL',
       sessionAttendeeIds: [],
+      sessionType: 'OFFLINE',
+      latitude: 0,
+      longitude: 0,
     },
   });
   const { data: eligibleUser } = useSessionEligibleUserQuery(
@@ -85,11 +91,22 @@ const SessionWrite: FC = () => {
     (state) => state.setReleatedNoticePopup,
   );
 
+  const { isOpen, openPostcode, closePostcode, handleComplete } =
+    useDaumPostcode({
+      onComplete: (data) => {
+        method.setValue('address', data.address);
+        method.setValue('latitude', data.latitude);
+        method.setValue('longitude', data.longitude);
+      },
+    });
+
+  const sessionType = method.watch('sessionType');
+  const isOffline = sessionType === 'OFFLINE';
   const values = method.watch(['name', 'place', 'address']);
   const { errors } = method.formState;
 
   const states = useMemo(() => {
-    const getState = (value: string, error?: FieldError): State => {
+    const getState = (value: string | null, error?: FieldError): State => {
       if (!value) return 'default';
       if (error) return 'error';
       return 'success';
@@ -101,6 +118,17 @@ const SessionWrite: FC = () => {
       address: getState(values[2], errors.address),
     };
   }, [values, errors]);
+
+  useEffect(() => {
+    const subscription = method.watch((value, { name }) => {
+      if (name === 'sessionType' && value.sessionType !== 'OFFLINE') {
+        method.setValue('address', '');
+        method.setValue('latitude', 0);
+        method.setValue('longitude', 0);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [method]);
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -139,8 +167,8 @@ const SessionWrite: FC = () => {
         endDate: dayjs(data.endDate).format('YYYY-MM-DD'),
         type: 'SESSION',
         noticeIds: data.notices.map((el) => el.noticeId),
-        longitude: 0,
-        latitude: 0,
+        longitude: data.longitude,
+        latitude: data.latitude,
       };
       const res = await mutateAsync(req);
       const location = res.headers['location'];
@@ -323,36 +351,83 @@ const SessionWrite: FC = () => {
               </FlexBox>
             </GridBox>
 
-            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="headline1Bold">
-                장소
-              </Typography>
-              <FlexBox direction="column">
-                <TextInput {...method.register('place')} state={states.place} />
-                {method.formState.errors.place && (
-                  <Typography color="status-negative" variant="caption1Regular">
-                    {method.formState.errors.place.message}
+            {isOffline && (
+              <>
+                <GridBox
+                  fullWidth
+                  align="center"
+                  columnGap={16}
+                  columns="79px 1fr"
+                  rowGap={8}
+                >
+                  <Typography fontWeight={600} variant="headline1Bold">
+                    장소
                   </Typography>
-                )}
-              </FlexBox>
-            </GridBox>
-
-            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-              <Typography fontWeight={600} variant="headline1Bold">
-                상세 주소
-              </Typography>
-              <FlexBox direction="column">
-                <TextInput
-                  {...method.register('address')}
-                  state={states.address}
-                />
-                {method.formState.errors.address && (
-                  <Typography color="status-negative" variant="caption1Regular">
-                    {method.formState.errors.address.message}
-                  </Typography>
-                )}
-              </FlexBox>
-            </GridBox>
+                  <FlexBox direction="column" gap={8}>
+                    <FlexBox gap={8}>
+                      <TextInput
+                        {...method.register('address')}
+                        disabled
+                        readOnly
+                        state={states.address}
+                        style={{ flex: 1 }}
+                        width="469px"
+                      />
+                      <SolidButton
+                        size="large"
+                        type="button"
+                        variant="primary"
+                        onClick={openPostcode}
+                      >
+                        주소 검색
+                      </SolidButton>
+                    </FlexBox>
+                  </FlexBox>
+                  <div />
+                  <FlexBox direction="column" gap={8}>
+                    <TextInput
+                      {...method.register('place')}
+                      placeholder="장소명을 입력해주세요"
+                      state={states.place}
+                    />
+                    {method.formState.errors.place && (
+                      <Typography
+                        color="status-negative"
+                        variant="caption1Regular"
+                      >
+                        {method.formState.errors.place.message}
+                      </Typography>
+                    )}
+                  </FlexBox>
+                </GridBox>
+              </>
+            )}
+            {!isOffline && (
+              <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+                <Typography fontWeight={600} variant="headline1Bold">
+                  장소
+                </Typography>
+                <FlexBox direction="column">
+                  <TextInput
+                    {...method.register('place')}
+                    state={states.place}
+                    placeholder={
+                      sessionType === 'ONLINE'
+                        ? '온라인 만남 URL을 입력해주세요'
+                        : ''
+                    }
+                  />
+                  {method.formState.errors.place && (
+                    <Typography
+                      color="status-negative"
+                      variant="caption1Regular"
+                    >
+                      {method.formState.errors.place.message}
+                    </Typography>
+                  )}
+                </FlexBox>
+              </GridBox>
+            )}
 
             <div
               style={{
@@ -483,7 +558,11 @@ const SessionWrite: FC = () => {
             >
               취소
             </OutlinedButton>
-            <SolidButton size="large" type="submit">
+            <SolidButton
+              disabled={!method.formState.isValid}
+              size="large"
+              type="submit"
+            >
               저장
             </SolidButton>
           </FlexBox>
@@ -502,6 +581,11 @@ const SessionWrite: FC = () => {
         {relatedNoticePopup && (
           <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
         )}
+        <PostcodePopup
+          isOpen={isOpen}
+          onClose={closePostcode}
+          onComplete={handleComplete}
+        />
       </Container>
     </FormProvider>
   );

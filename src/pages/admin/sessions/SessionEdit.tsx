@@ -2,8 +2,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import dayjs from 'dayjs';
-import { FC, useEffect, useState } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FC, useEffect, useMemo, useState } from 'react';
+import {
+  Controller,
+  FieldError,
+  FormProvider,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 import styled from 'styled-components';
 
 import CircleClose from '@assets/CircleClose';
@@ -13,14 +19,17 @@ import Calendar from '@compnents/commons/Calendar';
 import FlexBox from '@compnents/commons/FlexBox';
 import GridBox from '@compnents/commons/GridBox';
 import RadioGroup from '@compnents/commons/RadioGroup';
-import Select, { OptionType } from '@compnents/commons/Select';
-import TextInput from '@compnents/commons/TextInput';
+import Select from '@compnents/commons/Select';
+import TextInput, { State } from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
+import PostcodePopup from '@compnents/popup/PostcodePopup';
+import { OptionType } from '@constants/optionList';
 import {
   hourOptions,
   minuteOptions,
   sessionTypeList,
 } from '@constants/optionList';
+import { useDaumPostcode } from '@hooks/useDaumPostcode';
 import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useEditSessionMutation } from '@queries/session/useEditSessionMutaion';
 import { useSessionEligibleUserQuery } from '@queries/session/useSessionEligibleUserQuery';
@@ -59,6 +68,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             .map((el) => el.attendees)
             .flat()
             .map((el) => el.userId),
+          latitude: data.latitude ?? 0,
+          longitude: data.longitude ?? 0,
         }
       : undefined,
   });
@@ -90,9 +101,37 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
 
   const queryClient = useQueryClient();
 
+  const { isOpen, openPostcode, closePostcode, handleComplete } =
+    useDaumPostcode({
+      onComplete: (data) => {
+        method.setValue('address', data.address);
+        method.setValue('latitude', data.latitude);
+        method.setValue('longitude', data.longitude);
+      },
+    });
+
   const [selectedUsers, setSelectedUsers] = useState<SelectedUsersMap>(() =>
     convertSessionAttendee(data?.attendees),
   );
+
+  const sessionType = method.watch('sessionType');
+  const isOffline = sessionType === 'OFFLINE';
+  const values = method.watch(['name', 'place', 'address']);
+  const { errors } = method.formState;
+
+  const states = useMemo(() => {
+    const getState = (value: string | null, error?: FieldError): State => {
+      if (!value) return 'default';
+      if (error) return 'error';
+      return 'success';
+    };
+
+    return {
+      name: getState(values[0], errors.name),
+      place: getState(values[1], errors.place),
+      address: getState(values[2], errors.address),
+    };
+  }, [values, errors]);
 
   useEffect(() => {
     if (!data || !eligibleUser) return;
@@ -116,6 +155,17 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
       setSelectedUsers(all);
     }
   }, [target, eligibleUser]);
+
+  useEffect(() => {
+    const subscription = method.watch((value, { name }) => {
+      if (name === 'sessionType' && value.sessionType !== 'OFFLINE') {
+        method.setValue('address', '');
+        method.setValue('latitude', 0);
+        method.setValue('longitude', 0);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [method]);
 
   const optionList: OptionType[] =
     generationList?.data.map((el) => ({
@@ -155,6 +205,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         date: dayjs(formData.date).format('YYYY-MM-DD'),
         endDate: dayjs(formData.endDate).format('YYYY-MM-DD'),
         noticeIds: formData.notices.map((el) => el.noticeId),
+        longitude: formData.longitude,
+        latitude: formData.latitude,
       };
 
       await mutateAsync(req);
@@ -216,32 +268,24 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         <Typography variant="title3Bold">세션 수정</Typography>
         <FlexBox direction="column" gap={24}>
           <GridBox align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+            <Typography fontWeight={600} variant="headline1Bold">
               세션 타입
             </Typography>
-            <Controller
-              control={method.control}
-              name="sessionType"
-              render={({ field }) => (
-                <Select
-                  optionList={sessionTypeList}
-                  size="large"
-                  width="191px"
-                  selectedValue={
-                    sessionTypeList.find((item) => item.value === field.value)
-                      ?.value ?? ''
-                  }
-                  onChange={field.onChange}
-                />
+            <FlexBox direction="column">
+              <RadioGroup name="sessionType" options={sessionTypeList} />
+              {method.formState.errors.sessionType && (
+                <Typography color="status-negative" variant="caption1Regular">
+                  {method.formState.errors.sessionType.message}
+                </Typography>
               )}
-            />
+            </FlexBox>
           </GridBox>
           <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+            <Typography fontWeight={600} variant="headline1Bold">
               제목
             </Typography>
             <FlexBox direction="column">
-              <TextInput {...method.register('name')} />
+              <TextInput {...method.register('name')} state={states.name} />
               {method.formState.errors.name && (
                 <Typography color="status-negative" variant="caption1Regular">
                   {method.formState.errors.name.message}
@@ -250,7 +294,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             </FlexBox>
           </GridBox>
           <GridBox align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+            <Typography fontWeight={600} variant="headline1Bold">
               시작일
             </Typography>
             <FlexBox gap={20}>
@@ -269,6 +313,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
                       <Select
                         optionList={hourOptions}
                         selectedValue={hour}
+                        size="large"
+                        width="130px"
                         onChange={(selectedHour) => {
                           const newTime = `${selectedHour}:${minute}:00`;
                           field.onChange(newTime);
@@ -277,6 +323,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
                       <Select
                         optionList={minuteOptions}
                         selectedValue={minute}
+                        size="large"
+                        width="130px"
                         onChange={(selectedMinute) => {
                           const newTime = `${hour}:${selectedMinute}:00`;
                           field.onChange(newTime);
@@ -289,7 +337,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             </FlexBox>
           </GridBox>
           <GridBox align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+            <Typography fontWeight={600} variant="headline1Bold">
               종료일
             </Typography>
             <FlexBox direction="column">
@@ -309,6 +357,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
                         <Select
                           optionList={hourOptions}
                           selectedValue={hour}
+                          size="large"
+                          width="130px"
                           onChange={(selectedHour) => {
                             const newTime = `${selectedHour}:${minute}:00`;
                             field.onChange(newTime);
@@ -317,6 +367,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
                         <Select
                           optionList={minuteOptions}
                           selectedValue={minute}
+                          size="large"
+                          width="130px"
                           onChange={(selectedMinute) => {
                             const newTime = `${hour}:${selectedMinute}:00`;
                             field.onChange(newTime);
@@ -334,32 +386,82 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               )}
             </FlexBox>
           </GridBox>
-          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
-              장소
-            </Typography>
-            <FlexBox direction="column">
-              <TextInput {...method.register('place')} />
-              {method.formState.errors.place && (
-                <Typography color="status-negative" variant="caption1Regular">
-                  {method.formState.errors.place.message}
+
+          {isOffline && (
+            <>
+              <GridBox
+                fullWidth
+                align="center"
+                columnGap={16}
+                columns="79px 1fr"
+                rowGap={8}
+              >
+                <Typography fontWeight={600} variant="headline1Bold">
+                  장소
                 </Typography>
-              )}
-            </FlexBox>
-          </GridBox>
-          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
-              상세 주소
-            </Typography>
-            <FlexBox direction="column">
-              <TextInput {...method.register('address')} />
-              {method.formState.errors.address && (
-                <Typography color="status-negative" variant="caption1Regular">
-                  {method.formState.errors.address.message}
-                </Typography>
-              )}
-            </FlexBox>
-          </GridBox>
+                <FlexBox direction="column" gap={8}>
+                  <FlexBox gap={8}>
+                    <TextInput
+                      {...method.register('address')}
+                      disabled
+                      readOnly
+                      state={states.address}
+                      style={{ flex: 1 }}
+                      width="469px"
+                    />
+                    <SolidButton
+                      size="large"
+                      type="button"
+                      variant="primary"
+                      onClick={openPostcode}
+                    >
+                      주소 검색
+                    </SolidButton>
+                  </FlexBox>
+                </FlexBox>
+                <div />
+                <FlexBox direction="column" gap={8}>
+                  <TextInput
+                    {...method.register('place')}
+                    placeholder="장소명을 입력해주세요"
+                    state={states.place}
+                  />
+                  {method.formState.errors.place && (
+                    <Typography
+                      color="status-negative"
+                      variant="caption1Regular"
+                    >
+                      {method.formState.errors.place.message}
+                    </Typography>
+                  )}
+                </FlexBox>
+              </GridBox>
+            </>
+          )}
+          {!isOffline && (
+            <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+              <Typography fontWeight={600} variant="headline1Bold">
+                장소
+              </Typography>
+              <FlexBox direction="column">
+                <TextInput
+                  {...method.register('place')}
+                  state={states.place}
+                  placeholder={
+                    sessionType === 'ONLINE'
+                      ? '온라인 만남 URL을 입력해주세요'
+                      : ''
+                  }
+                />
+                {method.formState.errors.place && (
+                  <Typography color="status-negative" variant="caption1Regular">
+                    {method.formState.errors.place.message}
+                  </Typography>
+                )}
+              </FlexBox>
+            </GridBox>
+          )}
+
           <div
             style={{
               height: '1px',
@@ -368,7 +470,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             }}
           />
           <GridBox align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+            <Typography fontWeight={600} variant="headline1Bold">
               기수
             </Typography>
             <Controller
@@ -397,7 +499,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           </GridBox>
 
           <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+            <Typography fontWeight={600} variant="headline1Bold">
               세션 대상
             </Typography>
             <FlexBox align="center" gap={12}>
@@ -432,8 +534,8 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
             }}
           />
 
-          <GridBox fullWidth columns="79px 1fr" gap={16}>
-            <Typography fontWeight={600} variant="body1Normal">
+          <GridBox fullWidth align="center" columns="79px 1fr" gap={16}>
+            <Typography fontWeight={600} variant="headline1Bold">
               공지사항
             </Typography>
             <FlexBox direction="column" gap={12}>
@@ -449,7 +551,7 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
               {!!formNotices.length &&
                 formNotices.map((el) => (
                   <FlexBox key={el.noticeId} gap={16}>
-                    <Typography color="primary-normal" variant="body1Normal">
+                    <Typography color="primary-normal" variant="headline1Bold">
                       {el.title}
                     </Typography>
                     <IconButton onClick={() => removeNotice(el.noticeId)}>
@@ -465,7 +567,11 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
           <OutlinedButton size="large" variant="assistive" onClick={handleEdit}>
             취소
           </OutlinedButton>
-          <SolidButton size="large" type="submit">
+          <SolidButton
+            disabled={!method.formState.isValid}
+            size="large"
+            type="submit"
+          >
             저장
           </SolidButton>
         </FlexBox>
@@ -485,6 +591,12 @@ const SessionEdit: FC<Props> = ({ handleEdit, data }) => {
         {relatedNoticePopup && (
           <RelatedNoticePopup onClose={() => setReleatedNoticePopup(false)} />
         )}
+
+        <PostcodePopup
+          isOpen={isOpen}
+          onClose={closePostcode}
+          onComplete={handleComplete}
+        />
       </Form>
     </FormProvider>
   );

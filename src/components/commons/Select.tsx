@@ -28,6 +28,7 @@ const Select = ({
   defaultSelectLabel = '선택하세요',
 }: Props) => {
   const [isClick, setIsClick] = useState(false);
+  const hasValue = optionList.some((option) => option.value === selectedValue);
   const containerRef = useOutsideClick<HTMLDivElement>(
     useCallback(() => {
       setIsClick(false);
@@ -41,12 +42,14 @@ const Select = ({
   return (
     <Container ref={containerRef} width={width}>
       <SelectButton
+        $hasValue={hasValue}
         disabled={disabled}
         size={size}
         type="button"
         onClick={openOptionList}
       >
         <Typography
+          color={hasValue ? 'label-normal' : 'label-assistive'}
           style={{ whiteSpace: 'nowrap' }}
           variant={size === 'medium' ? 'body2Reading' : 'body1Normal'}
         >
@@ -87,6 +90,7 @@ const Container = styled.div<{ width?: string }>`
 const SelectButton = styled.button<{
   size: 'medium' | 'large';
   disabled: boolean;
+  $hasValue: boolean;
 }>`
   display: flex;
   padding: ${({ size }) => (size === 'medium' ? '12px' : '12px 16px')};
@@ -96,11 +100,20 @@ const SelectButton = styled.button<{
   gap: 12px;
   align-self: stretch;
   border-radius: 8px;
-  border: 1px solid ${theme.colors.lineNormal.strong};
+  border: 1px solid
+    ${({ $hasValue }) =>
+      $hasValue
+        ? theme.colors.lineNormal.strong
+        : theme.colors.lineNormal.normal};
   background: #fff;
   box-sizing: border-box;
   width: 100%;
   opacity: ${({ disabled }) => (disabled ? '0.43' : '')};
+
+  svg path {
+    fill: ${({ $hasValue }) =>
+      $hasValue ? theme.colors.label.normal : theme.colors.label.assistive};
+  }
 `;
 
 const IconWrapper = styled.div<{ $isOpen: boolean }>`

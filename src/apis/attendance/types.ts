@@ -89,3 +89,8 @@ export interface AttendanceCodeRes {
 export interface EditAttendanceCodeReq {
   code: number;
 }
+
+export interface EditSessionAttendanceBundleReq {
+  sessionId: string;
+  attendanceStatus: AttendanceStatusValueType;
+}

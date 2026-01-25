@@ -13,10 +13,9 @@ import { attendanceOptions } from '@constants/optionList';
 import { useEditAttendanceBundleMutation } from '@queries/attendance/useEditAttendanceBundleMutation';
 import { useAttendanceStore } from '@stores/attendanceStore';
 import {
-  AttendanceGroup,
   AttendanceSession,
   AttendanceStatusValueType,
-  EditAttendanceReq,
+  EditSessionAttendanceBundleReq,
 } from 'apis/attendance/types';
 import { ErrorResponse } from 'apis/common/types';
 import { showErrorToast } from 'types/showErrorToast';
@@ -24,13 +23,11 @@ import { showErrorToast } from 'types/showErrorToast';
 interface Props {
   onClose: VoidFunction;
   session?: AttendanceSession[];
-  attendancesGroupedBySession?: AttendanceGroup[];
 }
 
 const BundleEditPopup: FC<Props> = ({
   onClose,
   session,
-  attendancesGroupedBySession,
 }) => {
   const [selectedSession, setSelectedSession] = useState<{
     label: string;
@@ -53,18 +50,9 @@ const BundleEditPopup: FC<Props> = ({
 
   const onSave = async () => {
     try {
-      const targetUsers = attendancesGroupedBySession
-        ?.find((el) => el.sessionId === selectedSession.id)
-        ?.attendances.map((el) => el.userId);
-      if (!targetUsers) return;
-      const req: EditAttendanceReq = {
-        targets: targetUsers?.map((el) => {
-          return {
-            sessionId: selectedSession.id,
-            userId: el,
-            attendanceStatus: status as AttendanceStatusValueType,
-          };
-        }),
+      const req: EditSessionAttendanceBundleReq = {
+        sessionId: selectedSession.id,
+        attendanceStatus: status as AttendanceStatusValueType,
       };
       await mutateAsync(req);
       queryClient.invalidateQueries({ queryKey: ['attendances'] });

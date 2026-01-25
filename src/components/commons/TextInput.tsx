@@ -11,7 +11,7 @@ import theme from 'styles/theme';
 import Typography from './Typography';
 
 type TextInputSize = 'large' | 'medium' | 'small';
-type State = 'default' | 'active' | 'error' | 'success';
+export type State = 'default' | 'active' | 'error' | 'success';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputSize?: TextInputSize;

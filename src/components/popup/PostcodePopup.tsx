@@ -16,7 +16,10 @@ const PostcodePopup: FC<Props> = ({ isOpen, onClose, onComplete }) => {
   return (
     <Modal onClick={onClose}>
       <Wrapper onClick={(e) => e.stopPropagation()}>
-        <DaumPostcode onComplete={onComplete} />
+        <DaumPostcode
+          scriptUrl="https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+          onComplete={onComplete}
+        />
       </Wrapper>
     </Modal>
   );

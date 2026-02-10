@@ -88,7 +88,7 @@ export const latePassOptions: OptionType[] = [
 ];
 
 export const statusOptionList: OptionType[] = [
-  { label: '대기', value: '대기' },
-  { label: '승인', value: '승인' },
-  { label: '거절', value: '거절' },
+  { label: '대기', value: 'PENDING' },
+  { label: '승인', value: 'APPROVED' },
+  { label: '거절', value: 'REJECTED' },
 ];

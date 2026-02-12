@@ -66,9 +66,21 @@ const CalendarLabel = styled.label`
   display: flex;
   align-items: center;
   border: 1px solid ${theme.colors.lineNormal.strong};
-  padding: 12px 16px;
+  padding: 11px 16px;
   box-sizing: border-box;
   border-radius: 10px;
+
+  svg path {
+    fill: ${theme.colors.label.normal};
+  }
+
+  &:has(input:placeholder-shown) {
+    border: 1px solid ${theme.colors.lineNormal.normal};
+
+    svg path {
+      fill: ${theme.colors.label.assistive};
+    }
+  }
 
   .react-datepicker-wrapper {
     width: 100%;
@@ -78,7 +90,12 @@ const CalendarLabel = styled.label`
     }
 
     input {
+      padding: 0;
       border: none;
+      font-size: 16px;
+      &::placeholder {
+        color: rgba(55, 56, 60, 0.28);
+      }
     }
 
     input:focus {

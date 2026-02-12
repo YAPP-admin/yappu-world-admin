@@ -139,9 +139,6 @@ const Attendances: FC = () => {
       {bundleEditPopupOpen && (
         <BundleEditPopup
           session={attendancesData?.sessions}
-          attendancesGroupedBySession={
-            attendancesData?.attendancesGroupedBySession
-          }
           onClose={() => setBundleEditPopupOpen(false)}
         />
       )}

@@ -6,6 +6,7 @@ import {
   AttendancesRes,
   EditAttendanceCodeReq,
   EditAttendanceReq,
+  EditSessionAttendanceBundleReq,
 } from './types';
 
 export const getAttendances = () => {
@@ -16,6 +17,12 @@ export const getAttendances = () => {
 
 export const putAttendances = (data: EditAttendanceReq): Promise<void> => {
   return axiosInstance.put(`/admin/v1/attendances`, data);
+};
+
+export const putSessionAttendancesBundle = (
+  data: EditSessionAttendanceBundleReq,
+): Promise<void> => {
+  return axiosInstance.put('/admin/v1/session-attendances', data);
 };
 
 export const getAttendanceCode = () => {

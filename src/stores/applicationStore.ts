@@ -3,8 +3,6 @@ import { create } from 'zustand';
 import { ApplicationListRes } from 'apis/auth/types';
 
 interface ApplicationState {
-  selectedIndexes: string[];
-  setSelectedIndexes: (value: string[]) => void;
   isDetailPopup: boolean;
   setIsDetailPopup: (value: boolean) => void;
   selectedList: ApplicationListRes | null;
@@ -26,8 +24,6 @@ interface ApplicationState {
 }
 
 export const useApplicationStore = create<ApplicationState>((set) => ({
-  selectedIndexes: [],
-  setSelectedIndexes: (value: string[]) => set({ selectedIndexes: value }),
   isDetailPopup: false,
   setIsDetailPopup: (value: boolean) => set({ isDetailPopup: value }),
   selectedList: null,

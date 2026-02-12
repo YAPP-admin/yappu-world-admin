@@ -1,13 +1,10 @@
 import axiosInstance from 'apis/common/axiosInstance';
-import {
-  ApiResponse,
-  PaginatedApiResponse,
-  PaginatedReq,
-} from 'apis/common/types';
+import { ApiResponse, PaginatedApiResponse } from 'apis/common/types';
 
 import {
   ApplicationApproveReq,
   ApplicationDetailRes,
+  ApplicationListReq,
   ApplicationListRes,
   ApplicationRejectReq,
   DeleteMemberCodeReq,
@@ -61,9 +58,16 @@ export const patchUserRole = (data: EidtUserRoleReq) => {
   return axiosInstance.post<ApiResponse<void>>('/admin/v1/users/role', data);
 };
 
-export const getApplicationList = ({ page, size }: PaginatedReq) => {
+export const getApplicationList = ({
+  page,
+  size,
+  name,
+  position,
+  status,
+  generation,
+}: ApplicationListReq) => {
   return axiosInstance.get<PaginatedApiResponse<ApplicationListRes>>(
-    `/admin/v1/auth/applications?page=${page}&size=${size}`,
+    `/admin/v1/auth/applications?page=${page}&size=${size}&name=${name}&generation=${generation}&position=${position}&status=${status}`,
   );
 };
 

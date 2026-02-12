@@ -23,10 +23,10 @@ import Select from '@compnents/commons/Select';
 import TextInput, { State } from '@compnents/commons/TextInput';
 import Typography from '@compnents/commons/Typography';
 import PostcodePopup from '@compnents/popup/PostcodePopup';
-import { OptionType } from '@constants/optionList';
 import {
   hourOptions,
   minuteOptions,
+  OptionType,
   sessionTypeList,
 } from '@constants/optionList';
 import { useDaumPostcode } from '@hooks/useDaumPostcode';

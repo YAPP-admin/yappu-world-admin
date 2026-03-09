@@ -5,6 +5,7 @@ import Tune from '@assets/Tune';
 import IconButton from '@compnents/Button/IconButton';
 import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
+import SearchBar from '@compnents/commons/SearchBar';
 import Typography from '@compnents/commons/Typography';
 import Pagination from '@compnents/table/Pagination';
 import Table from '@compnents/table/Table';
@@ -23,10 +24,9 @@ import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
 import { useTableFilter } from '@hooks/useTableFilter';
 import useUserListQuery from '@queries/user/useUserListQuery';
 import { useMemberStore } from '@stores/memberStore';
-import { titleToFilterTypeMap } from '@utils/getTableFilter';
+import { memberListFilterTypeMap } from '@utils/getTableFilter';
 import { UserList } from 'apis/user/types';
 import MemberDetailPopup from 'features/member/list/MemberDetailPopup';
-import SearchBar from 'features/member/list/SearchBar';
 
 import { useGenerationListQuery } from '../../../queries/operation/useGenerationListQuery';
 
@@ -49,7 +49,11 @@ const MemberList: FC = () => {
     popoverPos,
     handleFilterClick,
     handleSelectFilter,
-  } = useTableFilter();
+  } = useTableFilter({
+    generation: '',
+    position: '',
+    role: '',
+  });
 
   const [name, setName] = useState('');
 
@@ -119,10 +123,11 @@ const MemberList: FC = () => {
               <TableHead>
                 <TableRow>
                   {memberListHeader.map((col, index) => {
-                    const type = titleToFilterTypeMap[col.title] ?? null;
+                    const filterType =
+                      memberListFilterTypeMap[col.title] ?? null;
 
-                    const hasValue = type
-                      ? selectedFilters[type] !== ''
+                    const hasValue = filterType
+                      ? selectedFilters[filterType] !== ''
                       : false;
 
                     return (
@@ -135,12 +140,14 @@ const MemberList: FC = () => {
                           >
                             {col.title}
                           </Typography>
-                          {col.isFilter && (
+                          {col.isFilter && filterType && (
                             <IconButton
                               ref={(el) => {
                                 filterRefs.current[index] = el;
                               }}
-                              onClick={() => handleFilterClick(index, type)}
+                              onClick={() =>
+                                handleFilterClick(index, filterType)
+                              }
                             >
                               <Tune
                                 color={hasValue ? '#FA6027' : '#171719'}

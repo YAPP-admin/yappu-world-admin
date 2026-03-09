@@ -1,27 +1,24 @@
-import dayjs from 'dayjs';
-import { FC, useEffect } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import CircleCheck from '@assets/CircleCheck';
 import CircleClose from '@assets/CircleClose';
 import OutlinedButton from '@compnents/Button/OutlinedButton';
-import TextButton from '@compnents/Button/TextButton';
-import Chip from '@compnents/commons/Chip';
 import FlexBox from '@compnents/commons/FlexBox';
+import SearchBar from '@compnents/commons/SearchBar';
 import Typography from '@compnents/commons/Typography';
-import Checkbox from '@compnents/Control/Checkbox';
 import CompletePopup from '@compnents/popup/CompletePopup';
 import Pagination from '@compnents/table/Pagination';
-import Table from '@compnents/table/Table';
-import TableBody from '@compnents/table/TableBody';
-import TableCell from '@compnents/table/TableCell';
-import TableHead from '@compnents/table/TableHead';
-import TableRow from '@compnents/table/TableRow';
-import { applicationHeader } from '@constants/tableHeader';
+import TableFilterPopover from '@compnents/table/TableFilterPopover';
+import { useDebounceCallBack } from '@hooks/useDebounceCallBack';
+import { useSelection } from '@hooks/useSelection';
+import { useTableFilter } from '@hooks/useTableFilter';
 import { useApplicationListQuery } from '@queries/auth/useApplicationListQuery';
+import { useGenerationListQuery } from '@queries/operation/useGenerationListQuery';
 import { useApplicationStore } from '@stores/applicationStore';
-import { getChipColor } from '@utils/getChipColor';
+import { getApplicationFilterConfig } from '@utils/getTableFilter';
 import { ApplicationListRes } from 'apis/auth/types';
+import ApplicationTable from 'features/member/application/ApplicationTable';
 import ApprovePopup from 'features/member/application/ApprovePopup';
 import DetailPopup from 'features/member/application/DetailPopup';
 import RefusePopup from 'features/member/application/RejectPopup';
@@ -29,8 +26,6 @@ import theme from 'styles/theme';
 
 const MemberApplication: FC = () => {
   const {
-    selectedIndexes,
-    setSelectedIndexes,
     isDetailPopup,
     setIsDetailPopup,
     selectedList,
@@ -46,43 +41,64 @@ const MemberApplication: FC = () => {
     page,
     setPage,
   } = useApplicationStore();
-  const { data } = useApplicationListQuery(page, 10);
+  const [name, setName] = useState('');
+  const {
+    selectedFilters,
+    openFilterType,
+    setOpenFilterIndex,
+    openFilterIndex,
+    filterRefs,
+    popoverRef,
+    popoverPos,
+    handleFilterClick,
+    handleSelectFilter,
+  } = useTableFilter({
+    generation: '',
+    position: '',
+    status: '',
+  });
+  const { data, refetch } = useApplicationListQuery({
+    page,
+    size: 10,
+    name,
+    generation: selectedFilters.generation,
+    position: selectedFilters.position,
+    status: selectedFilters.status,
+  });
+  const { data: generation } = useGenerationListQuery(1, 100);
 
-  useEffect(() => {
-    setSelectedIndexes([]);
-  }, []);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleSearch = useDebounceCallBack(() => {
+    refetch();
+  }, 500);
+
+  // useEffect(() => {
+  //   setSelectedIndexes([]);
+  // }, []);
 
   const applicationIds = data?.data.map((application) => application.id) || [];
 
-  const isAllChecked =
-    applicationIds.length > 0 &&
-    applicationIds.every((id) => selectedIndexes.includes(id?.toString()));
-
-  const onClickAllCheck = () => {
-    if (isAllChecked) {
-      setSelectedIndexes([]);
-    } else {
-      setSelectedIndexes(applicationIds);
-    }
-  };
-
-  const onClickRowCheck = (id: string) => {
-    if (selectedIndexes.includes(id)) {
-      setSelectedIndexes(selectedIndexes.filter((v) => v !== id));
-    } else {
-      setSelectedIndexes([...selectedIndexes, id]);
-    }
-  };
+  const { selected, setSelected, isAllChecked, toggleAll, toggleOne } =
+    useSelection(applicationIds);
 
   const onClickToDetail = (list: ApplicationListRes) => {
     setSelectedList(list);
     setIsDetailPopup(true);
+    if (openFilterIndex !== null) {
+      setOpenFilterIndex(null);
+      return;
+    }
   };
 
   const onChangePage = (page: number) => {
     setPage(page);
-    setSelectedIndexes([]);
+    setSelected([]);
   };
+
+  const filterConfig = getApplicationFilterConfig(generation?.data);
 
   return (
     <>
@@ -91,7 +107,8 @@ const MemberApplication: FC = () => {
         <Wrapper>
           <FlexBox direction="column" gap={8}>
             <FlexBox
-              align="center"
+              direction="column"
+              gap={8}
               height="fit-content"
               justify="space-between"
             >
@@ -103,140 +120,74 @@ const MemberApplication: FC = () => {
               >
                 <Typography variant="headline1Bold">신청리스트</Typography>
                 <Typography
-                  color="label-alternative"
+                  color="primary-normal"
                   variant="body1Normal"
                   style={{
                     fontWeight: 600,
                   }}
                 >
-                  {data?.totalCount}개
+                  {data?.totalCount}명
                 </Typography>
               </FlexBox>
-
-              <FlexBox align="center" gap={8} width="fit-content">
-                <OutlinedButton
-                  color="status-positive"
-                  disabled={!selectedIndexes.length}
-                  variant="assistive"
-                  leftIcon={
-                    <CircleCheck
-                      color={theme.colors.status.positive}
-                      size="16"
-                    />
-                  }
-                  onClick={() => setIsApprovePopup(true)}
-                >
-                  승인
-                </OutlinedButton>
-                <OutlinedButton
-                  color="status-negative"
-                  disabled={!selectedIndexes.length}
-                  variant="assistive"
-                  leftIcon={
-                    <CircleClose
-                      color={theme.colors.status.nagative}
-                      size="16"
-                    />
-                  }
-                  onClick={() => setIsRejectPopup(true)}
-                >
-                  거절
-                </OutlinedButton>
+              <FlexBox justify="space-between">
+                <SearchBar
+                  placeholder="이름으로 검색하세요"
+                  value={name}
+                  onChange={handleSearchChange}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  onSearch={handleSearch}
+                />
+                <FlexBox align="center" gap={8} width="fit-content">
+                  <OutlinedButton
+                    color="status-positive"
+                    disabled={!selected.length}
+                    variant="assistive"
+                    leftIcon={
+                      <CircleCheck
+                        color={theme.colors.status.positive}
+                        size="16"
+                      />
+                    }
+                    onClick={() => setIsApprovePopup(true)}
+                  >
+                    승인
+                  </OutlinedButton>
+                  <OutlinedButton
+                    color="status-negative"
+                    disabled={!selected.length}
+                    variant="assistive"
+                    leftIcon={
+                      <CircleClose
+                        color={theme.colors.status.nagative}
+                        size="16"
+                      />
+                    }
+                    onClick={() => setIsRejectPopup(true)}
+                  >
+                    거절
+                  </OutlinedButton>
+                </FlexBox>
               </FlexBox>
             </FlexBox>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell as="th">
-                    <Checkbox
-                      state={isAllChecked ? 'checked' : 'unchecked'}
-                      onClick={onClickAllCheck}
-                    />
-                  </TableCell>
-                  {applicationHeader.map((col) => (
-                    <TableCell key={col} as="th">
-                      <Typography
-                        color="label-normal"
-                        style={{ fontWeight: 600 }}
-                        variant="body1Normal"
-                      >
-                        {col}
-                      </Typography>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data?.data.map((el) => {
-                  const id = el.id;
-                  const isChecked = selectedIndexes.includes(id);
-                  return (
-                    <TableRow key={el.id} onClick={() => onClickToDetail(el)}>
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        <Checkbox
-                          state={isChecked ? 'checked' : 'unchecked'}
-                          onClick={() => onClickRowCheck(id)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          color="primary-normal"
-                          variant="body1Normal"
-                        >
-                          {el.name}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {el.email}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          <Chip
-                            color={getChipColor(el.status).color}
-                            size="large"
-                            text={el.status}
-                            variant={getChipColor(el.status).variant}
-                          />
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {el.activityUnit.generation}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {el.activityUnit.position.label}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {dayjs(el.applicationDate).format('YYYY-MM-DD')}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color="label-normal" variant="body1Normal">
-                          {el.processDate
-                            ? dayjs(el.processDate).format('YYYY-MM-DD')
-                            : '-'}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <TextButton>상세보기</TextButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+            <ApplicationTable
+              data={data?.data}
+              filterRefs={filterRefs}
+              handleFilterClick={handleFilterClick}
+              isAllChecked={isAllChecked}
+              selected={selected}
+              selectedFilters={selectedFilters}
+              toggleAll={toggleAll}
+              toggleOne={toggleOne}
+              onClickToDetail={onClickToDetail}
+            />
           </FlexBox>
-          <Pagination
-            currentPage={page}
-            totalPages={data?.totalPages ?? 0}
-            onPageChange={onChangePage}
-          />
+          {!!data?.data.length && (
+            <Pagination
+              currentPage={page}
+              totalPages={data?.totalPages ?? 0}
+              onPageChange={onChangePage}
+            />
+          )}
         </Wrapper>
       </Container>
       {isDetailPopup && (
@@ -248,7 +199,7 @@ const MemberApplication: FC = () => {
       {isApprovePopup && (
         <ApprovePopup
           isBulk
-          selectedIndexes={selectedIndexes}
+          selectedIndexes={selected}
           onClose={() => setIsApprovePopup(false)}
         />
       )}
@@ -262,7 +213,7 @@ const MemberApplication: FC = () => {
       {isRejectPopup && (
         <RefusePopup
           isBulk
-          selectedIndexes={selectedIndexes}
+          selectedIndexes={selected}
           onClose={() => setIsRejectPopup(false)}
         />
       )}
@@ -272,6 +223,21 @@ const MemberApplication: FC = () => {
           title="거절 완료"
           onClose={() => setIsRejectCompletePopup(false)}
         />
+      )}
+      {openFilterIndex !== null && (
+        <PopoverContainer
+          ref={popoverRef}
+          style={{ top: popoverPos.top, left: popoverPos.left }}
+        >
+          {openFilterType && (
+            <TableFilterPopover
+              optionList={filterConfig[openFilterType].getOptions()}
+              title={filterConfig[openFilterType].title}
+              value={selectedFilters[openFilterType]}
+              onSelect={(v) => handleSelectFilter(openFilterType, v)}
+            />
+          )}
+        </PopoverContainer>
       )}
     </>
   );
@@ -294,4 +260,9 @@ const Wrapper = styled.div`
   > div:first-child {
     flex: 1;
   }
+`;
+
+const PopoverContainer = styled.div`
+  position: absolute;
+  z-index: 10;
 `;
